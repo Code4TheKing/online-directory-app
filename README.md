@@ -1,2 +1,2 @@
-# OnlineDirectoryApp
-An online directory app built with JS
+# Online Directory App
+Please see the respective README in the frontend/ and backend/ directories for more information
