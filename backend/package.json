@@ -18,7 +18,6 @@
   "scripts": {
     "prettify": "prettier -l --write \"**/*.js\"",
     "test": "jest",
-    "dev": "nodemon src/index.js",
     "start": "node src/index.js"
   },
   "prettier": {

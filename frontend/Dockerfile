@@ -1,11 +1,6 @@
-FROM node:12-alpine AS build
+FROM node:12-alpine
 WORKDIR /frontend
 COPY package.json yarn.lock ./
-RUN yarn install --production
+RUN yarn install
 COPY . .
-RUN yarn build
-
-FROM nginx:stable-alpine
-COPY --from=build /frontend/build /usr/share/nginx/html
-EXPOSE 80
-CMD ["nginx", "-g", "daemon off;"]
+CMD ["yarn", "start"]
