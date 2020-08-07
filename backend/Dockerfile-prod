@@ -1,6 +1,6 @@
 FROM node:12-alpine
 WORKDIR /backend
 COPY package.json yarn.lock ./
-RUN yarn install
+RUN yarn install --production
 COPY . .
-CMD ["yarn", "run", "dev"]
+CMD ["yarn", "start"]
