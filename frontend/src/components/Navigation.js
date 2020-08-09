@@ -6,24 +6,26 @@ import { IndexLinkContainer, LinkContainer } from 'react-router-bootstrap';
 
 const Navigation = () => (
   <>
-    <Navbar bg="dark" variant="dark" expand="md">
+    <Navbar bg="dark" variant="dark" fixed="top" expand="md">
       <Navbar.Brand href="/">Online Directory App</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="mr-auto">
-          <IndexLinkContainer to="/">
-            <Nav.Link>Home</Nav.Link>
-          </IndexLinkContainer>
-          <LinkContainer to="/admin">
-            <Nav.Link>Admin</Nav.Link>
-          </LinkContainer>
-        </Nav>
-      </Navbar.Collapse>
-      <Navbar.Collapse className="justify-content-end">
-        <Nav>
-          <LinkContainer to="/profile">
-            <Nav.Link active="true">Signed in as: <u>The Boilerplate Life</u></Nav.Link>
-          </LinkContainer>
+        <Nav className="container-fluid">
+          <Nav.Item>
+            <IndexLinkContainer to="/">
+              <Nav.Link>Home</Nav.Link>
+            </IndexLinkContainer>
+          </Nav.Item>
+          <Nav.Item className="mr-auto">
+            <LinkContainer to="/admin">
+              <Nav.Link>Admin</Nav.Link>
+            </LinkContainer>
+          </Nav.Item>
+          <Nav.Item>
+            <LinkContainer to="/profile">
+              <Nav.Link>Signed in as: <u>The Boilerplate Life</u></Nav.Link>
+            </LinkContainer>
+          </Nav.Item>
         </Nav>
       </Navbar.Collapse>
     </Navbar>
