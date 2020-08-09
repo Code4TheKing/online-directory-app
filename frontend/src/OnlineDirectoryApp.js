@@ -1,21 +1,21 @@
 import React from 'react';
-import { MemoryRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch } from 'react-router-dom';
 import Navigation from './components/Navigation';
 import Admin from './pages/Admin';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 
-function OnlineDirectoryApp() {
+const OnlineDirectoryApp = () => {
   return (
     <>
-      <MemoryRouter>
+      <BrowserRouter>
         <Navigation />
         <Switch>
           <Route path="/" component={Home} exact />
           <Route path="/admin" component={Admin} />
           <Route path="/profile" component={Profile} />
         </Switch>
-      </MemoryRouter>
+      </BrowserRouter>
     </>
   );
 }
