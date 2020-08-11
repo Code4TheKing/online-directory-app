@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 import { connect } from 'react-redux';
-import { fetchContactsBySearch } from '../redux/actions';
+import { listContactsBySearchAsync } from '../redux/actions';
 
-const Search = ({ fetchContactsBySearch }) => {
+const Search = ({ listContactsBySearch }) => {
   const [input, setInput] = useState('');
 
   const handleChange = (event) => {
@@ -13,20 +13,20 @@ const Search = ({ fetchContactsBySearch }) => {
 
   const performSearch = (event) => {
     event.preventDefault();
-    fetchContactsBySearch(input);
+    listContactsBySearch(input);
     setInput('');
   }
 
   return (
     <>
-      <Form className="justify-content-center" inline onSubmit={performSearch}>
-        <Form.Control className="mr-md-2 w-25" type="text" placeholder="Search" size="lg" value={input} onChange={handleChange} />
+      <Form inline onSubmit={performSearch}>
+        <Form.Control className="mr-2" type="text" placeholder="Search" size="lg" value={input} onChange={handleChange} />
         <Button type="submit" variant="outline-success">Search</Button>
       </Form>
     </>
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({ fetchContactsBySearch: (searchText) => dispatch(fetchContactsBySearch(searchText)) });
+const mapDispatchToProps = (dispatch) => ({ listContactsBySearch: (searchText) => dispatch(listContactsBySearchAsync(searchText)) });
 
 export default connect(null, mapDispatchToProps)(Search);

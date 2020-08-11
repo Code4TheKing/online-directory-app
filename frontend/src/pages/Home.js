@@ -1,14 +1,19 @@
 import React from 'react';
-import Jumbotron from 'react-bootstrap/Jumbotron';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
 import ContactCardList from '../components/ContactCardList';
 import Search from '../components/Search';
 
 const Home = () => (
   <>
-    <Jumbotron>
-      <Search />
-      <ContactCardList />
-    </Jumbotron>
+    <Container>
+      <Row className="justify-content-center">
+        <Search />
+      </Row>
+      <Row className="justify-content-center mt-4">
+        <ContactCardList />
+      </Row>
+    </Container>
   </>
 );
 
