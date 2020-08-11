@@ -10,20 +10,20 @@ const Navigation = () => (
       <Navbar.Brand href="/">Online Directory App</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="container-fluid">
+        <Nav className="d-flex justify-content-center w-100">
           <Nav.Item>
             <IndexLinkContainer to="/">
               <Nav.Link>Home</Nav.Link>
             </IndexLinkContainer>
           </Nav.Item>
-          <Nav.Item className="mr-auto">
+          <Nav.Item className="w-100">
             <LinkContainer to="/admin">
               <Nav.Link>Admin</Nav.Link>
             </LinkContainer>
           </Nav.Item>
-          <Nav.Item>
+          <Nav.Item style={{ minWidth: '16rem' }}>
             <LinkContainer to="/profile">
-              <Nav.Link>Signed in as: <u>The Boilerplate Life</u></Nav.Link>
+              <Nav.Link><span>Signed in as: </span><u>The Boilerplate Life</u></Nav.Link>
             </LinkContainer>
           </Nav.Item>
         </Nav>

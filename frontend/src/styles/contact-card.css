@@ -1,0 +1,13 @@
+.editable:hover {
+  background: #ffffff;
+  color: #000000
+}
+
+.editable:focus {
+  background: #ffffff;
+  color: #000000
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
