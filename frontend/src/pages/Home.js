@@ -10,7 +10,7 @@ const Home = () => (
       <Row className="justify-content-center">
         <Search />
       </Row>
-      <Row className="justify-content-center mt-4">
+      <Row className="justify-content-center mt-5">
         <ContactCardList />
       </Row>
     </Container>
