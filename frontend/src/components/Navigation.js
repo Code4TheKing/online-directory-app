@@ -10,7 +10,7 @@ const Navigation = () => (
       <Navbar.Brand href="/">Online Directory App</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
-        <Nav className="d-flex justify-content-center w-100">
+        <Nav className="w-100">
           <Nav.Item>
             <IndexLinkContainer to="/">
               <Nav.Link>Home</Nav.Link>
