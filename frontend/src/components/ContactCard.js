@@ -1,30 +1,135 @@
+import Icon from '@material-ui/core/Icon';
 import 'holderjs';
 import Holder from 'holderjs';
-import React, { useEffect } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Card from 'react-bootstrap/Card';
+import Col from 'react-bootstrap/Col';
+import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
+import { saveContactAsync } from '../redux/actions';
+import '../styles/contact-card.css';
+import ContentEditable from '../utils/ContentEditable';
 
-const ContactCard = ({ contact }) => {
+const ContactCard = ({ contact, width, editable = false, saveContact }) => {
+  const [name, setName] = useState(contact.name);
+  const [address, setAddress] = useState(contact.address);
+  const [phoneNumber, setPhoneNumber] = useState(contact.phoneNumber);
+
+  const nameRef = useRef();
+  const addressRef = useRef();
+  const phoneNumberRef = useRef();
+
   useEffect(() => {
     Holder.run({
       images: '#img-' + contact.id
     });
   });
 
+  const handleChange = (event) => {
+    return getMappedFunctions(
+      () => (setName(event.target.value)),
+      () => (setAddress(event.target.value)),
+      () => (setPhoneNumber(event.target.value))
+    );
+  };
+
+  const handleBlur = () => {
+    const save = () => {
+      saveContact(Object.assign({}, contact, { name: name, address: address, phoneNumber: phoneNumber }))
+    }
+    return getMappedFunctions(
+      () => (save()),
+      () => (save()),
+      () => (save()),
+    );
+  };
+
+  const focus = () => {
+    return getMappedFunctions(
+      () => {
+        nameRef.current.focus();
+      },
+      () => {
+        addressRef.current.focus();
+      },
+      () => {
+        phoneNumberRef.current.focus();
+      }
+    );
+  }
+
+  const getMappedFunctions = (nameFunc, addressFunc, phoneNumberFunc) => {
+    return {
+      name: () => (nameFunc()),
+      address: () => (addressFunc()),
+      phoneNumber: () => (phoneNumberFunc())
+    }
+  }
+
   return (
     <>
-      <Card style={{ width: '18rem' }}>
+      <Card style={{ width: width || '100%' }} bg="dark" text="light">
         <Card.Img id={"img-" + contact.id} variant="top" src="holder.js/100px180" />
+        <Card.Header className="font-weight-bold">
+          <Row>
+            <Col className={editable ? "col-10" : "col-12"}>
+              <ContentEditable
+                tabIndex="0"
+                innerRef={nameRef}
+                html={name}
+                disabled={!editable}
+                onChange={(event) => handleChange(event).name()}
+                onBlur={() => handleBlur().name()}
+                className={(editable ? " editable cursor-pointer" : "")} />
+            </Col>
+            {editable && <Col className="col-2">
+              <div className="cursor-pointer" onClick={() => focus().name()}><Icon>edit</Icon></div>
+            </Col>}
+          </Row>
+        </Card.Header>
         <Card.Body>
-          <Card.Title className="font-weight-bolder text-primary">{contact.name}</Card.Title>
-          <Card.Text>
-            <span className="font-weight-bold font-italic text-secondary">Address: </span>{contact.address}<br />
-            <span className="font-weight-bold font-italic text-secondary">Phone Number: </span>{contact.phoneNumber}
-          </Card.Text>
+          <Row className="align-items-center">
+            <Col className="col-4">
+              <span className="font-italic">Address: </span>
+            </Col>
+            <Col className={(editable ? "col-6" : "col-8")}>
+              <ContentEditable
+                tabIndex="1"
+                innerRef={addressRef}
+                html={address}
+                disabled={!editable}
+                onChange={(event) => handleChange(event).address()}
+                onBlur={() => handleBlur().address()}
+                className={(editable ? " editable cursor-pointer" : "")} />
+            </Col>
+            {editable && <Col className="col-2">
+              <div className="cursor-pointer" onClick={() => focus().address()}><Icon>edit</Icon></div>
+            </Col>}
+          </Row>
+          <Row className="align-items-center">
+            <Col className="col-4">
+              <span className="font-italic">Phone Number: </span>
+            </Col>
+            <Col className={(editable ? "col-6" : "col-8")}>
+              <ContentEditable
+                tabIndex="2"
+                innerRef={phoneNumberRef}
+                html={phoneNumber}
+                disabled={!editable}
+                onChange={(event) => handleChange(event).phoneNumber()}
+                onBlur={() => handleBlur().phoneNumber()}
+                className={(editable ? " editable cursor-pointer" : "")} />
+            </Col>
+            {editable && <Col className="col-2">
+              <div className="cursor-pointer" onClick={() => focus().phoneNumber()}><Icon>edit</Icon></div>
+            </Col>}
+          </Row>
         </Card.Body>
       </Card>
     </>
   );
 }
 
-export default connect()(ContactCard);
+const mapDispatchToProps = (dispatch) => ({ saveContact: (contact) => dispatch(saveContactAsync(contact)) });
+
+export default connect(null, mapDispatchToProps)(ContactCard);
