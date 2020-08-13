@@ -3,12 +3,12 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
 import ContactCard from '../components/ContactCard';
-import { getContactByIdAsync } from '../redux/actions';
+import { getContactByIdAsync, saveContactAsync } from '../redux/actions';
 
-const Profile = ({ profileContact, contacts, isGetting, getContactById }) => {
+const Profile = ({ profileContact, isGetting, getContactById, saveContact }) => {
   useEffect(() => {
-    getContactById(99, contacts);
-  });
+    getContactById(99);
+  }, []);
 
   return (
     <>
@@ -16,10 +16,10 @@ const Profile = ({ profileContact, contacts, isGetting, getContactById }) => {
         <Row className="justify-content-center">
           <h1>Profile</h1>
         </Row>
-        <Row className="justify-content-center">
+        <Row className="justify-content-center mt-3">
           {isGetting ?
             <p className="text-center text-info">Loading...</p> :
-            profileContact && <ContactCard editable={true} contact={profileContact} width={'20rem'} />}
+            profileContact && <ContactCard editable={true} contact={profileContact} saveFunc={saveContact} width={'20rem'} />}
         </Row>
       </Container>
     </>
@@ -28,6 +28,9 @@ const Profile = ({ profileContact, contacts, isGetting, getContactById }) => {
 
 const mapStateToProps = (state) => state;
 
-const mapDispatchToProps = (dispatch) => ({ getContactById: (id, contacts) => dispatch(getContactByIdAsync(id, contacts)) });
+const mapDispatchToProps = (dispatch) => ({
+  getContactById: (id) => dispatch(getContactByIdAsync(id)),
+  saveContact: (contact) => dispatch(saveContactAsync(contact))
+});
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
