@@ -5,12 +5,10 @@ import React, { useEffect, useRef, useState } from 'react';
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
-import { connect } from 'react-redux';
-import { saveContactAsync } from '../redux/actions';
 import '../styles/contact-card.css';
 import ContentEditable from '../utils/ContentEditable';
 
-const ContactCard = ({ contact, width, editable = false, saveContact }) => {
+const ContactCard = ({ contact, width, editable = false, saveFunc }) => {
   const [name, setName] = useState(contact.name);
   const [address, setAddress] = useState(contact.address);
   const [phoneNumber, setPhoneNumber] = useState(contact.phoneNumber);
@@ -34,14 +32,7 @@ const ContactCard = ({ contact, width, editable = false, saveContact }) => {
   };
 
   const handleBlur = () => {
-    const save = () => {
-      saveContact(Object.assign({}, contact, { name: name, address: address, phoneNumber: phoneNumber }))
-    }
-    return getMappedFunctions(
-      () => (save()),
-      () => (save()),
-      () => (save()),
-    );
+    saveFunc(Object.assign({}, contact, { name: name, address: address, phoneNumber: phoneNumber }))
   };
 
   const focus = () => {
@@ -79,7 +70,7 @@ const ContactCard = ({ contact, width, editable = false, saveContact }) => {
                 html={name}
                 disabled={!editable}
                 onChange={(event) => handleChange(event).name()}
-                onBlur={() => handleBlur().name()}
+                onBlur={() => handleBlur()}
                 className={(editable ? " editable cursor-pointer" : "")} />
             </Col>
             {editable && <Col className="col-2">
@@ -99,7 +90,7 @@ const ContactCard = ({ contact, width, editable = false, saveContact }) => {
                 html={address}
                 disabled={!editable}
                 onChange={(event) => handleChange(event).address()}
-                onBlur={() => handleBlur().address()}
+                onBlur={() => handleBlur()}
                 className={(editable ? " editable cursor-pointer" : "")} />
             </Col>
             {editable && <Col className="col-2">
@@ -117,7 +108,7 @@ const ContactCard = ({ contact, width, editable = false, saveContact }) => {
                 html={phoneNumber}
                 disabled={!editable}
                 onChange={(event) => handleChange(event).phoneNumber()}
-                onBlur={() => handleBlur().phoneNumber()}
+                onBlur={() => handleBlur()}
                 className={(editable ? " editable cursor-pointer" : "")} />
             </Col>
             {editable && <Col className="col-2">
@@ -130,6 +121,4 @@ const ContactCard = ({ contact, width, editable = false, saveContact }) => {
   );
 }
 
-const mapDispatchToProps = (dispatch) => ({ saveContact: (contact) => dispatch(saveContactAsync(contact)) });
-
-export default connect(null, mapDispatchToProps)(ContactCard);
+export default ContactCard;
