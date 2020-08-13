@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
-import { connect } from 'react-redux';
-import { listContactsBySearchAsync } from '../redux/actions';
 
-const Search = ({ listContactsBySearch }) => {
+const SearchBar = ({ searchFunc }) => {
   const [input, setInput] = useState('');
 
   const handleChange = (event) => {
@@ -13,7 +11,7 @@ const Search = ({ listContactsBySearch }) => {
 
   const performSearch = (event) => {
     event.preventDefault();
-    listContactsBySearch(input);
+    searchFunc(input);
     setInput('');
   }
 
@@ -27,6 +25,4 @@ const Search = ({ listContactsBySearch }) => {
   );
 };
 
-const mapDispatchToProps = (dispatch) => ({ listContactsBySearch: (searchText) => dispatch(listContactsBySearchAsync(searchText)) });
-
-export default connect(null, mapDispatchToProps)(Search);
+export default SearchBar;

@@ -1,4 +1,9 @@
-import { GET_CONTACT, GET_CONTACT_ERROR, GET_CONTACT_SUCCESS, LIST_CONTACTS, LIST_CONTACTS_ERROR, LIST_CONTACTS_SUCCESS, SAVE_CONTACT, SAVE_CONTACT_ERROR, SAVE_CONTACT_SUCCESS } from './actionTypes';
+import store from '../redux/store';
+import {
+  GET_CONTACT, GET_CONTACT_ERROR, GET_CONTACT_SUCCESS,
+  LIST_CONTACTS, LIST_CONTACTS_ERROR, LIST_CONTACTS_SUCCESS,
+  SAVE_CONTACT, SAVE_CONTACT_ERROR, SAVE_CONTACT_SUCCESS
+} from './actionTypes';
 
 const listContacts = () => {
   return {
@@ -57,90 +62,88 @@ const getContactError = () => {
   }
 }
 
-const FAKE_CONTACTS_DATA = (searchText) => {
-  const address = 'Started at the bottom now we here.';
-  return [
-    {
-      id: 1,
-      name: "1",
-      address: address,
-      phoneNumber: "(999) 999-9999"
-    },
-    {
-      id: 2,
-      name: "2",
-      address: address,
-      phoneNumber: "(999) 999-9999"
-    },
-    {
-      id: 3,
-      name: "3",
-      address: [address, address].join(' '),
-      phoneNumber: "(999) 999-9999"
-    },
-    {
-      id: 4,
-      name: "4",
-      address: address,
-      phoneNumber: "(999) 999-9999"
-    },
-    {
-      id: 5,
-      name: "5",
-      address: [address, address, address, address].join(' '),
-      phoneNumber: "(999) 999-9999"
-    },
-    {
-      id: 6,
-      name: "6",
-      address: address,
-      phoneNumber: "(999) 999-9999"
-    },
-    {
-      id: 7,
-      name: "7",
-      address: [address, address, address].join(' '),
-      phoneNumber: "(999) 999-9999"
-    },
-    {
-      id: 8,
-      name: "8",
-      address: address,
-      phoneNumber: "(999) 999-9999"
-    },
-    {
-      id: 9,
-      name: "9",
-      address: [address, address].join(' '),
-      phoneNumber: "(999) 999-9999"
-    },
-    {
-      id: 10,
-      name: "10",
-      address: address,
-      phoneNumber: "(999) 999-9999"
-    },
-    {
-      id: 11,
-      name: "11",
-      address: [address, address, address, address].join(' '),
-      phoneNumber: "(999) 999-9999"
-    },
-    {
-      id: 99,
-      name: "99",
-      address: "Default address",
-      phoneNumber: "(123) 456-7890"
-    }
-  ]
-};
+const address = 'Started at the bottom now we here.';
+const FAKE_CONTACTS_DATA = [
+  {
+    id: 1,
+    name: "1",
+    address: address,
+    phoneNumber: "(999) 999-9999"
+  },
+  {
+    id: 2,
+    name: "2",
+    address: address,
+    phoneNumber: "(999) 999-9999"
+  },
+  {
+    id: 3,
+    name: "3",
+    address: [address, address].join(' '),
+    phoneNumber: "(999) 999-9999"
+  },
+  {
+    id: 4,
+    name: "4",
+    address: address,
+    phoneNumber: "(999) 999-9999"
+  },
+  {
+    id: 5,
+    name: "5",
+    address: [address, address, address, address].join(' '),
+    phoneNumber: "(999) 999-9999"
+  },
+  {
+    id: 6,
+    name: "6",
+    address: address,
+    phoneNumber: "(999) 999-9999"
+  },
+  {
+    id: 7,
+    name: "7",
+    address: [address, address, address].join(' '),
+    phoneNumber: "(999) 999-9999"
+  },
+  {
+    id: 8,
+    name: "8",
+    address: address,
+    phoneNumber: "(999) 999-9999"
+  },
+  {
+    id: 9,
+    name: "9",
+    address: [address, address].join(' '),
+    phoneNumber: "(999) 999-9999"
+  },
+  {
+    id: 10,
+    name: "10",
+    address: address,
+    phoneNumber: "(999) 999-9999"
+  },
+  {
+    id: 11,
+    name: "11",
+    address: [address, address, address, address].join(' '),
+    phoneNumber: "(999) 999-9999"
+  },
+  {
+    id: 99,
+    name: "99",
+    address: "Default address",
+    phoneNumber: "(123) 456-7890"
+  }
+];
 
 export const listContactsBySearchAsync = (searchText) => {
   return (dispatch) => {
     dispatch(listContacts());
     setTimeout(() => {
       let json = {
-        contacts: FAKE_CONTACTS_DATA(searchText)
+        contacts: searchText ? FAKE_CONTACTS_DATA : []
       };
       dispatch(listContactsSuccess(json));
     }, 500);
@@ -152,11 +155,12 @@ export const saveContactAsync = (contact) => {
     dispatch(saveContact());
     setTimeout(() => {
       dispatch(saveContactSuccess(contact));
-    }, 500);
+    }, 2500);
   };
 }
 
-export const getContactByIdAsync = (id, contacts) => {
+export const getContactByIdAsync = (id) => {
+  const contacts = store.getState().contacts ? store.getState().contacts : FAKE_CONTACTS_DATA[-1];
   return (dispatch) => {
     dispatch(getContact());
     setTimeout(() => {
