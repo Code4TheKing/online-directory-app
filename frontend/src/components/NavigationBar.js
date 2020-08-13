@@ -1,10 +1,9 @@
 import React from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
-import { connect } from 'react-redux';
 import { IndexLinkContainer, LinkContainer } from 'react-router-bootstrap';
 
-const Navigation = () => (
+const NavigationBar = () => (
   <>
     <Navbar bg="dark" variant="dark" fixed="top" expand="md">
       <Navbar.Brand href="/">Online Directory App</Navbar.Brand>
@@ -32,4 +31,4 @@ const Navigation = () => (
   </>
 );
 
-export default connect()(Navigation);
+export default NavigationBar;
