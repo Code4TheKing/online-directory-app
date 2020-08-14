@@ -20,7 +20,7 @@ router.get('/:id', (req, res, next) => {
   repository.getContactById(
     req.params.id,
     (err, data) => {
-      if (err) return next(err);
+      if (err) next(err);
       res.json(data);
     }
   );

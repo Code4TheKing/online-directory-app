@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors')
 const app = express();
 try {
   var mongoose = require('mongoose');
@@ -9,9 +10,23 @@ try {
 app.use(require('body-parser').json());
 app.use(express.static(__dirname + '/static'));
 
+// CORS handler
+const corsHandler = cors({
+  origin: (origin, callback) => {
+    const originWhitelist = ["http://localhost", "http://localhost:3000"];
+    if (originWhitelist.indexOf(origin) > -1) {
+      callback(null, true);
+    } else {
+      callback(new Error(`Origin ${origin} not allowed by CORS`));
+    }
+
+  }
+});
+app.use(corsHandler);
+
 // Root-level logger
 app.use((req, res, next) => {
-  console.log(req.method, req.path, "-", req.ip);
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - ${req.ip} -`, req.headers);
   next();
 });
 
@@ -26,7 +41,8 @@ app.get('/is-mongoose-ok', (req, res) => {
 
 // Contacts route
 const contacts = require('./routes/contacts');
-app.use('/contacts', contacts);
+app.use('/_api/v1/contacts', contacts);
+contacts.all('*', corsHandler);
 
 // Error handler
 app.use((err, req, res, next) => {
