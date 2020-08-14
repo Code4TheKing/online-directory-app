@@ -9,8 +9,14 @@ try {
 app.use(require('body-parser').json());
 app.use(express.static(__dirname + '/static'));
 
+// Root-level logger
+app.use((req, res, next) => {
+  console.log(req.method, req.path, "-", req.ip);
+  next();
+});
+
 // Mongoose healthcheck route
-app.get('/is-mongoose-ok', function (req, res) {
+app.get('/is-mongoose-ok', (req, res) => {
   if (mongoose) {
     res.json({ isMongooseOk: !!mongoose.connection.readyState })
   } else {
@@ -19,10 +25,11 @@ app.get('/is-mongoose-ok', function (req, res) {
 });
 
 // Contacts route
-app.use('/contacts', require('./routes/contacts'));
+const contacts = require('./routes/contacts');
+app.use('/contacts', contacts);
 
 // Error handler
-app.use(function (err, req, res, next) {
+app.use((err, req, res, next) => {
   if (err) {
     res.status(err.status || 500)
       .type('txt')
@@ -31,7 +38,7 @@ app.use(function (err, req, res, next) {
 });
 
 // Unmatched routes handler
-app.use(function (req, res) {
+app.use((req, res) => {
   if (req.method.toLowerCase() === 'options') {
     res.end();
   } else {
