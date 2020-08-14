@@ -17,7 +17,7 @@ const contacts = (
     case SAVE_CONTACT:
       return Object.assign({}, state, { isSaving: true });
     case SAVE_CONTACT_SUCCESS:
-      return Object.assign({}, state, { isSaving: false });
+      return Object.assign({}, state, { isSaving: false, profileContact: action.contact });
     case GET_CONTACT:
       return Object.assign({}, state, { isGetting: true });
     case GET_CONTACT_SUCCESS:

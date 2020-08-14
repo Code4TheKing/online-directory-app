@@ -22,7 +22,10 @@ const Home = ({ contacts, isListing, listContactsBySearch, saveContact }) => {
   )
 }
 
-const mapStateToProps = (state) => state;
+const mapStateToProps = (state) => ({
+  contacts: state.contacts,
+  isListing: state.isListing
+});
 
 const mapDispatchToProps = (dispatch) => ({
   listContactsBySearch: (searchText) => dispatch(listContactsBySearchAsync(searchText)),

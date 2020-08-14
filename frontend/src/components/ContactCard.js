@@ -1,17 +1,20 @@
+import { CircularProgress } from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
 import 'holderjs';
 import Holder from 'holderjs';
 import React, { useEffect, useRef, useState } from 'react';
+import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import '../styles/contact-card.css';
 import ContentEditable from '../utils/ContentEditable';
 
-const ContactCard = ({ contact, width, editable = false, saveFunc }) => {
+const ContactCard = ({ width, editable = false, contact, isSaving = false, saveFunc }) => {
   const [name, setName] = useState(contact.name);
   const [address, setAddress] = useState(contact.address);
   const [phoneNumber, setPhoneNumber] = useState(contact.phoneNumber);
+  const [modified, setModified] = useState(false);
 
   const nameRef = useRef();
   const addressRef = useRef();
@@ -24,6 +27,7 @@ const ContactCard = ({ contact, width, editable = false, saveFunc }) => {
   });
 
   const handleChange = (event) => {
+    setModified(isModified());
     return getMappedFunctions(
       () => (setName(event.target.value)),
       () => (setAddress(event.target.value)),
@@ -31,7 +35,7 @@ const ContactCard = ({ contact, width, editable = false, saveFunc }) => {
     );
   };
 
-  const handleBlur = () => {
+  const save = () => {
     saveFunc(Object.assign({}, contact, { name: name, address: address, phoneNumber: phoneNumber }))
   };
 
@@ -49,6 +53,16 @@ const ContactCard = ({ contact, width, editable = false, saveFunc }) => {
     );
   }
 
+  const reset = () => {
+    setName(contact.name);
+    setAddress(contact.address);
+    setPhoneNumber(contact.phoneNumber);
+  }
+
+  const isModified = () => {
+    return contact.name !== name || contact.address !== address || contact.phoneNumber !== phoneNumber;
+  }
+
   const getMappedFunctions = (nameFunc, addressFunc, phoneNumberFunc) => {
     return {
       name: () => (nameFunc()),
@@ -60,7 +74,7 @@ const ContactCard = ({ contact, width, editable = false, saveFunc }) => {
   return (
     <>
       <Card style={{ width: width || '100%' }} bg="dark" text="light">
-        <Card.Img id={"img-" + contact.id} variant="top" src="holder.js/100px180" />
+        <Card.Img id={"img-" + contact.id} variant="top" src="holder.js/100px200" />
         <Card.Header className="font-weight-bold">
           <Row>
             <Col className={editable ? "col-10" : "col-12"}>
@@ -70,7 +84,6 @@ const ContactCard = ({ contact, width, editable = false, saveFunc }) => {
                 html={name}
                 disabled={!editable}
                 onChange={(event) => handleChange(event).name()}
-                onBlur={() => handleBlur()}
                 className={(editable ? " editable cursor-pointer" : "")} />
             </Col>
             {editable && <Col className="col-2">
@@ -90,7 +103,6 @@ const ContactCard = ({ contact, width, editable = false, saveFunc }) => {
                 html={address}
                 disabled={!editable}
                 onChange={(event) => handleChange(event).address()}
-                onBlur={() => handleBlur()}
                 className={(editable ? " editable cursor-pointer" : "")} />
             </Col>
             {editable && <Col className="col-2">
@@ -108,7 +120,6 @@ const ContactCard = ({ contact, width, editable = false, saveFunc }) => {
                 html={phoneNumber}
                 disabled={!editable}
                 onChange={(event) => handleChange(event).phoneNumber()}
-                onBlur={() => handleBlur()}
                 className={(editable ? " editable cursor-pointer" : "")} />
             </Col>
             {editable && <Col className="col-2">
@@ -116,6 +127,25 @@ const ContactCard = ({ contact, width, editable = false, saveFunc }) => {
             </Col>}
           </Row>
         </Card.Body>
+        {editable && <Card.Body>
+          <Row>
+            <Col className="col-2">
+            </Col>
+            <Col className="justify-content-left col-4">
+              {isModified() ?
+                <Button className="w-100" variant="danger" onClick={reset}>Cancel</Button> :
+                <Button className="w-100" variant="outline-danger" disabled>Cancel</Button>}
+            </Col>
+            <Col className="justify-content-right col-4">
+              {isModified() && !isSaving ?
+                <Button className="w-100" variant="success" onClick={save}>Save</Button> :
+                <Button className="w-100" variant="outline-success" disabled>Save</Button>}
+            </Col>
+            {isSaving && <Col className="justify-content-left col-2">
+              <CircularProgress />
+            </Col>}
+          </Row>
+        </Card.Body>}
       </Card>
     </>
   );
