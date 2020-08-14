@@ -155,7 +155,7 @@ export const saveContactAsync = (contact) => {
     dispatch(saveContact());
     setTimeout(() => {
       dispatch(saveContactSuccess(contact));
-    }, 2500);
+    }, 1000);
   };
 }
 
