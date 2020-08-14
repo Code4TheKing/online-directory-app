@@ -12,7 +12,7 @@ const OnlineDirectoryApp = () => {
     <>
       <BrowserRouter>
         <NavigationBar />
-        <Jumbotron className="mt-5" style={{ height: '90vh' }}>
+        <Jumbotron className="vh-100">
           <Switch>
             <Route path="/" component={Home} exact />
             <Route path="/admin" component={Admin} />
