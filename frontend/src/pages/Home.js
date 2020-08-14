@@ -9,16 +9,14 @@ import { listContactsBySearchAsync, saveContactAsync } from '../redux/actions';
 const Home = ({ searchText, contacts, isListing, listContactsBySearch, saveContact }) => {
 
   return (
-    <>
-      <Container>
-        <Row className="justify-content-center">
-          <SearchBar searchFunc={listContactsBySearch} />
-        </Row>
-        <Row className="justify-content-center mt-5">
-          <ContactCardList searchText={searchText} contacts={contacts} isListing={isListing} saveFunc={saveContact} />
-        </Row>
-      </Container>
-    </>
+    <Container>
+      <Row className="justify-content-center">
+        <SearchBar searchFunc={listContactsBySearch} />
+      </Row>
+      <Row className="justify-content-center mt-5">
+        <ContactCardList searchText={searchText} contacts={contacts} isListing={isListing} saveFunc={saveContact} />
+      </Row>
+    </Container>
   )
 }
 
