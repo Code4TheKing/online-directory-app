@@ -1,4 +1,3 @@
-import store from '../redux/store';
 import {
   GET_CONTACT, GET_CONTACT_ERROR, GET_CONTACT_SUCCESS,
   LIST_CONTACTS, LIST_CONTACTS_ERROR, LIST_CONTACTS_SUCCESS,
@@ -20,9 +19,11 @@ const listContactsSuccess = (searchText, json) => {
   }
 }
 
-const listContactsError = () => {
+const listContactsError = (err) => {
+  console.warn(err);
   return {
-    type: LIST_CONTACTS_ERROR
+    type: LIST_CONTACTS_ERROR,
+    error: err
   }
 }
 
@@ -39,9 +40,11 @@ const saveContactSuccess = (contact) => {
   }
 }
 
-const saveContactError = () => {
+const saveContactError = (err) => {
+  console.warn(err);
   return {
-    type: SAVE_CONTACT_ERROR
+    type: SAVE_CONTACT_ERROR,
+    error: err
   }
 }
 
@@ -58,82 +61,84 @@ const getContactSuccess = (contact) => {
   }
 }
 
-const getContactError = () => {
+const getContactError = (err) => {
+  console.warn(err);
   return {
-    type: GET_CONTACT_ERROR
+    type: GET_CONTACT_ERROR,
+    error: err
   }
 }
 
 const address = 'Started at the bottom now we here.';
 const FAKE_CONTACTS_DATA = [
   {
-    id: 1,
+    _id: 1,
     name: "1",
     address: address,
     phoneNumber: "(999) 999-9999"
   },
   {
-    id: 2,
+    _id: 2,
     name: "2",
     address: address,
     phoneNumber: "(999) 999-9999"
   },
   {
-    id: 3,
+    _id: 3,
     name: "3",
     address: [address, address].join(' '),
     phoneNumber: "(999) 999-9999"
   },
   {
-    id: 4,
+    _id: 4,
     name: "4",
     address: address,
     phoneNumber: "(999) 999-9999"
   },
   {
-    id: 5,
+    _id: 5,
     name: "5",
     address: [address, address, address, address].join(' '),
     phoneNumber: "(999) 999-9999"
   },
   {
-    id: 6,
+    _id: 6,
     name: "6",
     address: address,
     phoneNumber: "(999) 999-9999"
   },
   {
-    id: 7,
+    _id: 7,
     name: "7",
     address: [address, address, address].join(' '),
     phoneNumber: "(999) 999-9999"
   },
   {
-    id: 8,
+    _id: 8,
     name: "8",
     address: address,
     phoneNumber: "(999) 999-9999"
   },
   {
-    id: 9,
+    _id: 9,
     name: "9",
     address: [address, address].join(' '),
     phoneNumber: "(999) 999-9999"
   },
   {
-    id: 10,
+    _id: 10,
     name: "10",
     address: address,
     phoneNumber: "(999) 999-9999"
   },
   {
-    id: 11,
+    _id: 11,
     name: "11",
     address: [address, address, address, address].join(' '),
     phoneNumber: "(999) 999-9999"
   },
   {
-    id: 99,
+    _id: 99,
     name: "99",
     address: "Default address",
     phoneNumber: "(123) 456-7890"
@@ -153,20 +158,29 @@ export const listContactsBySearchAsync = (searchText) => {
 }
 
 export const saveContactAsync = (contact) => {
+  const localContact = Object.assign({}, contact);
+  delete localContact._id;
   return (dispatch) => {
     dispatch(saveContact());
-    setTimeout(() => {
-      dispatch(saveContactSuccess(contact));
-    }, 1000);
+    fetch(`http://localhost:4000/_api/v1/contacts/${contact._id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(localContact)
+    })
+      .then(res => res.json())
+      .then((contact) => dispatch(saveContactSuccess(contact)))
+      .catch((err) => dispatch(saveContactError(err)));
   };
 }
 
 export const getContactByIdAsync = (id) => {
-  const contacts = store.getState().contacts ? store.getState().contacts : FAKE_CONTACTS_DATA[-1];
   return (dispatch) => {
     dispatch(getContact());
-    setTimeout(() => {
-      dispatch(getContactSuccess(contacts.find(contact => contact.id === id)));
-    }, 1000);
+    fetch(`http://localhost:4000/_api/v1/contacts/${id}`)
+      .then(res => res.json())
+      .then((contact) => dispatch(getContactSuccess(contact)))
+      .catch((err) => dispatch(getContactError(err)));
   }
 }
