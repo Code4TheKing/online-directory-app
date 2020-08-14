@@ -15,7 +15,7 @@ const ContactCardList = ({ searchText, contacts, isListing, saveFunc }) => {
             contacts.length > 0 ?
               <CardColumns>
                 {
-                  contacts.map(contact => <ContactCard key={contact.id} contact={contact} saveFunc={saveFunc} />)
+                  contacts.map(contact => <ContactCard key={contact._id} contact={contact} saveFunc={saveFunc} />)
                 }
               </CardColumns> :
               searchText ?

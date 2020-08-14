@@ -11,10 +11,10 @@ import '../styles/contact-card.css';
 import ContentEditable from '../utils/ContentEditable';
 
 const ContactCard = ({ width, editable = false, contact, isSaving = false, saveFunc }) => {
-  const [name, setName] = useState(contact.name);
-  const [address, setAddress] = useState(contact.address);
-  const [phoneNumber, setPhoneNumber] = useState(contact.phoneNumber);
-  const [modified, setModified] = useState(false);
+  const emptyIfNull = (str) => (str ? str : '');
+  const [name, setName] = useState(emptyIfNull(contact.name));
+  const [address, setAddress] = useState(emptyIfNull(contact.address));
+  const [phoneNumber, setPhoneNumber] = useState(emptyIfNull(contact.phoneNumber));
 
   const nameRef = useRef();
   const addressRef = useRef();
@@ -22,12 +22,11 @@ const ContactCard = ({ width, editable = false, contact, isSaving = false, saveF
 
   useEffect(() => {
     Holder.run({
-      images: '#img-' + contact.id
+      images: '#img-' + contact._id
     });
   });
 
   const handleChange = (event) => {
-    setModified(isModified());
     return getMappedFunctions(
       () => (setName(event.target.value)),
       () => (setAddress(event.target.value)),
@@ -54,13 +53,13 @@ const ContactCard = ({ width, editable = false, contact, isSaving = false, saveF
   }
 
   const reset = () => {
-    setName(contact.name);
-    setAddress(contact.address);
-    setPhoneNumber(contact.phoneNumber);
+    setName(emptyIfNull(contact.name));
+    setAddress(emptyIfNull(contact.address));
+    setPhoneNumber(emptyIfNull(contact.phoneNumber));
   }
 
   const isModified = () => {
-    return contact.name !== name || contact.address !== address || contact.phoneNumber !== phoneNumber;
+    return emptyIfNull(contact.name) !== name || emptyIfNull(contact.address) !== address || emptyIfNull(contact.phoneNumber) !== phoneNumber;
   }
 
   const getMappedFunctions = (nameFunc, addressFunc, phoneNumberFunc) => {
@@ -74,7 +73,7 @@ const ContactCard = ({ width, editable = false, contact, isSaving = false, saveF
   return (
     <>
       <Card style={{ width: width || '100%' }} bg="dark" text="light">
-        <Card.Img id={"img-" + contact.id} variant="top" src="holder.js/100px200" />
+        <Card.Img id={"img-" + contact._id} variant="top" src="holder.js/100px200" />
         <Card.Header className="font-weight-bold">
           <Row>
             <Col className={editable ? "col-10" : "col-12"}>
