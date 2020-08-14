@@ -1,3 +1,4 @@
+import { CircularProgress } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -11,18 +12,16 @@ const Profile = ({ profileContact, isGetting, isSaving, getContactById, saveCont
   }, []);
 
   return (
-    <>
-      <Container>
-        <Row className="justify-content-center">
-          <h1>Profile</h1>
-        </Row>
-        <Row className="justify-content-center mt-3">
-          {isGetting ?
-            <p className="text-center text-info">Loading...</p> :
-            profileContact && <ContactCard editable={true} contact={profileContact} isSaving={isSaving} saveFunc={saveContact} width={'25rem'} />}
-        </Row>
-      </Container>
-    </>
+    <Container>
+      <Row className="justify-content-center">
+        <h1>Profile</h1>
+      </Row>
+      <Row className="justify-content-center mt-3">
+        {isGetting ?
+          <CircularProgress /> :
+          profileContact && <ContactCard editable={true} contact={profileContact} isSaving={isSaving} saveFunc={saveContact} width={'25rem'} />}
+      </Row>
+    </Container>
   );
 }
 

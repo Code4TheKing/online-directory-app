@@ -5,15 +5,17 @@ import {
   SAVE_CONTACT, SAVE_CONTACT_ERROR, SAVE_CONTACT_SUCCESS
 } from './actionTypes';
 
-const listContacts = () => {
+const listContacts = (searchText) => {
   return {
-    type: LIST_CONTACTS
+    type: LIST_CONTACTS,
+    searchText: searchText
   }
 }
 
-const listContactsSuccess = (json) => {
+const listContactsSuccess = (searchText, json) => {
   return {
     type: LIST_CONTACTS_SUCCESS,
+    searchText: searchText,
     contacts: json.contacts
   }
 }
@@ -140,13 +142,13 @@ const FAKE_CONTACTS_DATA = [
 
 export const listContactsBySearchAsync = (searchText) => {
   return (dispatch) => {
-    dispatch(listContacts());
+    dispatch(listContacts(searchText));
     setTimeout(() => {
       let json = {
         contacts: searchText ? FAKE_CONTACTS_DATA : []
       };
-      dispatch(listContactsSuccess(json));
-    }, 500);
+      dispatch(listContactsSuccess(searchText, json));
+    }, 1000);
   };
 }
 
@@ -165,6 +167,6 @@ export const getContactByIdAsync = (id) => {
     dispatch(getContact());
     setTimeout(() => {
       dispatch(getContactSuccess(contacts.find(contact => contact.id === id)));
-    }, 500);
+    }, 1000);
   }
 }

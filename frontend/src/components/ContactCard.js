@@ -1,4 +1,4 @@
-import { CircularProgress } from '@material-ui/core';
+import { LinearProgress } from '@material-ui/core';
 import Icon from '@material-ui/core/Icon';
 import 'holderjs';
 import Holder from 'holderjs';
@@ -129,22 +129,22 @@ const ContactCard = ({ width, editable = false, contact, isSaving = false, saveF
         </Card.Body>
         {editable && <Card.Body>
           <Row>
-            <Col className="col-2">
-            </Col>
-            <Col className="justify-content-left col-4">
-              {isModified() ?
+            <Col className="justify-content-center col-6">
+              {isModified() && !isSaving ?
                 <Button className="w-100" variant="danger" onClick={reset}>Cancel</Button> :
                 <Button className="w-100" variant="outline-danger" disabled>Cancel</Button>}
             </Col>
-            <Col className="justify-content-right col-4">
+            <Col className="justify-content-center col-6">
               {isModified() && !isSaving ?
                 <Button className="w-100" variant="success" onClick={save}>Save</Button> :
                 <Button className="w-100" variant="outline-success" disabled>Save</Button>}
             </Col>
-            {isSaving && <Col className="justify-content-left col-2">
-              <CircularProgress />
-            </Col>}
           </Row>
+          {isSaving && <Row className="mt-3">
+            <Col className="justify-content-center">
+              <LinearProgress className="w-100" />
+            </Col>
+          </Row>}
         </Card.Body>}
       </Card>
     </>
