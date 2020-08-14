@@ -30,7 +30,7 @@ const updateContact = (contactId, contact, done) => {
   Contact.findByIdAndUpdate(
     contactId,
     contact,
-    { new: true },
+    { new: true, useFindAndModify: false },
     (err, data) => {
       if (err) return done(err);
       done(null, data);
