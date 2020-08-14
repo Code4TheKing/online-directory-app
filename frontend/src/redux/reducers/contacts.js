@@ -5,15 +5,16 @@ const contacts = (
     isListing: false,
     isSaving: false,
     isGetting: false,
+    searchText: '',
     contacts: [],
     profileContact: null
   },
   action) => {
   switch (action.type) {
     case LIST_CONTACTS:
-      return Object.assign({}, state, { isListing: true });
+      return Object.assign({}, state, { isListing: true, searchText: action.searchText });
     case LIST_CONTACTS_SUCCESS:
-      return Object.assign({}, state, { isListing: false, contacts: action.contacts });
+      return Object.assign({}, state, { isListing: false, searchText: action.searchText, contacts: action.contacts });
     case SAVE_CONTACT:
       return Object.assign({}, state, { isSaving: true });
     case SAVE_CONTACT_SUCCESS:

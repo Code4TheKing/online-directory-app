@@ -12,14 +12,15 @@ const SearchBar = ({ searchFunc }) => {
   const performSearch = (event) => {
     event.preventDefault();
     searchFunc(input);
-    setInput('');
   }
 
   return (
     <>
       <Form inline onSubmit={performSearch}>
         <Form.Control className="mr-2" type="text" placeholder="Search" size="lg" value={input} onChange={handleChange} />
-        <Button type="submit" variant="outline-success">Search</Button>
+        {input.length > 0 ?
+          <Button type="submit" variant="success">Search</Button> :
+          <Button type="submit" variant="outline-success" disabled>Search</Button>}
       </Form>
     </>
   );
