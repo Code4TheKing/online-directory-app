@@ -5,7 +5,7 @@ import { IndexLinkContainer, LinkContainer } from 'react-router-bootstrap';
 
 const NavigationBar = () => (
   <>
-    <Navbar bg="dark" variant="dark" fixed="top" expand="md">
+    <Navbar bg="dark" variant="dark" sticky="top" expand="md">
       <Navbar.Brand href="/">Online Directory App</Navbar.Brand>
       <Navbar.Toggle aria-controls="basic-navbar-nav" />
       <Navbar.Collapse id="basic-navbar-nav">
