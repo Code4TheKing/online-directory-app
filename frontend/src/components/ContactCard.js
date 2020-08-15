@@ -10,11 +10,26 @@ import Row from 'react-bootstrap/Row';
 import '../styles/contact-card.css';
 import ContentEditable from '../utils/ContentEditable';
 
-const ContactCard = ({ width, editable = false, contact, isSaving = false, saveFunc }) => {
-  const emptyIfNull = (str) => (str ? str : '');
-  const [name, setName] = useState(emptyIfNull(contact.name));
-  const [address, setAddress] = useState(emptyIfNull(contact.address));
-  const [phoneNumber, setPhoneNumber] = useState(emptyIfNull(contact.phoneNumber));
+const ContactCard = ({ width, editable = false, contact, isUpdating = false, saveFunc }) => {
+  const getId = (contact) => {
+    return contact ? contact._id : 'no-id';
+  }
+
+  const getName = (contact) => {
+    return contact && contact.name ? contact.name : '';
+  }
+
+  const getAddress = (contact) => {
+    return contact && contact.address ? contact.address : '';
+  }
+
+  const getPhoneNumber = (contact) => {
+    return contact && contact.phoneNumber ? contact.phoneNumber : '';
+  }
+
+  const [name, setName] = useState(getName(contact));
+  const [address, setAddress] = useState(getAddress(contact));
+  const [phoneNumber, setPhoneNumber] = useState(getPhoneNumber(contact));
 
   const nameRef = useRef();
   const addressRef = useRef();
@@ -22,9 +37,10 @@ const ContactCard = ({ width, editable = false, contact, isSaving = false, saveF
 
   useEffect(() => {
     Holder.run({
-      images: '#img-' + contact._id
+      images: '#img-' + getId(contact)
     });
-  });
+    reset();
+  }, [contact]);
 
   const handleChange = (event) => {
     return getMappedFunctions(
@@ -35,7 +51,8 @@ const ContactCard = ({ width, editable = false, contact, isSaving = false, saveF
   };
 
   const save = () => {
-    saveFunc(Object.assign({}, contact, { name: name, address: address, phoneNumber: phoneNumber }))
+    saveFunc(Object.assign({}, contact ? contact : {}, { name: name, address: address, phoneNumber: phoneNumber }))
+      .then(() => reset());
   };
 
   const focus = () => {
@@ -53,13 +70,13 @@ const ContactCard = ({ width, editable = false, contact, isSaving = false, saveF
   }
 
   const reset = () => {
-    setName(emptyIfNull(contact.name));
-    setAddress(emptyIfNull(contact.address));
-    setPhoneNumber(emptyIfNull(contact.phoneNumber));
+    setName(getName(contact));
+    setAddress(getAddress(contact));
+    setPhoneNumber(getPhoneNumber(contact));
   }
 
   const isModified = () => {
-    return emptyIfNull(contact.name) !== name || emptyIfNull(contact.address) !== address || emptyIfNull(contact.phoneNumber) !== phoneNumber;
+    return getName(contact) !== name || getAddress(contact) !== address || getPhoneNumber(contact) !== phoneNumber;
   }
 
   const getMappedFunctions = (nameFunc, addressFunc, phoneNumberFunc) => {
@@ -72,7 +89,7 @@ const ContactCard = ({ width, editable = false, contact, isSaving = false, saveF
 
   return (
     <Card className="d-flex" style={{ width: width || '100%', maxWidth: '25rem', maxHeight: '100%' }} bg="dark" text="light">
-      <Card.Img id={"img-" + contact._id} variant="top" src="holder.js/100px200/auto" />
+      <Card.Img id={"img-" + getId(contact)} variant="top" src="holder.js/100px200/auto" />
       <Card.Header className="font-weight-bold">
         <Row>
           <Col className={editable ? "col-10" : "col-12"}>
@@ -128,17 +145,17 @@ const ContactCard = ({ width, editable = false, contact, isSaving = false, saveF
       {editable && <Card.Body>
         <Row>
           <Col className="col-6">
-            {isModified() && !isSaving ?
+            {isModified() && !isUpdating ?
               <Button className="w-100" variant="danger" onClick={reset}>Cancel</Button> :
               <Button className="w-100" variant="outline-danger" disabled>Cancel</Button>}
           </Col>
           <Col className="col-6">
-            {isModified() && !isSaving ?
+            {isModified() && !isUpdating ?
               <Button className="w-100" variant="success" onClick={save}>Save</Button> :
               <Button className="w-100" variant="outline-success" disabled>Save</Button>}
           </Col>
         </Row>
-        {isSaving && <Row className="mt-3">
+        {isUpdating && <Row className="mt-3">
           <Col>
             <LinearProgress className="w-100" />
           </Col>

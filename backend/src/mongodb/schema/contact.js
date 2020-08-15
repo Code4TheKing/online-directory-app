@@ -1,12 +1,12 @@
 const mongoose = require('mongoose');
-const uuid = require('uuid');
+const { v4: uuidv4 } = require('uuid');
 
 const Schema = mongoose.Schema;
 const contactSchema = new Schema({
   _id: {
     type: String,
     required: true,
-    default: uuid.v4()
+    default: uuidv4
   },
   name: {
     type: String,
