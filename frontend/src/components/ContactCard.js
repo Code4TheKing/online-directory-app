@@ -71,82 +71,80 @@ const ContactCard = ({ width, editable = false, contact, isSaving = false, saveF
   }
 
   return (
-    <>
-      <Card style={{ width: width || '100%' }} bg="dark" text="light">
-        <Card.Img id={"img-" + contact._id} variant="top" src="holder.js/100px200" />
-        <Card.Header className="font-weight-bold">
-          <Row>
-            <Col className={editable ? "col-10" : "col-12"}>
-              <ContentEditable
-                tabIndex="0"
-                innerRef={nameRef}
-                html={name}
-                disabled={!editable}
-                onChange={(event) => handleChange(event).name()}
-                className={(editable ? " editable cursor-pointer" : "")} />
-            </Col>
-            {editable && <Col className="col-2">
-              <div className="cursor-pointer" onClick={() => focus().name()}><Icon>edit</Icon></div>
-            </Col>}
-          </Row>
-        </Card.Header>
-        <Card.Body>
-          <Row className="align-items-center">
-            <Col className="col-4">
-              <span className="font-italic">Address: </span>
-            </Col>
-            <Col className={(editable ? "col-6" : "col-8")}>
-              <ContentEditable
-                tabIndex="1"
-                innerRef={addressRef}
-                html={address}
-                disabled={!editable}
-                onChange={(event) => handleChange(event).address()}
-                className={(editable ? " editable cursor-pointer" : "")} />
-            </Col>
-            {editable && <Col className="col-2">
-              <div className="cursor-pointer" onClick={() => focus().address()}><Icon>edit</Icon></div>
-            </Col>}
-          </Row>
-          <Row className="align-items-center">
-            <Col className="col-4">
-              <span className="font-italic">Phone Number: </span>
-            </Col>
-            <Col className={(editable ? "col-6" : "col-8")}>
-              <ContentEditable
-                tabIndex="2"
-                innerRef={phoneNumberRef}
-                html={phoneNumber}
-                disabled={!editable}
-                onChange={(event) => handleChange(event).phoneNumber()}
-                className={(editable ? " editable cursor-pointer" : "")} />
-            </Col>
-            {editable && <Col className="col-2">
-              <div className="cursor-pointer" onClick={() => focus().phoneNumber()}><Icon>edit</Icon></div>
-            </Col>}
-          </Row>
-        </Card.Body>
-        {editable && <Card.Body>
-          <Row>
-            <Col className="justify-content-center col-6">
-              {isModified() && !isSaving ?
-                <Button className="w-100" variant="danger" onClick={reset}>Cancel</Button> :
-                <Button className="w-100" variant="outline-danger" disabled>Cancel</Button>}
-            </Col>
-            <Col className="justify-content-center col-6">
-              {isModified() && !isSaving ?
-                <Button className="w-100" variant="success" onClick={save}>Save</Button> :
-                <Button className="w-100" variant="outline-success" disabled>Save</Button>}
-            </Col>
-          </Row>
-          {isSaving && <Row className="mt-3">
-            <Col className="justify-content-center">
-              <LinearProgress className="w-100" />
-            </Col>
-          </Row>}
-        </Card.Body>}
-      </Card>
-    </>
+    <Card className="d-flex" style={{ width: width || '100%', maxWidth: '25rem', maxHeight: '100%' }} bg="dark" text="light">
+      <Card.Img id={"img-" + contact._id} variant="top" src="holder.js/100px200/auto" />
+      <Card.Header className="font-weight-bold">
+        <Row>
+          <Col className={editable ? "col-10" : "col-12"}>
+            <ContentEditable
+              tabIndex="0"
+              innerRef={nameRef}
+              html={name}
+              disabled={!editable}
+              onChange={(event) => handleChange(event).name()}
+              className={(editable ? " editable cursor-pointer" : "")} />
+          </Col>
+          {editable && <Col className="col-2">
+            <div className="cursor-pointer" onClick={() => focus().name()}><Icon>edit</Icon></div>
+          </Col>}
+        </Row>
+      </Card.Header>
+      <Card.Body>
+        <Row className="align-items-center">
+          <Col className="col-3">
+            <span>Address: </span>
+          </Col>
+          <Col className={(editable ? "col-7" : "col-9")}>
+            <ContentEditable
+              tabIndex="1"
+              innerRef={addressRef}
+              html={address}
+              disabled={!editable}
+              onChange={(event) => handleChange(event).address()}
+              className={(editable ? " editable cursor-pointer" : "")} />
+          </Col>
+          {editable && <Col className="col-2">
+            <div className="cursor-pointer" onClick={() => focus().address()}><Icon>edit</Icon></div>
+          </Col>}
+        </Row>
+        <Row className="align-items-center">
+          <Col className="col-3">
+            <span>Phone Number: </span>
+          </Col>
+          <Col className={(editable ? "col-7" : "col-9")}>
+            <ContentEditable
+              tabIndex="2"
+              innerRef={phoneNumberRef}
+              html={phoneNumber}
+              disabled={!editable}
+              onChange={(event) => handleChange(event).phoneNumber()}
+              className={(editable ? " editable cursor-pointer" : "")} />
+          </Col>
+          {editable && <Col className="col-2">
+            <div className="cursor-pointer" onClick={() => focus().phoneNumber()}><Icon>edit</Icon></div>
+          </Col>}
+        </Row>
+      </Card.Body>
+      {editable && <Card.Body>
+        <Row>
+          <Col className="col-6">
+            {isModified() && !isSaving ?
+              <Button className="w-100" variant="danger" onClick={reset}>Cancel</Button> :
+              <Button className="w-100" variant="outline-danger" disabled>Cancel</Button>}
+          </Col>
+          <Col className="col-6">
+            {isModified() && !isSaving ?
+              <Button className="w-100" variant="success" onClick={save}>Save</Button> :
+              <Button className="w-100" variant="outline-success" disabled>Save</Button>}
+          </Col>
+        </Row>
+        {isSaving && <Row className="mt-3">
+          <Col>
+            <LinearProgress className="w-100" />
+          </Col>
+        </Row>}
+      </Card.Body>}
+    </Card>
   );
 }
 
