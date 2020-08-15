@@ -26,7 +26,7 @@ app.use(corsHandler);
 
 // Root-level logger
 app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - ${req.ip} -`, req.headers);
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - ${req.ip} -`, req.body);
   next();
 });
 
@@ -47,6 +47,7 @@ contacts.all('*', corsHandler);
 // Error handler
 app.use((err, req, res, next) => {
   if (err) {
+    console.error(`[${new Date().toISOString()}] ${err}`);
     res.status(err.status || 500)
       .type('txt')
       .send(err.message || 'SERVER ERROR');
