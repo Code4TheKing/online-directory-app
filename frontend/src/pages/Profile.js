@@ -6,9 +6,9 @@ import { connect } from 'react-redux';
 import ContactCard from '../components/ContactCard';
 import { getContactByIdAsync, saveContactAsync } from '../redux/actions';
 
-const Profile = ({ profileContact, isGetting, isSaving, getContactById, saveContact }) => {
+const Profile = ({ profileContact, isGetting, isUpdating, getContactById, saveContact }) => {
   useEffect(() => {
-    getContactById('50d6c4b5-c3cf-4077-b552-46bfec198a28');
+    getContactById('13aefc61-16c8-4cc5-a677-f0b8f9fb9d98');
   }, [getContactById]);
 
   return (
@@ -19,7 +19,7 @@ const Profile = ({ profileContact, isGetting, isSaving, getContactById, saveCont
       <Row className="justify-content-center mt-3">
         {isGetting ?
           <CircularProgress /> :
-          profileContact && <ContactCard editable={true} contact={profileContact} isSaving={isSaving} saveFunc={saveContact} width={'25rem'} />}
+          profileContact && <ContactCard editable={true} contact={profileContact} isUpdating={isUpdating} saveFunc={saveContact} width={'25rem'} />}
       </Row>
     </Container>
   );
@@ -28,7 +28,7 @@ const Profile = ({ profileContact, isGetting, isSaving, getContactById, saveCont
 const mapStateToProps = (state) => ({
   profileContact: state.profileContact,
   isGetting: state.isGetting,
-  isSaving: state.isSaving
+  isUpdating: state.isUpdating
 });
 
 const mapDispatchToProps = (dispatch) => ({
