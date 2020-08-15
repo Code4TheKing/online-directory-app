@@ -1,5 +1,4 @@
 import React from 'react';
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
 import ContactCardList from '../components/ContactCardList';
@@ -9,14 +8,14 @@ import { listContactsBySearchAsync, saveContactAsync } from '../redux/actions';
 const Home = ({ searchText, contacts, isListing, listContactsBySearch, saveContact }) => {
 
   return (
-    <Container>
+    <div className="mx-5">
       <Row className="justify-content-center">
         <SearchBar searchFunc={listContactsBySearch} />
       </Row>
       <Row className="justify-content-center mt-5">
         <ContactCardList searchText={searchText} contacts={contacts} isListing={isListing} saveFunc={saveContact} />
       </Row>
-    </Container>
+    </div>
   )
 }
 
