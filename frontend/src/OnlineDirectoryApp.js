@@ -9,18 +9,16 @@ import Profile from './pages/Profile';
 
 const OnlineDirectoryApp = () => {
   return (
-    <>
-      <BrowserRouter>
-        <NavigationBar />
-        <Jumbotron className="vh-100">
-          <Switch>
-            <Route path="/" component={Home} exact />
-            <Route path="/admin" component={Admin} />
-            <Route path="/profile" component={Profile} />
-          </Switch>
-        </Jumbotron>
-      </BrowserRouter>
-    </>
+    <BrowserRouter>
+      <NavigationBar />
+      <Jumbotron>
+        <Switch>
+          <Route path="/" component={Home} exact />
+          <Route path="/admin" component={Admin} />
+          <Route path="/profile" component={Profile} />
+        </Switch>
+      </Jumbotron>
+    </BrowserRouter>
   );
 }
 
