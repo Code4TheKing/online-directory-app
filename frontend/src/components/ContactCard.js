@@ -91,27 +91,28 @@ const ContactCard = ({ width, editable = false, contact, isUpdating = false, sav
     <Card className="d-flex" style={{ width: width || '100%', maxWidth: '25rem', maxHeight: '100%' }} bg="dark" text="light">
       <Card.Img id={"img-" + getId(contact)} variant="top" src="holder.js/100px200/auto" />
       <Card.Header className="font-weight-bold">
-        <Row>
-          <Col className={editable ? "col-10" : "col-12"}>
+        <Row className="align-items-center">
+          <Col className="w-100 pr-0">
             <ContentEditable
               tabIndex="0"
               innerRef={nameRef}
               html={name}
               disabled={!editable}
               onChange={(event) => handleChange(event).name()}
-              className={(editable ? " editable cursor-pointer" : "")} />
+              className={(editable ? " editable cursor-pointer" : "")}
+              tagName="h2" />
           </Col>
-          {editable && <Col className="col-2">
+          {editable && <Col className="col-auto pl-1">
             <div className="cursor-pointer" onClick={() => focus().name()}><Icon>edit</Icon></div>
           </Col>}
         </Row>
       </Card.Header>
       <Card.Body>
-        <Row className="align-items-center">
-          <Col className="col-3">
-            <span>Address: </span>
+        <Row className="align-items-center mb-2">
+          <Col className="col-auto">
+            <span className="font-weight-bold">Address: </span>
           </Col>
-          <Col className={(editable ? "col-7" : "col-9")}>
+          <Col className="w-100 pl-0 pr-0">
             <ContentEditable
               tabIndex="1"
               innerRef={addressRef}
@@ -120,15 +121,15 @@ const ContactCard = ({ width, editable = false, contact, isUpdating = false, sav
               onChange={(event) => handleChange(event).address()}
               className={(editable ? " editable cursor-pointer" : "")} />
           </Col>
-          {editable && <Col className="col-2">
+          {editable && <Col className="col-auto pl-1">
             <div className="cursor-pointer" onClick={() => focus().address()}><Icon>edit</Icon></div>
           </Col>}
         </Row>
         <Row className="align-items-center">
-          <Col className="col-3">
-            <span>Phone Number: </span>
+          <Col className="col-auto">
+            <span className="font-weight-bold">Phone Number: </span>
           </Col>
-          <Col className={(editable ? "col-7" : "col-9")}>
+          <Col className="w-100 pl-0 pr-0">
             <ContentEditable
               tabIndex="2"
               innerRef={phoneNumberRef}
@@ -137,7 +138,7 @@ const ContactCard = ({ width, editable = false, contact, isUpdating = false, sav
               onChange={(event) => handleChange(event).phoneNumber()}
               className={(editable ? " editable cursor-pointer" : "")} />
           </Col>
-          {editable && <Col className="col-2">
+          {editable && <Col className="col-auto pl-1">
             <div className="cursor-pointer" onClick={() => focus().phoneNumber()}><Icon>edit</Icon></div>
           </Col>}
         </Row>
