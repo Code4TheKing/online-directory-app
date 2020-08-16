@@ -40,9 +40,9 @@ app.get('/is-mongoose-ok', (req, res) => {
 });
 
 // Contacts route
-const contacts = require('./routes/contacts');
-app.use('/_api/v1/contacts', contacts);
-contacts.all('*', corsHandler);
+const contactsRoute = require('./routes/contactsRoute');
+app.use('/_api/v1/contacts', contactsRoute);
+contactsRoute.all('*', corsHandler);
 
 // Error handler
 app.use((err, req, res, next) => {
