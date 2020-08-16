@@ -3,7 +3,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
   .then(result => console.log(`Established connection to MongoDB on host ${result.connection.host}:${result.connection.port} with user ${result.connection.user}`))
   .catch(err => console.error(err));
 
-const contactSchema = require('./schema/contact');
+const contactSchema = require('./schema/contactSchema');
 const Contact = mongoose.model('Contact', contactSchema);
 
 // Add contact
