@@ -19,7 +19,7 @@ const Profile = ({ profileContact, isGetting, isUpdating, getContactById, saveCo
       <Row className="justify-content-center mt-3">
         {isGetting ?
           <CircularProgress /> :
-          profileContact && <ContactCard editable={true} contact={profileContact} isUpdating={isUpdating} saveFunc={saveContact} width={'25rem'} />}
+          profileContact && <ContactCard editable={true} contact={profileContact} isProcessing={isUpdating} saveFunc={saveContact} width={'25rem'} />}
       </Row>
     </Container>
   );

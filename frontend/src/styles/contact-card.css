@@ -1,21 +1,11 @@
-.editable {
-  border-style: dashed;
-  border-color: #ffffff;
-  border-width: 1px;
-}
-
 .editable:hover {
   background: #ffffff;
   color: #000000;
-  border-style: solid;
-  border-color: #ffffff;
 }
 
 .editable:focus {
   background: #ffffff;
   color: #000000;
-  border-style: solid;
-  border-color: #ffffff;
 }
 
 .cursor-pointer {

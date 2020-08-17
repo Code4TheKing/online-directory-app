@@ -11,15 +11,19 @@ const contactSchema = new Schema({
   name: {
     type: String,
     required: true,
-    minlength: [1, 'Name too short'],
-    maxlength: [64, 'Name too long']
+    minlength: [1, 'Too short'],
+    maxlength: [64, 'Too long']
   },
   address: {
     type: String,
-    required: true,
-    minlength: [1, 'Address too short'],
-    maxlength: [256, 'Address too long']
+    minlength: [1, 'Too short'],
+    maxlength: [256, 'Too long']
   },
+  phoneNumber: {
+    type: String,
+    minlength: [1, 'Too short'],
+    maxlength: [32, 'Too long']
+  }
 });
 
 module.exports = contactSchema;
