@@ -14,7 +14,7 @@ const Admin = ({ isAdding, addContact }) => (
       <h2>Add Contact</h2>
     </Row>
     <Row className="justify-content-center mt-3">
-      <ContactCard editable={true} isUpdating={isAdding} saveFunc={addContact} width={'25rem'} />
+      <ContactCard editable={true} isProcessing={isAdding} saveFunc={addContact} width={'25rem'} />
     </Row>
   </Container>
 );
