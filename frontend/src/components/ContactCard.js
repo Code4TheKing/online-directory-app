@@ -118,7 +118,7 @@ const ContactCard = ({
   }
 
   return (
-    <Card className="d-flex" style={{ width: width || '100%', maxWidth: '25rem', maxHeight: '100%' }} bg="dark" text="light">
+    <Card style={{ width: width || '100%', maxWidth: '25rem' }} bg="dark" text="light">
       <Card.Img id={"img-" + getIdValue(fieldDefs, contact)} variant="top" src="holder.js/100px200/auto" />
       <Card.Header className="font-weight-bold">
         <Row key={0} className="align-items-center">
