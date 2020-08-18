@@ -91,91 +91,14 @@ const addContactError = (err) => {
   }
 }
 
-const address = 'Started at the bottom now we here.';
-const FAKE_CONTACTS_DATA = [
-  {
-    _id: 1,
-    name: "1",
-    address: address,
-    phoneNumber: "(999) 999-9999"
-  },
-  {
-    _id: 2,
-    name: "2",
-    address: address,
-    phoneNumber: "(999) 999-9999"
-  },
-  {
-    _id: 3,
-    name: "3",
-    address: [address, address].join(' '),
-    phoneNumber: "(999) 999-9999"
-  },
-  {
-    _id: 4,
-    name: "4",
-    address: address,
-    phoneNumber: "(999) 999-9999"
-  },
-  {
-    _id: 5,
-    name: "5",
-    address: [address, address, address, address].join(' '),
-    phoneNumber: "(999) 999-9999"
-  },
-  {
-    _id: 6,
-    name: "6",
-    address: address,
-    phoneNumber: "(999) 999-9999"
-  },
-  {
-    _id: 7,
-    name: "7",
-    address: [address, address, address].join(' '),
-    phoneNumber: "(999) 999-9999"
-  },
-  {
-    _id: 8,
-    name: "8",
-    address: address,
-    phoneNumber: "(999) 999-9999"
-  },
-  {
-    _id: 9,
-    name: "9",
-    address: [address, address].join(' '),
-    phoneNumber: "(999) 999-9999"
-  },
-  {
-    _id: 10,
-    name: "10",
-    address: address,
-    phoneNumber: "(999) 999-9999"
-  },
-  {
-    _id: 11,
-    name: "11",
-    address: [address, address, address, address].join(' '),
-    phoneNumber: "(999) 999-9999"
-  },
-  {
-    _id: 99,
-    name: "99",
-    address: "Default address",
-    phoneNumber: "(123) 456-7890"
-  }
-];
-
-export const listContactsBySearchAsync = (searchText) => {
+export const listContactsByKeywordAsync = (keyword) => {
   return (dispatch) => {
-    dispatch(listContacts(searchText));
-    let json = {
-      contacts: searchText ? FAKE_CONTACTS_DATA : []
-    };
-    return Promise.resolve()
-      .then(() => new Promise(resolve => { setTimeout(() => resolve(), 1500) }))
-      .then(() => dispatch(listContactsSuccess(searchText, json)));
+    dispatch(listContacts(keyword));
+    return fetch(`http://localhost:4000/_api/v1/contacts?keyword=${keyword}`)
+      .then(res => res.json())
+      .then((contactsJson) => new Promise(resolve => { setTimeout(() => resolve(contactsJson), 1500) }))
+      .then((contactsJson) => dispatch(listContactsSuccess(keyword, contactsJson)))
+      .catch((err) => dispatch(listContactsError(err)));
   };
 }
 
@@ -206,7 +129,6 @@ export const getContactByIdAsync = (id) => {
       .then((contact) => new Promise(resolve => { setTimeout(() => resolve(contact), 1500) }))
       .then((contact) => dispatch(getContactSuccess(contact)))
       .catch((err) => dispatch(getContactError(err)));
-
   }
 }
 
