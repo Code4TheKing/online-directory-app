@@ -26,7 +26,7 @@ app.use(corsHandler);
 
 // Root-level logger
 app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - ${req.ip} -`, req.body);
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - ${req.ip}`, '-', req.body, '-', req.query);
   next();
 });
 

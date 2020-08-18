@@ -31,12 +31,8 @@ const ContactCard = ({
         displayName: "Phone Number"
       },
       {
-        name: "workAddress",
-        displayName: "Work Address"
-      },
-      {
-        name: "salary",
-        displayName: "Salary"
+        name: "birthday",
+        displayName: "Birthday"
       }
     ]
   },
