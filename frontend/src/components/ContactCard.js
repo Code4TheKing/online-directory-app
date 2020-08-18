@@ -97,7 +97,7 @@ const ContactCard = ({
         { [fieldDefs.mainField.name]: mainField },
         fieldDefs.otherFields
           .reduce((acc, curr) => {
-            acc[curr.name] = otherFields[curr.name];
+            if (otherFields[curr.name]) acc[curr.name] = otherFields[curr.name];
             return acc;
           }, {})))
       .then(() => { if (Object.keys(contact).length === 0) reset(); });
