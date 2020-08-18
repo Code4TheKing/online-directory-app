@@ -8,7 +8,7 @@ const Contact = mongoose.model('Contact', contactSchema);
 
 // Add contact
 const addContact = (contact, done) => {
-  contact.save((err, data) => {
+  new Contact(contact).save((err, data) => {
     if (err) return done(err);
     done(null, data);
   });
@@ -36,9 +36,28 @@ const updateContact = (contactId, contact, done) => {
       done(null, data);
     }
   );
-};
+}
 
-exports.ContactModel = Contact;
+// List contacts by keyword
+const listContactsByKeyword = (keyword, done) => {
+  Contact.find(
+    keyword === ':all:' ?
+      {} :
+      {
+        $or: [
+          { name: new RegExp(keyword, 'i') },
+          { address: new RegExp(keyword, 'i') },
+          { phoneNumber: new RegExp(keyword, 'i') }
+        ]
+      },
+    (err, data) => {
+      if (err) return done(err);
+      done(null, data);
+    }
+  );
+}
+
 exports.addContact = addContact;
 exports.getContactById = getContactById;
 exports.updateContact = updateContact;
+exports.listContactsByKeyword = listContactsByKeyword;

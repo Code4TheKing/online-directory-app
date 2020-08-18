@@ -8,7 +8,7 @@ import { getContactByIdAsync, saveContactAsync } from '../redux/actions';
 
 const Profile = ({ profileContact, isGetting, isUpdating, getContactById, saveContact }) => {
   useEffect(() => {
-    getContactById('13aefc61-16c8-4cc5-a677-f0b8f9fb9d98');
+    getContactById('default');
   }, [getContactById]);
 
   return (

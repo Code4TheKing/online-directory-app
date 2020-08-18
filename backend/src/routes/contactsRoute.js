@@ -2,12 +2,10 @@ const express = require('express');
 const router = express.Router();
 const repository = require('../mongodb/repository');
 
-const Contact = repository.ContactModel;
-
 // Add contact
 router.post('/', (req, res, next) => {
   repository.addContact(
-    new Contact(req.body),
+    req.body,
     (err, data) => {
       if (err) return next(err);
       res.json(data);
@@ -37,5 +35,16 @@ router.patch('/:id', (req, res, next) => {
     }
   );
 });
+
+// List contacts by keyword
+router.get('/', (req, res, next) => {
+  repository.listContactsByKeyword(
+    req.query.keyword,
+    (err, data) => {
+      if (err) return next(err);
+      res.json({ contacts: data });
+    }
+  );
+})
 
 module.exports = router;
