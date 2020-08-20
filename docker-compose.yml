@@ -57,6 +57,8 @@ services:
         tty: true
         depends_on:
             - "backend"
+        env_file:
+            - local.env
         networks:
             - frontend
 
