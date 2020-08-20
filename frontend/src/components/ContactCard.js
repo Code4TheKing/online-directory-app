@@ -1,5 +1,5 @@
 import { LinearProgress } from '@material-ui/core';
-import Icon from '@material-ui/core/Icon';
+import { Icon } from '@material-ui/core';
 import 'holderjs';
 import Holder from 'holderjs';
 import React, { useRef, useState } from 'react';
@@ -33,6 +33,10 @@ const ContactCard = ({
       {
         name: "birthday",
         displayName: "Birthday"
+      },
+      {
+        name: "workAddress",
+        displayName: "Work Address"
       }
     ]
   },
@@ -138,26 +142,27 @@ const ContactCard = ({
         </Row>
       </Card.Header>
       <Card.Body>
-        {fieldDefs.otherFields.map((field, idx) => {
-          return <Row key={idx} className={"align-items-center" + ((idx < fieldDefs.otherFields.length - 1) ? " mb-2" : "")}>
-            <Col className="col-auto">
-              <span className="font-weight-bold">{field.displayName + ':'}</span>
-            </Col>
-            <Col className="flex-grow-1 pl-0 pr-0">
-              <ContentEditable
-                tabIndex={idx + 1}
-                innerRef={element => otherRefs.current[field.name] = element}
-                html={otherFields[field.name]}
-                disabled={!editable}
-                onChange={(event) => handleChange(event, (value) => setOtherFields(Object.assign({}, otherFields, { [field.name]: value })))}
-                className={(editable ? " editable cursor-pointer" : "")} />
-            </Col>
-            {editable && <Col className="col-auto pl-1">
-              <div className="cursor-pointer" onClick={() => focus(otherRefs, field.name)}><Icon>edit</Icon></div>
-            </Col>}
-          </Row>
+        {
+          fieldDefs.otherFields.map((field, idx) => {
+            return <Row key={idx} className={"align-items-center" + ((idx < fieldDefs.otherFields.length - 1) ? " mb-2" : "")}>
+              <Col className="col-auto">
+                <span className="font-weight-bold">{field.displayName + ':'}</span>
+              </Col>
+              <Col className="flex-grow-1 pl-0 pr-0">
+                <ContentEditable
+                  tabIndex={idx + 1}
+                  innerRef={element => otherRefs.current[field.name] = element}
+                  html={otherFields[field.name]}
+                  disabled={!editable}
+                  onChange={(event) => handleChange(event, (value) => setOtherFields(Object.assign({}, otherFields, { [field.name]: value })))}
+                  className={(editable ? " editable cursor-pointer" : "")} />
+              </Col>
+              {editable && <Col className="col-auto pl-1">
+                <div className="cursor-pointer" onClick={() => focus(otherRefs, field.name)}><Icon>edit</Icon></div>
+              </Col>}
+            </Row>
+          })
         }
-        )}
       </Card.Body>
       {editable && <Card.Body className="pt-0">
         <Row>

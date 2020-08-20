@@ -1,33 +1,20 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import React from 'react';
-import Row from 'react-bootstrap/Row';
-import { connect } from 'react-redux';
-import ContactCardList from '../components/ContactCardList';
-import SearchBar from '../components/SearchBar';
-import { listContactsByKeywordAsync, saveContactAsync } from '../redux/actions';
+import Container from 'react-bootstrap/Container';
 
-const Home = ({ searchText, contacts, isListing, listContactsByKeyword, saveContact }) => {
+const Home = () => {
+  const { isAuthenticated } = useAuth0();
 
   return (
-    <div className="mx-5">
-      <Row className="justify-content-center">
-        <SearchBar searchFunc={listContactsByKeyword} />
-      </Row>
-      <Row className="justify-content-center mt-5">
-        <ContactCardList searchText={searchText} contacts={contacts} isListing={isListing} saveFunc={saveContact} />
-      </Row>
-    </div>
-  )
+    <Container>
+      <div className="text-center">
+        <h1>Welcome to the Online Directory App</h1>
+        {isAuthenticated ?
+          <h2>Hope you enjoy your stay!</h2> :
+          <h2>Please login by clicking the button in the top right</h2>}
+      </div>
+    </Container>
+  );
 }
 
-const mapStateToProps = (state) => ({
-  searchText: state.searchText,
-  contacts: state.contacts,
-  isListing: state.isListing
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  listContactsByKeyword: (searchText) => dispatch(listContactsByKeywordAsync(searchText)),
-  saveContact: (contact) => dispatch(saveContactAsync(contact))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default Home;
