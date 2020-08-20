@@ -118,11 +118,11 @@ const ContactCard = ({
   }
 
   return (
-    <Card style={{ width: width || '100%', maxWidth: '25rem' }} bg="dark" text="light">
+    <Card className="mb-3" style={{ width: width || '100%', maxWidth: '25rem' }} bg="dark" text="light">
       <Card.Img id={"img-" + getIdValue(fieldDefs, contact)} variant="top" src="holder.js/100px200/auto" />
       <Card.Header className="font-weight-bold">
         <Row key={0} className="align-items-center">
-          <Col className="w-100 pr-0">
+          <Col className="flex-grow-1 pr-0">
             <ContentEditable
               tabIndex="0"
               innerRef={mainRef}
@@ -130,7 +130,7 @@ const ContactCard = ({
               disabled={!editable}
               onChange={(event) => handleChange(event, setMainField)}
               className={(editable ? " editable cursor-pointer" : "")}
-              tagName="h2" />
+              tagName="h3" />
           </Col>
           {editable && <Col className="col-auto pl-1">
             <div className="cursor-pointer" onClick={() => focus(mainRef)}><Icon>edit</Icon></div>
@@ -143,7 +143,7 @@ const ContactCard = ({
             <Col className="col-auto">
               <span className="font-weight-bold">{field.displayName + ':'}</span>
             </Col>
-            <Col className="w-100 pl-0 pr-0">
+            <Col className="flex-grow-1 pl-0 pr-0">
               <ContentEditable
                 tabIndex={idx + 1}
                 innerRef={element => otherRefs.current[field.name] = element}

@@ -8,12 +8,12 @@ import ContactCard from './ContactCard';
 const ContactCardList = ({ searchText, contacts, isListing, saveFunc }) => {
 
   return (
-    <Container className="d-flex justify-content-center border">
+    <Container className="d-flex justify-content-center px-3" style={!isListing && contacts.length > 0 ? { borderWidth: '1px', borderStyle: 'dashed' } : {}}>
       {
         isListing ?
           <CircularProgress /> :
           contacts.length > 0 ?
-            <CardColumns className="mt-2">
+            <CardColumns className="mt-3">
               {
                 contacts.map(contact => <ContactCard key={contact._id} contact={contact} saveFunc={saveFunc} />)
               }
