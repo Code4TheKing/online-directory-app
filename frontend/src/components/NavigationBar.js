@@ -14,7 +14,7 @@ const NavigationBar = () => (
             <Nav.Link>Home</Nav.Link>
           </IndexLinkContainer>
         </Nav.Item>
-        <Nav.Item className="w-100">
+        <Nav.Item className="flex-grow-1">
           <LinkContainer to="/admin">
             <Nav.Link>Admin</Nav.Link>
           </LinkContainer>
