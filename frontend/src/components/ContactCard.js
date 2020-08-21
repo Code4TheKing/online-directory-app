@@ -1,5 +1,5 @@
-import { LinearProgress } from '@material-ui/core';
-import { Icon } from '@material-ui/core';
+import { useAuth0 } from "@auth0/auth0-react";
+import { Icon, LinearProgress } from '@material-ui/core';
 import 'holderjs';
 import Holder from 'holderjs';
 import React, { useRef, useState } from 'react';
@@ -62,6 +62,7 @@ const ContactCard = ({
       (fieldName === fieldDefs.idField.name ? 'no-id' : '');
   }
 
+  const { getAccessTokenSilently } = useAuth0();
   const [mainField, setMainField] = useState(getMainValue(fieldDefs, contact));
   const [otherFields, setOtherFields] = useState(
     fieldDefs.otherFields
@@ -94,17 +95,19 @@ const ContactCard = ({
   };
 
   const save = () => {
-    saveFunc(
-      Object.assign(
-        {},
-        contact,
-        { [fieldDefs.mainField.name]: mainField },
-        fieldDefs.otherFields
-          .reduce((acc, curr) => {
-            if (otherFields[curr.name]) acc[curr.name] = otherFields[curr.name];
-            return acc;
-          }, {})))
-      .then(() => { if (Object.keys(contact).length === 0) reset(); });
+    getAccessTokenSilently()
+      .then(token => saveFunc(
+        Object.assign(
+          {},
+          contact,
+          { [fieldDefs.mainField.name]: mainField },
+          fieldDefs.otherFields
+            .reduce((acc, curr) => {
+              if (otherFields[curr.name]) acc[curr.name] = otherFields[curr.name];
+              return acc;
+            }, {})),
+        token)
+        .then(() => { if (Object.keys(contact).length === 0) reset(); }));
   };
 
   const focus = (ref, fieldName) => {
