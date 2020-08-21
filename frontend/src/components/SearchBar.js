@@ -1,8 +1,10 @@
+import { useAuth0 } from "@auth0/auth0-react";
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
 const SearchBar = ({ searchFunc }) => {
+  const { getAccessTokenSilently } = useAuth0();
   const [input, setInput] = useState('');
 
   const handleChange = (event) => {
@@ -11,7 +13,8 @@ const SearchBar = ({ searchFunc }) => {
 
   const performSearch = (event) => {
     event.preventDefault();
-    searchFunc(input);
+    getAccessTokenSilently()
+      .then(token => searchFunc(input, token));
   }
 
   return (

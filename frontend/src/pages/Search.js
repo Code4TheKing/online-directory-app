@@ -26,8 +26,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  listContactsByKeyword: (searchText) => dispatch(listContactsByKeywordAsync(searchText)),
-  saveContact: (contact) => dispatch(saveContactAsync(contact))
+  listContactsByKeyword: (searchText, token) => dispatch(listContactsByKeywordAsync(searchText, token)),
+  saveContact: (contact, token) => dispatch(saveContactAsync(contact, token))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);
