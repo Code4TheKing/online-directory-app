@@ -6,6 +6,8 @@ try {
 } catch (e) {
   console.error(e);
 }
+const jwt = require('express-jwt');
+const jwks = require('jwks-rsa');
 
 app.use(require('body-parser').json());
 app.use(express.static(__dirname + '/static'));
@@ -17,9 +19,10 @@ const corsHandler = cors({
     if (originWhitelist.indexOf(origin) > -1) {
       callback(null, true);
     } else {
-      callback(new Error(`Origin ${origin} not allowed by CORS`));
+      const error = new Error(`Origin ${origin} not allowed by CORS`);
+      error.status = 401;
+      callback(error);
     }
-
   }
 });
 app.use(corsHandler);
@@ -29,6 +32,20 @@ app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - ${req.ip}`, '-', req.body, '-', req.query);
   next();
 });
+
+// JWT handler
+var jwtCheck = jwt({
+  secret: jwks.expressJwtSecret({
+    cache: true,
+    rateLimit: true,
+    jwksRequestsPerMinute: 5,
+    jwksUri: process.env.AUTH0_JWKS_URI
+  }),
+  audience: process.env.AUTH0_AUDIENCE,
+  issuer: process.env.AUTH0_ISSUER,
+  algorithms: ['RS256']
+});
+app.use(jwtCheck);
 
 // Mongoose healthcheck route
 app.get('/is-mongoose-ok', (req, res) => {
@@ -42,15 +59,19 @@ app.get('/is-mongoose-ok', (req, res) => {
 // Contacts route
 const contactsRoute = require('./routes/contactsRoute');
 app.use('/_api/v1/contacts', contactsRoute);
-contactsRoute.all('*', corsHandler);
 
 // Error handler
 app.use((err, req, res, next) => {
   if (err) {
-    console.error(`[${new Date().toISOString()}] ${err}`);
-    res.status(err.status || 500)
-      .type('txt')
-      .send(err.message || 'SERVER ERROR');
+    const error = {
+      message: err.message || 'Internal Server Error',
+      timestamp: new Date().toISOString(),
+      statusCode: err.status || 500
+    }
+    console.error(`[${new Date().toISOString()}]`, 'Error occurred', error);
+    res.status(error.statusCode)
+      .type('json')
+      .send(error);
   }
 });
 
@@ -59,11 +80,17 @@ app.use((req, res) => {
   if (req.method.toLowerCase() === 'options') {
     res.end();
   } else {
-    res.status(404).type('txt').send('Not Found');
+    const error = {
+      message: 'Not Found',
+      timestamp: new Date().toISOString(),
+      statusCode: 401
+    }
+    res.status(error.statusCode).type('json').send(error);
   }
 })
 
-app.listen(4000, () => console.log('Listening on port 4000'));
+const port = process.env.API_PORT || 4000;
+app.listen(port, () => console.log(`Listening on port ${port}`));
 
 const gracefulShutdown = () => {
   process.exit();
