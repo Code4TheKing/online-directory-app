@@ -91,60 +91,108 @@ const addContactError = (err) => {
   }
 }
 
-export const listContactsByKeywordAsync = (keyword) => {
+export const listContactsByKeywordAsync = (keyword, token) => {
   return (dispatch) => {
     dispatch(listContacts(keyword));
-    return fetch(`http://localhost:4000/_api/v1/contacts?keyword=${keyword}`)
-      .then(res => res.json())
-      .then((contactsJson) => new Promise(resolve => { setTimeout(() => resolve(contactsJson), 1500) }))
-      .then((contactsJson) => dispatch(listContactsSuccess(keyword, contactsJson)))
-      .catch((err) => dispatch(listContactsError(err)));
+    return fetch(
+      `http://localhost:4000/_api/v1/contacts?keyword=${keyword}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      })
+      .then(response => response.json()
+        .then((contacts) => ({ contacts, response }))
+        .then(({ contacts, response }) => new Promise(resolve => { setTimeout(() => resolve({ contacts, response }), 1500) }))
+        .then(({ contacts, response }) => {
+          if (!response.ok) {
+            dispatch(listContactsError(contacts.message));
+            return Promise.reject(contacts);
+          } else {
+            dispatch(listContactsSuccess(keyword, contacts));
+          }
+        }))
+      .catch((err) => console.error(err));
   };
 }
 
-export const saveContactAsync = (contact) => {
+export const saveContactAsync = (contact, token) => {
   const localContact = Object.assign({}, contact);
   delete localContact._id;
   return (dispatch) => {
     dispatch(saveContact());
-    return fetch(`http://localhost:4000/_api/v1/contacts/${contact._id}`, {
-      method: 'PATCH',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(localContact)
-    })
-      .then(res => res.json())
-      .then((contact) => new Promise(resolve => { setTimeout(() => resolve(contact), 1500) }))
-      .then((contact) => dispatch(saveContactSuccess(contact)))
-      .catch((err) => dispatch(saveContactError(err)));
+    return fetch(
+      `http://localhost:4000/_api/v1/contacts/${contact._id}`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(localContact)
+      })
+      .then(response => response.json()
+        .then((contact) => ({ contact, response }))
+        .then(({ contact, response }) => new Promise(resolve => { setTimeout(() => resolve({ contact, response }), 1500) }))
+        .then(({ contact, response }) => {
+          if (!response.ok) {
+            dispatch(saveContactError(contact.message));
+            return Promise.reject(contact);
+          } else {
+            dispatch(saveContactSuccess(contact));
+          }
+        }))
+      .catch((err) => console.error(err));
   };
 }
 
-export const getContactByIdAsync = (id) => {
+export const getContactByIdAsync = (id, token) => {
   return (dispatch) => {
     dispatch(getContact());
-    return fetch(`http://localhost:4000/_api/v1/contacts/${id}`)
-      .then(res => res.json())
-      .then((contact) => new Promise(resolve => { setTimeout(() => resolve(contact), 1500) }))
-      .then((contact) => dispatch(getContactSuccess(contact)))
-      .catch((err) => dispatch(getContactError(err)));
+    return fetch(
+      `http://localhost:4000/_api/v1/contacts/${id}`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      })
+      .then(response => response.json()
+        .then((contact) => ({ contact, response }))
+        .then(({ contact, response }) => new Promise(resolve => { setTimeout(() => resolve({ contact, response }), 1500) }))
+        .then(({ contact, response }) => {
+          if (!response.ok) {
+            dispatch(getContactError(contact.message));
+            return Promise.reject(contact);
+          } else {
+            dispatch(getContactSuccess(contact));
+          }
+        }))
+      .catch((err) => console.error(err));
   }
 }
 
-export const addContactAsync = (contact) => {
+export const addContactAsync = (contact, token) => {
   return (dispatch) => {
     dispatch(addContact());
     return fetch(`http://localhost:4000/_api/v1/contacts`, {
       method: 'POST',
       headers: {
+        Authorization: `Bearer ${token}`,
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(contact)
     })
-      .then(res => res.json())
-      .then((contact) => new Promise(resolve => { setTimeout(() => resolve(contact), 1500) }))
-      .then((contact) => dispatch(addContactSuccess(contact)))
-      .catch((err) => dispatch(addContactError(err)));
+      .then(response => response.json()
+        .then((contact) => ({ contact, response }))
+        .then(({ contact, response }) => new Promise(resolve => { setTimeout(() => resolve({ contact, response }), 1500) }))
+        .then(({ contact, response }) => {
+          if (!response.ok) {
+            dispatch(addContactError(contact.message));
+            return Promise.reject(contact);
+          } else {
+            dispatch(addContactSuccess(contact));
+          }
+        }))
+      .catch((err) => console.error(err));
   };
 }

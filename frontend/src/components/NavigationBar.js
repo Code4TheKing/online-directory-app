@@ -38,7 +38,7 @@ const NavigationBar = () => {
           {isAuthenticated && <Nav.Item>
             <LinkContainer to="/profile">
               <Nav.Link className="d-inline-flex">
-                <Avatar className="mr-1">{user.name.split(' ').map(word => word.charAt(0).toUpperCase()).join('')}</Avatar>
+                <Avatar className="mr-1">{user.name.split(' ').map(word => word.charAt(0).toUpperCase()).join('').slice(0, 2)}</Avatar>
                 <span className="align-self-center"><u>{user.name}</u></span>
               </Nav.Link>
             </LinkContainer>
