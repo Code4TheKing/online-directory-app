@@ -9,7 +9,6 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import '../styles/contact-card.css';
-import ContentEditable from '../utils/ContentEditable';
 
 const ContactCard = ({
   width,
@@ -29,14 +28,6 @@ const ContactCard = ({
       {
         name: "phoneNumber",
         displayName: "Phone Number"
-      },
-      {
-        name: "birthday",
-        displayName: "Birthday"
-      },
-      {
-        name: "workAddress",
-        displayName: "Work Address"
       }
     ]
   },
@@ -130,14 +121,16 @@ const ContactCard = ({
       <Card.Header className="font-weight-bold">
         <Row key={0} className="align-items-center">
           <Col className="flex-grow-1 pr-0">
-            <ContentEditable
-              tabIndex="0"
-              innerRef={mainRef}
-              html={mainField}
-              disabled={!editable}
-              onChange={(event) => handleChange(event, setMainField)}
-              className={(editable ? " editable cursor-pointer" : "")}
-              tagName="h3" />
+            {
+              editable ?
+                <h3><input
+                  style={{ fontSize: 'inherit' }}
+                  className="form-control editable cursor-pointer"
+                  ref={mainRef}
+                  value={mainField}
+                  onChange={(event) => handleChange(event, setMainField)} /></h3> :
+                <div>{mainField}</div>
+            }
           </Col>
           {editable && <Col className="col-auto pl-1">
             <div className="cursor-pointer" onClick={() => focus(mainRef)}><Icon>edit</Icon></div>
@@ -152,13 +145,15 @@ const ContactCard = ({
                 <span className="font-weight-bold">{field.displayName + ':'}</span>
               </Col>
               <Col className="flex-grow-1 pl-0 pr-0">
-                <ContentEditable
-                  tabIndex={idx + 1}
-                  innerRef={element => otherRefs.current[field.name] = element}
-                  html={otherFields[field.name]}
-                  disabled={!editable}
-                  onChange={(event) => handleChange(event, (value) => setOtherFields(Object.assign({}, otherFields, { [field.name]: value })))}
-                  className={(editable ? " editable cursor-pointer" : "")} />
+                {
+                  editable ?
+                    <input
+                      className="form-control editable cursor-pointer"
+                      ref={element => otherRefs.current[field.name] = element}
+                      value={otherFields[field.name]}
+                      tabIndex={idx}
+                      onChange={(event) => handleChange(event, (value) => setOtherFields(Object.assign({}, otherFields, { [field.name]: value })))} /> :
+                    <div>{otherFields[field.name]}</div>}
               </Col>
               {editable && <Col className="col-auto pl-1">
                 <div className="cursor-pointer" onClick={() => focus(otherRefs, field.name)}><Icon>edit</Icon></div>
