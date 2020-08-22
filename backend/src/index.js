@@ -60,6 +60,10 @@ app.get('/is-mongoose-ok', (req, res) => {
 const contactsRoute = require('./routes/contactsRoute');
 app.use('/_api/v1/contacts', contactsRoute);
 
+// Profile Contacts route
+const profileContactsRoute = require('./routes/profileContactsRoute');
+app.use('/_api/v1/profile-contacts', profileContactsRoute);
+
 // Error handler
 app.use((err, req, res, next) => {
   if (err) {
@@ -83,9 +87,11 @@ app.use((req, res) => {
     const error = {
       message: 'Not Found',
       timestamp: new Date().toISOString(),
-      statusCode: 401
+      statusCode: 404
     }
-    res.status(error.statusCode).type('json').send(error);
+    res.status(error.statusCode)
+      .type('json')
+      .send(error);
   }
 })
 

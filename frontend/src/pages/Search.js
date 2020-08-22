@@ -3,9 +3,9 @@ import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
 import ContactCardList from '../components/ContactCardList';
 import SearchBar from '../components/SearchBar';
-import { listContactsByKeywordAsync, saveContactAsync } from '../redux/actions';
+import { listContactsByKeywordAsync, updateContactAsync } from '../redux/actions';
 
-const Search = ({ searchText, contacts, isListing, listContactsByKeyword, saveContact }) => {
+const Search = ({ searchText, contacts, isListingContacts, listContactsByKeyword, updateContact }) => {
 
   return (
     <div className="mx-5">
@@ -13,21 +13,21 @@ const Search = ({ searchText, contacts, isListing, listContactsByKeyword, saveCo
         <SearchBar searchFunc={listContactsByKeyword} />
       </Row>
       <Row className="justify-content-center mt-5">
-        <ContactCardList searchText={searchText} contacts={contacts} isListing={isListing} saveFunc={saveContact} />
+        <ContactCardList searchText={searchText} contacts={contacts} isListing={isListingContacts} saveFunc={updateContact} />
       </Row>
     </div>
   )
 }
 
 const mapStateToProps = (state) => ({
-  searchText: state.searchText,
-  contacts: state.contacts,
-  isListing: state.isListing
+  searchText: state.contacts.searchText,
+  contacts: state.contacts.contacts,
+  isListingContacts: state.contacts.isListingContacts
 });
 
 const mapDispatchToProps = (dispatch) => ({
   listContactsByKeyword: (searchText, token) => dispatch(listContactsByKeywordAsync(searchText, token)),
-  saveContact: (contact, token) => dispatch(saveContactAsync(contact, token))
+  updateContact: (contact, token) => dispatch(updateContactAsync(contact, token))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Search);
