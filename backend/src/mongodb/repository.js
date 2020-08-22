@@ -25,6 +25,17 @@ const getContactById = (contactId, done) => {
   );
 }
 
+// Get contact by IDP subject
+const getContactByIdpSubject = (idpSub, done) => {
+  Contact.findOne(
+    { idpSubject: idpSub },
+    (err, data) => {
+      if (err) return done(err);
+      done(null, data);
+    }
+  );
+}
+
 // Update contact by ID
 const updateContact = (contactId, contact, done) => {
   Contact.findByIdAndUpdate(
@@ -59,5 +70,6 @@ const listContactsByKeyword = (keyword, done) => {
 
 exports.addContact = addContact;
 exports.getContactById = getContactById;
+exports.getContactByIdpSubject = getContactByIdpSubject;
 exports.updateContact = updateContact;
 exports.listContactsByKeyword = listContactsByKeyword;

@@ -7,7 +7,7 @@ import ContactCard from '../components/ContactCard';
 import useAdminCheck from "../hooks/UseAdminCheck";
 import { addContactAsync } from '../redux/actions';
 
-const Admin = ({ isAdding, addContact }) => {
+const Admin = ({ isAddingContact, addContact }) => {
   const { user } = useAuth0();
   const isAdmin = useAdminCheck(user);
 
@@ -28,14 +28,14 @@ const Admin = ({ isAdding, addContact }) => {
         <h2>Add Contact</h2>
       </Row>
       <Row className="justify-content-center mt-3">
-        <ContactCard editable={true} isProcessing={isAdding} saveFunc={addContact} width={'25rem'} />
+        <ContactCard editable={true} isProcessing={isAddingContact} saveFunc={addContact} width={'25rem'} />
       </Row>
     </Container>
   );
 }
 
 const mapStateToProps = (state) => ({
-  isAdding: state.isAdding
+  isAddingContact: state.contacts.isAddingContact
 });
 
 const mapDispatchToProps = (dispatch) => ({

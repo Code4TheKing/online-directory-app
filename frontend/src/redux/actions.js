@@ -1,9 +1,34 @@
 import {
   ADD_CONTACT, ADD_CONTACT_ERROR, ADD_CONTACT_SUCCESS,
-  GET_CONTACT, GET_CONTACT_ERROR, GET_CONTACT_SUCCESS,
+  ADD_PROFILE_CONTACT, ADD_PROFILE_CONTACT_ERROR, ADD_PROFILE_CONTACT_SUCCESS,
+  GET_PROFILE_CONTACT, GET_PROFILE_CONTACT_ERROR, GET_PROFILE_CONTACT_SUCCESS,
   LIST_CONTACTS, LIST_CONTACTS_ERROR, LIST_CONTACTS_SUCCESS,
-  UPDATE_CONTACT, UPDATE_CONTACT_ERROR, UPDATE_CONTACT_SUCCESS
+  UPDATE_CONTACT, UPDATE_CONTACT_ERROR, UPDATE_CONTACT_SUCCESS,
+  UPDATE_PROFILE_CONTACT, UPDATE_PROFILE_CONTACT_ERROR, UPDATE_PROFILE_CONTACT_SUCCESS
 } from './actionTypes';
+
+// Action creators for contacts
+
+const addContact = () => {
+  return {
+    type: ADD_CONTACT
+  }
+}
+
+const addContactSuccess = (contact) => {
+  return {
+    type: ADD_CONTACT_SUCCESS,
+    contact: contact
+  }
+}
+
+const addContactError = (err) => {
+  console.warn(err);
+  return {
+    type: ADD_CONTACT_ERROR,
+    error: err
+  }
+}
 
 const listContacts = (searchText) => {
   return {
@@ -28,20 +53,20 @@ const listContactsError = (err) => {
   }
 }
 
-const saveContact = () => {
+const updateContact = () => {
   return {
     type: UPDATE_CONTACT
   }
 }
 
-const saveContactSuccess = (contact) => {
+const updateContactSuccess = (contact) => {
   return {
     type: UPDATE_CONTACT_SUCCESS,
     contact: contact
   }
 }
 
-const saveContactError = (err) => {
+const updateContactError = (err) => {
   console.warn(err);
   return {
     type: UPDATE_CONTACT_ERROR,
@@ -49,46 +74,97 @@ const saveContactError = (err) => {
   }
 }
 
-const getContact = () => {
+// Action creators for profile contacts
+
+const addProfileContact = () => {
   return {
-    type: GET_CONTACT
+    type: ADD_PROFILE_CONTACT
   }
 }
 
-const getContactSuccess = (contact) => {
+const addProfileContactSuccess = (profileContact) => {
   return {
-    type: GET_CONTACT_SUCCESS,
-    contact: contact
+    type: ADD_PROFILE_CONTACT_SUCCESS,
+    profileContact: profileContact
   }
 }
 
-const getContactError = (err) => {
+const addProfileContactError = (err) => {
   console.warn(err);
   return {
-    type: GET_CONTACT_ERROR,
+    type: ADD_PROFILE_CONTACT_ERROR,
     error: err
   }
 }
 
-const addContact = () => {
+const getProfileContact = () => {
   return {
-    type: ADD_CONTACT
+    type: GET_PROFILE_CONTACT
   }
 }
 
-const addContactSuccess = (contact) => {
+const getProfileContactSuccess = (profileContact) => {
   return {
-    type: ADD_CONTACT_SUCCESS,
-    contact: contact
+    type: GET_PROFILE_CONTACT_SUCCESS,
+    profileContact: profileContact
   }
 }
 
-const addContactError = (err) => {
+const getProfileContactError = (err) => {
   console.warn(err);
   return {
-    type: ADD_CONTACT_ERROR,
+    type: GET_PROFILE_CONTACT_ERROR,
     error: err
   }
+}
+
+const updateProfileContact = () => {
+  return {
+    type: UPDATE_PROFILE_CONTACT
+  }
+}
+
+const updateProfileContactSuccess = (profileContact) => {
+  return {
+    type: UPDATE_PROFILE_CONTACT_SUCCESS,
+    profileContact: profileContact
+  }
+}
+
+const updateProfileContactError = (err) => {
+  console.warn(err);
+  return {
+    type: UPDATE_PROFILE_CONTACT_ERROR,
+    error: err
+  }
+}
+
+// Async dispatches for Contacts
+
+export const addContactAsync = (contact, token) => {
+  return (dispatch) => {
+    dispatch(addContact());
+    return fetch(`http://localhost:4000/_api/v1/contacts`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(contact)
+    })
+      .then(response => response.json()
+        .then((contact) => ({ contact, response }))
+        .then(({ contact, response }) => new Promise(resolve => { setTimeout(() => resolve({ contact, response }), 1500) }))
+        .then(({ contact, response }) => {
+          if (!response.ok) {
+            dispatch(addContactError(contact.message));
+            return Promise.reject(contact);
+          } else {
+            dispatch(addContactSuccess(contact));
+          }
+        }))
+      .catch((err) => console.error(err));
+  };
 }
 
 export const listContactsByKeywordAsync = (keyword, token) => {
@@ -116,11 +192,11 @@ export const listContactsByKeywordAsync = (keyword, token) => {
   };
 }
 
-export const saveContactAsync = (contact, token) => {
+export const updateContactAsync = (contact, token) => {
   const localContact = Object.assign({}, contact);
   delete localContact._id;
   return (dispatch) => {
-    dispatch(saveContact());
+    dispatch(updateContact());
     return fetch(
       `http://localhost:4000/_api/v1/contacts/${contact._id}`,
       {
@@ -136,61 +212,93 @@ export const saveContactAsync = (contact, token) => {
         .then(({ contact, response }) => new Promise(resolve => { setTimeout(() => resolve({ contact, response }), 1500) }))
         .then(({ contact, response }) => {
           if (!response.ok) {
-            dispatch(saveContactError(contact.message));
+            dispatch(updateContactError(contact.message));
             return Promise.reject(contact);
           } else {
-            dispatch(saveContactSuccess(contact));
+            dispatch(updateContactSuccess(contact));
           }
         }))
       .catch((err) => console.error(err));
   };
 }
 
-export const getContactByIdAsync = (id, token) => {
+// Async dispatches for profile contacts
+
+export const addProfileContactAsync = (profileContact, token) => {
   return (dispatch) => {
-    dispatch(getContact());
+    dispatch(addProfileContact());
+    return fetch(`http://localhost:4000/_api/v1/profile-contacts`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(profileContact)
+    })
+      .then(response => response.json()
+        .then((profileContact) => ({ profileContact, response }))
+        .then(({ profileContact, response }) => new Promise(resolve => { setTimeout(() => resolve({ profileContact, response }), 1500) }))
+        .then(({ profileContact, response }) => {
+          if (!response.ok) {
+            dispatch(addProfileContactError(profileContact.message));
+            return Promise.reject(profileContact);
+          } else {
+            dispatch(addProfileContactSuccess(profileContact));
+          }
+        }))
+      .catch((err) => console.error(err));
+  };
+}
+
+export const getProfileContactAsync = (token) => {
+  return (dispatch) => {
+    dispatch(getProfileContact());
     return fetch(
-      `http://localhost:4000/_api/v1/contacts/${id}`,
+      `http://localhost:4000/_api/v1/profile-contacts`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
         }
       })
       .then(response => response.json()
-        .then((contact) => ({ contact, response }))
-        .then(({ contact, response }) => new Promise(resolve => { setTimeout(() => resolve({ contact, response }), 1500) }))
-        .then(({ contact, response }) => {
+        .then((profileContact) => ({ profileContact, response }))
+        .then(({ profileContact, response }) => new Promise(resolve => { setTimeout(() => resolve({ profileContact, response }), 1500) }))
+        .then(({ profileContact, response }) => {
           if (!response.ok) {
-            dispatch(getContactError(contact.message));
-            return Promise.reject(contact);
+            dispatch(getProfileContactError(profileContact.message));
+            return Promise.reject(profileContact);
           } else {
-            dispatch(getContactSuccess(contact));
+            dispatch(getProfileContactSuccess(profileContact));
           }
         }))
       .catch((err) => console.error(err));
   }
 }
 
-export const addContactAsync = (contact, token) => {
+export const updateProfileContactAsync = (profileContact, token) => {
+  const localProfileContact = Object.assign({}, profileContact);
+  delete localProfileContact._id;
   return (dispatch) => {
-    dispatch(addContact());
-    return fetch(`http://localhost:4000/_api/v1/contacts`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(contact)
-    })
+    dispatch(updateProfileContact());
+    return fetch(
+      `http://localhost:4000/_api/v1/profile-contacts`,
+      {
+        method: 'PATCH',
+        headers: {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(localProfileContact)
+      })
       .then(response => response.json()
-        .then((contact) => ({ contact, response }))
-        .then(({ contact, response }) => new Promise(resolve => { setTimeout(() => resolve({ contact, response }), 1500) }))
-        .then(({ contact, response }) => {
+        .then((profileContact) => ({ profileContact, response }))
+        .then(({ profileContact, response }) => new Promise(resolve => { setTimeout(() => resolve({ profileContact, response }), 1500) }))
+        .then(({ profileContact, response }) => {
           if (!response.ok) {
-            dispatch(addContactError(contact.message));
-            return Promise.reject(contact);
+            dispatch(updateProfileContactError(profileContact.message));
+            return Promise.reject(profileContact);
           } else {
-            dispatch(addContactSuccess(contact));
+            dispatch(updateProfileContactSuccess(profileContact));
           }
         }))
       .catch((err) => console.error(err));
