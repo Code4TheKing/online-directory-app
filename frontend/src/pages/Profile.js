@@ -5,15 +5,15 @@ import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
 import ContactCard from '../components/ContactCard';
-import { getContactByIdAsync, saveContactAsync } from '../redux/actions';
+import { getProfileContactAsync, updateProfileContactAsync } from '../redux/actions';
 
-const Profile = ({ profileContact, isGetting, isUpdating, getContactById, saveContact }) => {
+const Profile = ({ profileContact, isGettingProfileContact, isUpdatingProfileContact, getProfileContact, updateProfileContact }) => {
   const { getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     getAccessTokenSilently()
-      .then(token => getContactById('default', token));
-  }, [getContactById]);
+      .then(token => getProfileContact(token));
+  }, [getProfileContact]);
 
   return (
     <Container>
@@ -21,23 +21,23 @@ const Profile = ({ profileContact, isGetting, isUpdating, getContactById, saveCo
         <h1>Profile</h1>
       </Row>
       <Row className="justify-content-center mt-3">
-        {isGetting ?
+        {isGettingProfileContact ?
           <CircularProgress /> :
-          profileContact && <ContactCard editable={true} contact={profileContact} isProcessing={isUpdating} saveFunc={saveContact} width={'25rem'} />}
+          profileContact && <ContactCard editable={true} contact={profileContact} isProcessing={isUpdatingProfileContact} saveFunc={updateProfileContact} width={'25rem'} />}
       </Row>
     </Container>
   );
 }
 
 const mapStateToProps = (state) => ({
-  profileContact: state.profileContact,
-  isGetting: state.isGetting,
-  isUpdating: state.isUpdating
+  profileContact: state.profileContacts.profileContact,
+  isGettingProfileContact: state.profileContacts.isGettingProfileContact,
+  isUpdatingProfileContact: state.profileContacts.isUpdatingProfileContact
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  getContactById: (id, token) => dispatch(getContactByIdAsync(id, token)),
-  saveContact: (contact, token) => dispatch(saveContactAsync(contact, token))
+  getProfileContact: (token) => dispatch(getProfileContactAsync(token)),
+  updateProfileContact: (profileContact, token) => dispatch(updateProfileContactAsync(profileContact, token))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
