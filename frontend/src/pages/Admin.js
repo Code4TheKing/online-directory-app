@@ -1,15 +1,11 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
 import ContactCard from '../components/ContactCard';
-import useAdminCheck from "../hooks/UseAdminCheck";
 import { addContactAsync } from '../redux/actions';
 
-const Admin = ({ isAddingContact, addContact }) => {
-  const { user } = useAuth0();
-  const isAdmin = useAdminCheck(user);
+const Admin = ({ isAddingContact, isAdmin, addContact }) => {
 
   if (!isAdmin) {
     return (
@@ -35,7 +31,8 @@ const Admin = ({ isAddingContact, addContact }) => {
 }
 
 const mapStateToProps = (state) => ({
-  isAddingContact: state.contacts.isAddingContact
+  isAddingContact: state.contacts.isAddingContact,
+  isAdmin: state.profileContacts.isAdmin
 });
 
 const mapDispatchToProps = (dispatch) => ({

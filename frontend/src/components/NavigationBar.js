@@ -4,13 +4,11 @@ import React from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 import { IndexLinkContainer, LinkContainer } from 'react-router-bootstrap';
-import useAdminCheck from "../hooks/UseAdminCheck";
 import LoginButton from './LoginButton';
 import LogoutButton from './LogoutButton';
 
-const NavigationBar = () => {
-  const { isAuthenticated, user } = useAuth0();
-  const isAdmin = useAdminCheck(user);
+const NavigationBar = ({ profileContact, isAdmin }) => {
+  const { isAuthenticated } = useAuth0();
 
   return (
     <Navbar bg="dark" variant="dark" sticky="top" expand="md">
@@ -38,8 +36,10 @@ const NavigationBar = () => {
           {isAuthenticated && <Nav.Item>
             <LinkContainer to="/profile">
               <Nav.Link className="d-inline-flex">
-                <Avatar className="mr-1">{user.name.split(' ').map(word => word.charAt(0).toUpperCase()).join('').slice(0, 2)}</Avatar>
-                <span className="align-self-center"><u>{user.name}</u></span>
+                <Avatar className="mr-1">
+                  {profileContact.name.split(' ').map(word => word.charAt(0).toUpperCase()).join('').slice(0, 2)}
+                </Avatar>
+                <span className="align-self-center"><u>{profileContact.name}</u></span>
               </Nav.Link>
             </LinkContainer>
           </Nav.Item>}

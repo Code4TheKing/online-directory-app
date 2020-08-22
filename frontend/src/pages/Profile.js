@@ -1,6 +1,5 @@
-import { useAuth0 } from "@auth0/auth0-react";
 import { CircularProgress } from '@material-ui/core';
-import React, { useEffect } from 'react';
+import React from 'react';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
@@ -8,12 +7,6 @@ import ContactCard from '../components/ContactCard';
 import { getProfileContactAsync, updateProfileContactAsync } from '../redux/actions';
 
 const Profile = ({ profileContact, isGettingProfileContact, isUpdatingProfileContact, getProfileContact, updateProfileContact }) => {
-  const { getAccessTokenSilently } = useAuth0();
-
-  useEffect(() => {
-    getAccessTokenSilently()
-      .then(token => getProfileContact(token));
-  }, [getProfileContact]);
 
   return (
     <Container>
