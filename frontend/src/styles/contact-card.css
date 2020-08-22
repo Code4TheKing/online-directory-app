@@ -8,6 +8,11 @@
   color: #000000;
 }
 
+.editable {
+  background: #343a40;
+  color: #ffffff;
+}
+
 .cursor-pointer {
   cursor: pointer;
 }
