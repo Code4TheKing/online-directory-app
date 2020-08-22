@@ -1,17 +1,21 @@
 const express = require('express');
 const router = express.Router();
 const repository = require('../mongodb/repository');
+const enforceAuthorization = require('../utils/auth');
 
 // Add contact
 router.post('/', (req, res, next) => {
   enforceAuthorization(
     req.user,
-    ['create:contacts', 'create:profile_contact'],
+    ['create:contacts'],
     req, res, next,
     (req, res, next) => repository.addContact(
       req.body,
       (err, data) => {
         if (err) return next(err);
+        if (!data) {
+          return next(new Error('Something went wrong. Could not add contact for the given input.'));
+        }
         res.json(data);
       }
     ));
@@ -21,12 +25,17 @@ router.post('/', (req, res, next) => {
 router.get('/:id', (req, res, next) => {
   enforceAuthorization(
     req.user,
-    ['read:contacts', 'read:profile_contact'],
+    ['read:contacts'],
     req, res, next,
     (req, res, next) => repository.getContactById(
       req.params.id,
       (err, data) => {
-        if (err) next(err);
+        if (err) return next(err);
+        if (!data) {
+          const notFoundError = new Error(`No contact found for ID ${req.params.id}`);
+          notFoundError.status = 404;
+          return next(notFoundError);
+        }
         res.json(data);
       }
     ));
@@ -36,14 +45,28 @@ router.get('/:id', (req, res, next) => {
 router.patch('/:id', (req, res, next) => {
   enforceAuthorization(
     req.user,
-    ['update:contacts', 'update:profile_contact'],
+    ['update:contacts'],
     req, res, next,
-    (req, res, next) => repository.updateContact(
+    (req, res, next) => repository.getContactById(
       req.params.id,
-      req.body,
-      (err, data) => {
+      (err, existingContact) => {
         if (err) return next(err);
-        res.json(data);
+        if (!existingContact) {
+          const notFoundError = new Error(`No contact found for ID ${req.params.id}`);
+          notFoundError.status = 404;
+          return next(notFoundError);
+        }
+        repository.updateContact(
+          existingContact._id,
+          req.body,
+          (err, data) => {
+            if (err) return next(err);
+            if (!data) {
+              return next(new Error('Something went wrong. Could not update contact for the given input.'));
+            }
+            res.json(data);
+          }
+        )
       }
     ));
 });
@@ -62,19 +85,5 @@ router.get('/', (req, res, next) => {
       }
     ));
 });
-
-const enforceAuthorization = (user, allowedPermissions, req, res, next, cb) => {
-  if (!isAuthorized(user, allowedPermissions)) {
-    const error = new Error(`User must have one of the permissions in [${allowedPermissions.map(perm => `'${perm}'`).join(', ')}]`);
-    error.status = 401;
-    next(error);
-  } else {
-    cb(req, res, next);
-  }
-}
-
-const isAuthorized = (user, allowedPermissions) => {
-  return allowedPermissions.some(permission => user.permissions.indexOf(permission) !== -1);
-}
 
 module.exports = router;

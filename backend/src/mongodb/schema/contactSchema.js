@@ -8,6 +8,11 @@ const contactSchema = new Schema({
     required: true,
     default: uuidv4
   },
+  idpSubject: {
+    type: String,
+    minlength: [1, 'Too short'],
+    maxlength: [64, 'Too long']
+  },
   name: {
     type: String,
     required: true,
