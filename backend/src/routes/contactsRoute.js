@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const repository = require('../mongodb/repository');
-const enforceAuthorization = require('../utils/auth');
+const auth = require('../utils/auth');
 
 // Add contact
 router.post('/', (req, res, next) => {
-  enforceAuthorization(
+  auth.enforceAuthorization(
     req.user,
     ['create:contacts'],
     req, res, next,
@@ -23,7 +23,7 @@ router.post('/', (req, res, next) => {
 
 // Get contact by ID
 router.get('/:id', (req, res, next) => {
-  enforceAuthorization(
+  auth.enforceAuthorization(
     req.user,
     ['read:contacts'],
     req, res, next,
@@ -33,7 +33,7 @@ router.get('/:id', (req, res, next) => {
         if (err) return next(err);
         if (!data) {
           const notFoundError = new Error(`No contact found for ID ${req.params.id}`);
-          notFoundError.status = 404;
+          notFoundError.statusCode = 404;
           return next(notFoundError);
         }
         res.json(data);
@@ -43,7 +43,7 @@ router.get('/:id', (req, res, next) => {
 
 // Update contact by ID
 router.patch('/:id', (req, res, next) => {
-  enforceAuthorization(
+  auth.enforceAuthorization(
     req.user,
     ['update:contacts'],
     req, res, next,
@@ -53,7 +53,7 @@ router.patch('/:id', (req, res, next) => {
         if (err) return next(err);
         if (!existingContact) {
           const notFoundError = new Error(`No contact found for ID ${req.params.id}`);
-          notFoundError.status = 404;
+          notFoundError.statusCode = 404;
           return next(notFoundError);
         }
         repository.updateContact(
@@ -73,7 +73,7 @@ router.patch('/:id', (req, res, next) => {
 
 // List contacts by keyword
 router.get('/', (req, res, next) => {
-  enforceAuthorization(
+  auth.enforceAuthorization(
     req.user,
     ['read:contacts'],
     req, res, next,
