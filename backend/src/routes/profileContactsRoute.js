@@ -1,11 +1,11 @@
 const express = require('express');
 const router = express.Router();
 const repository = require('../mongodb/repository');
-const enforceAuthorization = require('../utils/auth');
+const auth = require('../utils/auth');
 
-// Add profile contact
+// Create profile contact
 router.post('/', (req, res, next) => {
-  enforceAuthorization(
+  auth.enforceAuthorization(
     req.user,
     ['create:profile_contact'],
     req, res, next,
@@ -15,73 +15,93 @@ router.post('/', (req, res, next) => {
         idpSub,
         (err, existingProfileContact) => {
           if (err) return next(err);
-          if (!existingProfileContact) {
-            repository.addContact(
-              Object.assign(req.body, { idpSubject: idpSub }),
-              (err, data) => {
-                if (err) return next(err);
-                if (!data) {
-                  return next(new Error(`Something went wrong. Could not add profile contact for ${idpSub}.`));
-                }
-                res.json(data);
-              }
-            );
-            return;
+          if (existingProfileContact) {
+            const conflictError = new Error(`Profile contact already exists for IDP sub ${idpSub}`);
+            conflictError.statusCode = 409;
+            return next(conflictError);
           }
-          const conflictError = new Error(`Profile contact already exists for IDP sub ${idpSub}`);
-          conflictError.status = 409;
-          return next(conflictError);
-        });
+          const accessToken = req.get('Authorization').substring('Bearer '.length);
+          auth.getUserInfo(accessToken, (err, userInfo) => {
+            if (err) return next(err);
+            if (!userInfo) {
+              return next(new Error(`Something went wrong. Could not get user info for ${idpSub}.`));
+            }
+            repository.addContact(
+              Object.assign({ name: userInfo.name }, { idpSubject: idpSub }),
+              (err, profileContact) => {
+                if (err) return next(err);
+                if (!profileContact) {
+                  return next(new Error(`Something went wrong. Could not create profile contact for ${idpSub}.`));
+                }
+                auth.isAdmin(
+                  req.user,
+                  (err, isAdmin) => {
+                    if (err) { return next(err); }
+                    res.json(Object.assign(profileContact, { admin: isAdmin }));
+                  });
+              },
+              true
+            );
+          });
+        },
+        true);
     });
 });
 
 // Get profile contact
 router.get('/', (req, res, next) => {
-  enforceAuthorization(
+  auth.enforceAuthorization(
     req.user,
     ['read:profile_contact'],
     req, res, next,
     (req, res, next) => repository.getContactByIdpSubject(
       req.user.sub,
-      (err, data) => {
+      (err, profileContact) => {
         if (err) return next(err);
-        if (!data) {
+        if (!profileContact) {
           const notFoundError = new Error(`There is no profile contact for IDP sub ${req.user.sub}. Create one first.`);
-          notFoundError.status = 404;
+          notFoundError.statusCode = 404;
           return next(notFoundError);
         }
-        res.json(data);
-      }
+        auth.isAdmin(
+          req.user,
+          (err, isAdmin) => {
+            if (err) { return next(err); }
+            res.json(Object.assign(profileContact, { admin: isAdmin }));
+          });
+      },
+      true
     ));
 });
 
 // Update profile contact
 router.patch('/', (req, res, next) => {
-  enforceAuthorization(
+  auth.enforceAuthorization(
     req.user,
     ['update:profile_contact'],
     req, res, next,
     (req, res, next) => repository.getContactByIdpSubject(
       req.user.sub,
       (err, existingProfileContact) => {
-        if (err) next(err);
+        if (err) return next(err);
         if (!existingProfileContact) {
           const notFoundError = new Error(`There is no profile contact for IDP sub ${req.user.sub}. Create one first.`);
-          notFoundError.status = 404;
+          notFoundError.statusCode = 404;
           return next(notFoundError);
         }
         repository.updateContact(
           existingProfileContact._id,
           req.body,
-          (err, data) => {
+          (err, profileContact) => {
             if (err) return next(err);
-            if (!data) {
+            if (!profileContact) {
               return next(new Error(`Something went wrong. Could not update profile contact for ${idpSub}.`));
             }
-            res.json(data);
+            res.json(profileContact);
           }
         );
-      }
+      },
+      true
     ));
 });
 
