@@ -128,6 +128,7 @@ const ContactCard = ({
                   className="form-control editable cursor-pointer"
                   ref={mainRef}
                   value={mainField}
+                  tabIndex="1"
                   onChange={(event) => handleChange(event, setMainField)} /></h3> :
                 <div>{mainField}</div>
             }
@@ -151,7 +152,7 @@ const ContactCard = ({
                       className="form-control editable cursor-pointer"
                       ref={element => otherRefs.current[field.name] = element}
                       value={otherFields[field.name]}
-                      tabIndex={idx}
+                      tabIndex={idx + 2}
                       onChange={(event) => handleChange(event, (value) => setOtherFields(Object.assign({}, otherFields, { [field.name]: value })))} /> :
                     <div>{otherFields[field.name]}</div>}
               </Col>

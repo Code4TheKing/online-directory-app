@@ -10,6 +10,7 @@ const contactSchema = new Schema({
   },
   idpSubject: {
     type: String,
+    immutable: true,
     minlength: [1, 'Too short'],
     maxlength: [64, 'Too long']
   },
@@ -30,5 +31,6 @@ const contactSchema = new Schema({
     maxlength: [32, 'Too long']
   }
 });
+contactSchema.plugin(require('mongoose-immutable-plugin'));
 
 module.exports = contactSchema;

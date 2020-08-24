@@ -20,7 +20,7 @@ const corsHandler = cors({
       callback(null, true);
     } else {
       const error = new Error(`Origin ${origin} not allowed by CORS`);
-      error.status = 401;
+      error.statusCode = 401;
       callback(error);
     }
   }
@@ -69,8 +69,8 @@ app.use((err, req, res, next) => {
   if (err) {
     const error = {
       message: err.message || 'Internal Server Error',
-      timestamp: new Date().toISOString(),
-      statusCode: err.status || 500
+      statusCode: err.statusCode || 500,
+      timestamp: new Date().toISOString()
     }
     console.error(`[${new Date().toISOString()}]`, 'Error occurred', error);
     res.status(error.statusCode)

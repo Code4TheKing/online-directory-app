@@ -7,11 +7,12 @@ const contactSchema = require('./schema/contactSchema');
 const Contact = mongoose.model('Contact', contactSchema);
 
 // Add contact
-const addContact = (contact, done) => {
-  new Contact(contact).save((err, data) => {
-    if (err) return done(err);
-    done(null, data);
-  });
+const addContact = (contact, done, lean = false) => {
+  new Contact(contact)
+    .save((err, data) => {
+      if (err) return done(err);
+      done(null, lean ? data.toObject() : data);
+    });
 }
 
 // Get contact by ID
@@ -26,14 +27,13 @@ const getContactById = (contactId, done) => {
 }
 
 // Get contact by IDP subject
-const getContactByIdpSubject = (idpSub, done) => {
-  Contact.findOne(
-    { idpSubject: idpSub },
-    (err, data) => {
+const getContactByIdpSubject = (idpSub, done, lean = false) => {
+  Contact.findOne({ idpSubject: idpSub })
+    .lean(lean)
+    .exec((err, data) => {
       if (err) return done(err);
       done(null, data);
-    }
-  );
+    });
 }
 
 // Update contact by ID
