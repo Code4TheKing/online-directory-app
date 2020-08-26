@@ -1,11 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const repository = require('../mongodb/repository');
-const auth = require('../utils/auth');
+const auth0 = require('../utils/auth0');
+const authz = require('../utils/authz');
 
 // Create profile contact
 router.post('/', (req, res, next) => {
-  auth.enforceAuthorization(
+  delete req.body.idpSub;
+  authz.enforceAuthorization(
     req.user,
     ['create:profile_contact'],
     req, res, next,
@@ -20,37 +22,34 @@ router.post('/', (req, res, next) => {
             conflictError.statusCode = 409;
             return next(conflictError);
           }
-          const accessToken = req.get('Authorization').substring('Bearer '.length);
-          auth.getUserInfo(accessToken, (err, userInfo) => {
-            if (err) return next(err);
-            if (!userInfo) {
-              return next(new Error(`Something went wrong. Could not get user info for ${idpSub}.`));
-            }
-            repository.addContact(
-              Object.assign({ name: userInfo.name }, { idpSubject: idpSub }),
+          auth0.getAccessToken()
+            .then(accessToken => auth0.getUser(accessToken, idpSub))
+            .then(user => repository.updateContact(
+              user.user_metadata.contact_id,
+              { idpSubject: idpSub },
               (err, profileContact) => {
                 if (err) return next(err);
                 if (!profileContact) {
                   return next(new Error(`Something went wrong. Could not create profile contact for ${idpSub}.`));
                 }
-                auth.isAdmin(
+                authz.isAdmin(
                   req.user,
                   (err, isAdmin) => {
                     if (err) { return next(err); }
                     res.json(Object.assign(profileContact, { admin: isAdmin }));
                   });
               },
-              true
-            );
-          });
+              true))
+            .catch(err => handleError(err, next));
         },
-        true);
+        true
+      );
     });
 });
 
 // Get profile contact
 router.get('/', (req, res, next) => {
-  auth.enforceAuthorization(
+  authz.enforceAuthorization(
     req.user,
     ['read:profile_contact'],
     req, res, next,
@@ -63,7 +62,7 @@ router.get('/', (req, res, next) => {
           notFoundError.statusCode = 404;
           return next(notFoundError);
         }
-        auth.isAdmin(
+        authz.isAdmin(
           req.user,
           (err, isAdmin) => {
             if (err) { return next(err); }
@@ -76,7 +75,8 @@ router.get('/', (req, res, next) => {
 
 // Update profile contact
 router.patch('/', (req, res, next) => {
-  auth.enforceAuthorization(
+  delete req.body.idpSub;
+  authz.enforceAuthorization(
     req.user,
     ['update:profile_contact'],
     req, res, next,
@@ -104,5 +104,13 @@ router.patch('/', (req, res, next) => {
       true
     ));
 });
+
+const handleError = (err, next) => {
+  console.log(err);
+  if (err?.response?.data) {
+    return next(err.response.data);
+  }
+  return next(err);
+}
 
 module.exports = router;

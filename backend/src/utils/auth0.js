@@ -1,7 +1,35 @@
 const axios = require('axios');
 const pwdGenerator = require('generate-password');
 
-const createUser = (accessToken, email, name) => {
+const getAccessToken = () => {
+  return axios({
+    method: 'POST',
+    url: process.env.AUTH0_TOKEN_ENDPOINT,
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    data: {
+      client_id: process.env.API_AUTH0_CLIENT_ID,
+      client_secret: process.env.API_AUTH0_CLIENT_SECRET,
+      audience: process.env.AUTH0_MANAGEMENT_API_AUDIENCE,
+      grant_type: 'client_credentials'
+    }
+  })
+    .then(tokenResponse => tokenResponse.data.access_token);
+}
+
+const getUser = (accessToken, userId) => {
+  return axios({
+    method: 'GET',
+    url: `${process.env.AUTH0_MANAGEMENT_API_AUDIENCE}users/${userId}`,
+    headers: {
+      'Authorization': `Bearer ${accessToken}`
+    },
+  })
+    .then(getUserResponse => getUserResponse.data);
+}
+
+const createUser = (accessToken, email, name, contactId) => {
   return axios({
     method: 'POST',
     url: `${process.env.AUTH0_MANAGEMENT_API_AUDIENCE}users`,
@@ -22,7 +50,10 @@ const createUser = (accessToken, email, name) => {
       name: name,
       connection: process.env.AUTH0_DB_CONNECTION_NAME,
       email_verified: false,
-      verify_email: false
+      verify_email: false,
+      user_metadata: {
+        contact_id: contactId
+      }
     }
   });
 }
@@ -75,6 +106,8 @@ const triggerChangePassword = (email) => {
   });
 }
 
+exports.getAccessToken = getAccessToken;
+exports.getUser = getUser;
 exports.createUser = createUser;
 exports.getParticipantRoleId = getParticipantRoleId;
 exports.assignParticipantRoleToUser = assignParticipantRoleToUser;

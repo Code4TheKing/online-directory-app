@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const repository = require('../mongodb/repository');
-const auth = require('../utils/auth');
-const invite = require('../utils/invite');
+const authz = require('../utils/authz');
+const auth0 = require('../utils/auth0');
 
 // Add contact
 router.post('/', (req, res, next) => {
-  auth.enforceAuthorization(
+  authz.enforceAuthorization(
     req.user,
     ['create:contacts'],
     req, res, next,
@@ -24,7 +24,7 @@ router.post('/', (req, res, next) => {
 
 // Get contact by ID
 router.get('/:id', (req, res, next) => {
-  auth.enforceAuthorization(
+  authz.enforceAuthorization(
     req.user,
     ['read:contacts'],
     req, res, next,
@@ -44,7 +44,8 @@ router.get('/:id', (req, res, next) => {
 
 // Update contact by ID
 router.patch('/:id', (req, res, next) => {
-  auth.enforceAuthorization(
+  delete req.body.idpSub;
+  authz.enforceAuthorization(
     req.user,
     ['update:contacts'],
     req, res, next,
@@ -74,7 +75,7 @@ router.patch('/:id', (req, res, next) => {
 
 // List contacts by keyword
 router.get('/', (req, res, next) => {
-  auth.enforceAuthorization(
+  authz.enforceAuthorization(
     req.user,
     ['read:contacts'],
     req, res, next,
@@ -89,7 +90,7 @@ router.get('/', (req, res, next) => {
 
 // Invite contact to register
 router.post('/:id/invite', (req, res, next) => {
-  auth.enforceAuthorization(
+  authz.enforceAuthorization(
     req.user,
     ['invite:contacts'],
     req, res, next,
@@ -102,12 +103,13 @@ router.post('/:id/invite', (req, res, next) => {
           notFoundError.statusCode = 404;
           return next(notFoundError);
         }
-        auth.getAccessToken()
-          .then(accessToken => Promise.all([invite.createUser(accessToken, req.body.email, contact.name), invite.getParticipantRoleId(accessToken)])
-            .then(([createUserResponse, participantRoleId]) =>
-              invite.assignParticipantRoleToUser(accessToken, createUserResponse?.data?.user_id, participantRoleId))
-            .then(() => invite.triggerChangePassword(req.body.email))
-            .then((changePasswordResponse) => res.json({ result: changePasswordResponse.data })))
+        auth0.getAccessToken()
+          .then(accessToken =>
+            Promise.all([auth0.createUser(accessToken, req.body.email, contact.name, req.params.id), auth0.getParticipantRoleId(accessToken)])
+              .then(([createUserResponse, participantRoleId]) =>
+                auth0.assignParticipantRoleToUser(accessToken, createUserResponse?.data?.user_id, participantRoleId))
+              .then(() => auth0.triggerChangePassword(req.body.email))
+              .then((changePasswordResponse) => res.json({ result: changePasswordResponse.data })))
           .catch(err => handleError(err, next));
       }
     ));
