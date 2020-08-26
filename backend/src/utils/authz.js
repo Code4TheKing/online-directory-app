@@ -1,4 +1,5 @@
 const axios = require('axios');
+const auth0 = require('./auth0');
 
 const enforceAuthorization = (user, allowedPermissions, req, res, next, cb) => {
   if (!isAuthorized(user, allowedPermissions)) {
@@ -15,7 +16,7 @@ const isAuthorized = (user, allowedPermissions) => {
 }
 
 const isAdmin = (user, done) => {
-  getAccessToken()
+  auth0.getAccessToken()
     .then(accessToken =>
       axios({
         method: 'GET',
@@ -33,41 +34,5 @@ const isAdmin = (user, done) => {
     });
 }
 
-const getAccessToken = () => {
-  return axios({
-    method: 'POST',
-    url: process.env.AUTH0_TOKEN_ENDPOINT,
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    data: {
-      client_id: process.env.API_AUTH0_CLIENT_ID,
-      client_secret: process.env.API_AUTH0_CLIENT_SECRET,
-      audience: process.env.AUTH0_MANAGEMENT_API_AUDIENCE,
-      grant_type: 'client_credentials'
-    }
-  })
-    .then(tokenResponse => tokenResponse.data.access_token);
-}
-
-const getUserInfo = (accessToken, done) => {
-  axios({
-    method: 'GET',
-    url: process.env.AUTH0_USERINFO_ENDPOINT,
-    headers: {
-      'Authorization': `Bearer ${accessToken}`
-    }
-  })
-    .then(response => done(null, response.data))
-    .catch(err => {
-      if (err?.response?.data) {
-        return done(err.response.data);
-      }
-      return done(err);
-    });
-}
-
 exports.enforceAuthorization = enforceAuthorization;
 exports.isAdmin = isAdmin;
-exports.getAccessToken = getAccessToken;
-exports.getUserInfo = getUserInfo;
