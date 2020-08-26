@@ -7,51 +7,56 @@ const contactSchema = require('./schema/contactSchema');
 const Contact = mongoose.model('Contact', contactSchema);
 
 // Add contact
-const addContact = (contact, done, lean = false) => {
-  new Contact(contact)
-    .save((err, data) => {
-      if (err) return done(err);
-      done(null, lean ? data.toObject() : data);
+const addContact = (contact) => {
+  return new Contact(contact).save()
+    .then(savedContact => {
+      if (!savedContact) {
+        throw new Error('Something went wrong. Could not add contact for the given input.');
+      }
+      return savedContact;
     });
 }
 
 // Get contact by ID
-const getContactById = (contactId, done) => {
-  Contact.findById(
-    contactId,
-    (err, data) => {
-      if (err) return done(err);
-      done(null, data);
-    }
-  );
-}
-
-// Get contact by IDP subject
-const getContactByIdpSubject = (idpSub, done, lean = false) => {
-  Contact.findOne({ idpSubject: idpSub })
-    .lean(lean)
-    .exec((err, data) => {
-      if (err) return done(err);
-      done(null, data);
+const getContactById = (contactId) => {
+  return Contact.findById(contactId)
+    .then(existingContact => {
+      if (!existingContact) {
+        const notFoundError = new Error(`No contact found for ID ${contactId}`);
+        notFoundError.statusCode = 404;
+        throw notFoundError;
+      }
+      return existingContact;
     });
 }
 
+// Get contact by IDP subject
+const getContactByIdpSubject = (idpSub, lean = false) => {
+  return Contact.findOne({ idpSubject: idpSub }).lean(lean)
+    .then(contact => {
+      if (!contact) {
+        const notFoundError = new Error(`There is no profile contact for IDP sub ${idpSub}. Create one first.`);
+        notFoundError.statusCode = 404;
+        throw notFoundError;
+      }
+      return contact;
+    })
+}
+
 // Update contact by ID
-const updateContact = (contactId, contact, done) => {
-  Contact.findByIdAndUpdate(
-    contactId,
-    contact,
-    { new: true, useFindAndModify: false },
-    (err, data) => {
-      if (err) return done(err);
-      done(null, data);
-    }
-  );
+const updateContact = (contactId, contact, lean = false) => {
+  return Contact.findByIdAndUpdate(contactId, contact, { new: true, useFindAndModify: false }).lean(lean)
+    .then(updatedContact => {
+      if (!updatedContact) {
+        throw new Error('Something went wrong. Could not update contact for the given input.');
+      }
+      return updatedContact;
+    });
 }
 
 // List contacts by keyword
-const listContactsByKeyword = (keyword, done) => {
-  Contact.find(
+const listContactsByKeyword = (keyword) => {
+  return Contact.find(
     keyword === ':all:' ?
       {} :
       {
@@ -60,12 +65,7 @@ const listContactsByKeyword = (keyword, done) => {
           { address: new RegExp(keyword, 'i') },
           { phoneNumber: new RegExp(keyword, 'i') }
         ]
-      },
-    (err, data) => {
-      if (err) return done(err);
-      done(null, data);
-    }
-  );
+      });
 }
 
 exports.addContact = addContact;
