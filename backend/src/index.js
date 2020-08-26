@@ -68,7 +68,7 @@ app.use('/_api/v1/profile-contacts', profileContactsRoute);
 app.use((err, req, res, next) => {
   if (err) {
     const error = {
-      message: err.message || 'Internal Server Error',
+      message: err.message || err.error_description || 'Internal Server Error',
       statusCode: err.statusCode || 500,
       timestamp: new Date().toISOString()
     }
