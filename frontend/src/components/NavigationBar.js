@@ -33,7 +33,7 @@ const NavigationBar = ({ profileContact, isAdmin }) => {
               </LinkContainer>
             </Nav.Item>}
           <Nav.Item className="flex-grow-1" />
-          {isAuthenticated && <Nav.Item>
+          {isAuthenticated && <Nav.Item className="align-self-center">
             <LinkContainer to="/profile">
               <Nav.Link className="d-inline-flex">
                 <Avatar className="mr-1">

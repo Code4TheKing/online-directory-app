@@ -2,6 +2,7 @@ import {
   ADD_CONTACT, ADD_CONTACT_ERROR, ADD_CONTACT_SUCCESS,
   CREATE_PROFILE_CONTACT, CREATE_PROFILE_CONTACT_ERROR, CREATE_PROFILE_CONTACT_SUCCESS,
   GET_PROFILE_CONTACT, GET_PROFILE_CONTACT_ERROR, GET_PROFILE_CONTACT_SUCCESS,
+  INVITE_CONTACT, INVITE_CONTACT_ERROR, INVITE_CONTACT_SUCCESS,
   LIST_CONTACTS, LIST_CONTACTS_ERROR, LIST_CONTACTS_SUCCESS,
   UPDATE_CONTACT, UPDATE_CONTACT_ERROR, UPDATE_CONTACT_SUCCESS,
   UPDATE_PROFILE_CONTACT, UPDATE_PROFILE_CONTACT_ERROR, UPDATE_PROFILE_CONTACT_SUCCESS
@@ -67,6 +68,25 @@ const updateContactSuccess = (contact) => {
 const updateContactError = (err) => {
   return {
     type: UPDATE_CONTACT_ERROR,
+    error: err
+  }
+}
+
+const inviteContact = () => {
+  return {
+    type: INVITE_CONTACT
+  }
+}
+
+const inviteContactSuccess = () => {
+  return {
+    type: INVITE_CONTACT_SUCCESS
+  }
+}
+
+const inviteContactError = (err) => {
+  return {
+    type: INVITE_CONTACT_ERROR,
     error: err
   }
 }
@@ -147,14 +167,14 @@ export const addContactAsync = (contact, token) => {
       body: JSON.stringify(contact)
     })
       .then(response => response.json()
-        .then((contact) => ({ contact, response }))
-        .then(({ contact, response }) => new Promise(resolve => { setTimeout(() => resolve({ contact, response }), 500) }))
-        .then(({ contact, response }) => {
+        .then((responseJson) => ({ responseJson, response }))
+        .then(({ responseJson, response }) => new Promise(resolve => { setTimeout(() => resolve({ responseJson, response }), 500) }))
+        .then(({ responseJson, response }) => {
           if (!response.ok) {
-            dispatch(addContactError(contact));
-            return Promise.reject(contact);
+            dispatch(addContactError(responseJson));
+            return Promise.reject(responseJson);
           } else {
-            dispatch(addContactSuccess(contact));
+            dispatch(addContactSuccess(responseJson));
           }
         }))
       .catch((err) => console.error(err));
@@ -172,14 +192,14 @@ export const listContactsByKeywordAsync = (keyword, token) => {
         }
       })
       .then(response => response.json()
-        .then((contacts) => ({ contacts, response }))
-        .then(({ contacts, response }) => new Promise(resolve => { setTimeout(() => resolve({ contacts, response }), 500) }))
-        .then(({ contacts, response }) => {
+        .then((responseJson) => ({ responseJson, response }))
+        .then(({ responseJson, response }) => new Promise(resolve => { setTimeout(() => resolve({ responseJson, response }), 500) }))
+        .then(({ responseJson, response }) => {
           if (!response.ok) {
-            dispatch(listContactsError(contacts));
-            return Promise.reject(contacts);
+            dispatch(listContactsError(responseJson));
+            return Promise.reject(responseJson);
           } else {
-            dispatch(listContactsSuccess(keyword, contacts));
+            dispatch(listContactsSuccess(keyword, responseJson));
           }
         }))
       .catch((err) => console.error(err));
@@ -202,14 +222,40 @@ export const updateContactAsync = (contact, token) => {
         body: JSON.stringify(localContact)
       })
       .then(response => response.json()
-        .then((contact) => ({ contact, response }))
-        .then(({ contact, response }) => new Promise(resolve => { setTimeout(() => resolve({ contact, response }), 500) }))
-        .then(({ contact, response }) => {
+        .then((responseJson) => ({ responseJson, response }))
+        .then(({ responseJson, response }) => new Promise(resolve => { setTimeout(() => resolve({ responseJson, response }), 500) }))
+        .then(({ responseJson, response }) => {
           if (!response.ok) {
-            dispatch(updateContactError(contact));
-            return Promise.reject(contact);
+            dispatch(updateContactError(responseJson));
+            return Promise.reject(responseJson);
           } else {
-            dispatch(updateContactSuccess(contact));
+            dispatch(updateContactSuccess(responseJson));
+          }
+        }))
+      .catch((err) => console.error(err));
+  };
+}
+
+export const inviteContactAsync = (contactId, email, token) => {
+  return (dispatch) => {
+    dispatch(inviteContact());
+    return fetch(`http://localhost:4000/_api/v1/contacts/${contactId}/invite`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ email: email })
+    })
+      .then(response => response.json()
+        .then((responseJson) => ({ responseJson, response }))
+        .then(({ responseJson, response }) => new Promise(resolve => { setTimeout(() => resolve({ responseJson, response }), 500) }))
+        .then(({ responseJson, response }) => {
+          if (!response.ok) {
+            dispatch(inviteContactError(responseJson));
+            return Promise.reject(responseJson);
+          } else {
+            dispatch(inviteContactSuccess(responseJson));
           }
         }))
       .catch((err) => console.error(err));
@@ -229,14 +275,14 @@ export const createProfileContactAsync = (token) => {
       }
     })
       .then(response => response.json()
-        .then((profileContact) => ({ profileContact, response }))
-        .then(({ profileContact, response }) => new Promise(resolve => { setTimeout(() => resolve({ profileContact, response }), 500) }))
-        .then(({ profileContact, response }) => {
+        .then((responseJson) => ({ responseJson, response }))
+        .then(({ responseJson, response }) => new Promise(resolve => { setTimeout(() => resolve({ responseJson, response }), 500) }))
+        .then(({ responseJson, response }) => {
           if (!response.ok) {
-            dispatch(createProfileContactError(profileContact));
-            return Promise.reject(profileContact);
+            dispatch(createProfileContactError(responseJson));
+            return Promise.reject(responseJson);
           } else {
-            dispatch(createProfileContactSuccess(profileContact));
+            dispatch(createProfileContactSuccess(responseJson));
           }
         }))
       .catch((err) => console.error(err));
@@ -254,14 +300,14 @@ export const getProfileContactAsync = (token) => {
         }
       })
       .then(response => response.json()
-        .then((profileContact) => ({ profileContact, response }))
-        .then(({ profileContact, response }) => new Promise(resolve => { setTimeout(() => resolve({ profileContact, response }), 500) }))
-        .then(({ profileContact, response }) => {
+        .then((responseJson) => ({ responseJson, response }))
+        .then(({ responseJson, response }) => new Promise(resolve => { setTimeout(() => resolve({ responseJson, response }), 500) }))
+        .then(({ responseJson, response }) => {
           if (!response.ok) {
-            dispatch(getProfileContactError(profileContact));
-            return Promise.reject(profileContact);
+            dispatch(getProfileContactError(responseJson));
+            return Promise.reject(responseJson);
           } else {
-            dispatch(getProfileContactSuccess(profileContact));
+            dispatch(getProfileContactSuccess(responseJson));
           }
         }))
       .catch((err) => console.error(err));
@@ -284,14 +330,14 @@ export const updateProfileContactAsync = (profileContact, token) => {
         body: JSON.stringify(localProfileContact)
       })
       .then(response => response.json()
-        .then((profileContact) => ({ profileContact, response }))
-        .then(({ profileContact, response }) => new Promise(resolve => { setTimeout(() => resolve({ profileContact, response }), 500) }))
-        .then(({ profileContact, response }) => {
+        .then((responseJson) => ({ responseJson, response }))
+        .then(({ responseJson, response }) => new Promise(resolve => { setTimeout(() => resolve({ responseJson, response }), 500) }))
+        .then(({ responseJson, response }) => {
           if (!response.ok) {
-            dispatch(updateProfileContactError(profileContact));
-            return Promise.reject(profileContact);
+            dispatch(updateProfileContactError(responseJson));
+            return Promise.reject(responseJson);
           } else {
-            dispatch(updateProfileContactSuccess(profileContact));
+            dispatch(updateProfileContactSuccess(responseJson));
           }
         }))
       .catch((err) => console.error(err));
