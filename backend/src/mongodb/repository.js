@@ -45,7 +45,12 @@ const getContactByIdpSubject = (idpSub, lean = false) => {
 
 // Update contact by ID
 const updateContact = (contactId, contact, lean = false) => {
-  return Contact.findByIdAndUpdate(contactId, contact, { new: true, useFindAndModify: false }).lean(lean)
+  return Contact
+    .findByIdAndUpdate(
+      contactId,
+      contact,
+      { new: true, useFindAndModify: false, runValidators: true })
+    .lean(lean)
     .then(updatedContact => {
       if (!updatedContact) {
         throw new Error('Something went wrong. Could not update contact for the given input.');
