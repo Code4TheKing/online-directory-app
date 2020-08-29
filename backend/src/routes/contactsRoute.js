@@ -72,14 +72,18 @@ router.post('/:id/invite', (req, res, next) => {
       .then(existingContact =>
         auth0.getAccessToken()
           .then(accessToken =>
-            Promise.all([auth0.createUser(accessToken, req.body.email, existingContact.name, req.params.id), auth0.getParticipantRoleId(accessToken)])
-              .then(([createUserResponse, participantRoleId]) =>
-                auth0.assignParticipantRoleToUser(accessToken, createUserResponse.data.user_id, participantRoleId))
-              .then(() => auth0.triggerChangePassword(req.body.email))
-              .then((changePasswordResponse) => res.json({ result: changePasswordResponse.data })))
-      )
-      .catch(err => handleError(err, next))
-  );
+            auth0.createUser(accessToken, req.body.email, existingContact.name, req.params.id)
+              .catch(createUserErr => {
+                if (createUserErr.response.status === 409) {
+                  return auth0.getUserByEmail(accessToken, req.body.email)
+                }
+                throw createUserErr;
+              })
+              .then(user => auth0.getParticipantRoleId(accessToken)
+                .then(participantRoleId => auth0.assignParticipantRoleToUser(accessToken, user.user_id, participantRoleId))
+                .then(() => auth0.triggerChangePassword(req.body.email))
+                .then((changePasswordResponse) => res.json({ result: changePasswordResponse.data })))))
+      .catch(err => handleError(err, next)));
 });
 
 const handleError = (err, next) => {

@@ -55,7 +55,30 @@ const createUser = (accessToken, email, name, contactId) => {
         contact_id: contactId
       }
     }
-  });
+  })
+    .then(createUserResponse => createUserResponse.data);
+}
+
+const getUserByEmail = (accessToken, email) => {
+  return axios({
+    method: 'GET',
+    url: `${process.env.AUTH0_MANAGEMENT_API_AUDIENCE}users-by-email`,
+    headers: {
+      'Authorization': `Bearer ${accessToken}`
+    },
+    params: {
+      fields: 'user_id',
+      email: email
+    }
+  })
+    .then(usersResponse => {
+      if (usersResponse?.data?.length === 1) {
+        return usersResponse.data[0];
+      } else if (usersResponse?.data?.length > 1) {
+        throw new Error(`Unexpected: More than 1 user found for email ${email}`);
+      }
+      throw new Error(`Unexpected: No user found for email ${email}`);
+    });
 }
 
 const getParticipantRoleId = (accessToken) => {
@@ -72,6 +95,8 @@ const getParticipantRoleId = (accessToken) => {
     .then(rolesResponse => {
       if (rolesResponse?.data?.length === 1) {
         return rolesResponse.data[0].id;
+      } else if (rolesResponse?.data?.length > 1) {
+        throw new Error('Unexpected: More than one participant role found');
       }
       throw new Error('Unexpected: No participant role found');
     });
@@ -109,6 +134,7 @@ const triggerChangePassword = (email) => {
 exports.getAccessToken = getAccessToken;
 exports.getUser = getUser;
 exports.createUser = createUser;
+exports.getUserByEmail = getUserByEmail;
 exports.getParticipantRoleId = getParticipantRoleId;
 exports.assignParticipantRoleToUser = assignParticipantRoleToUser;
 exports.triggerChangePassword = triggerChangePassword;
