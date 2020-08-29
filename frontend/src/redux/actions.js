@@ -158,7 +158,7 @@ const updateProfileContactError = (err) => {
 export const addContactAsync = (contact, token) => {
   return (dispatch) => {
     dispatch(addContact());
-    return fetch(`http://localhost:4000/_api/v1/contacts`, {
+    return fetch(`${process.env.REACT_APP_API_URL}/_api/v1/contacts`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -185,7 +185,7 @@ export const listContactsByKeywordAsync = (keyword, token) => {
   return (dispatch) => {
     dispatch(listContacts(keyword));
     return fetch(
-      `http://localhost:4000/_api/v1/contacts?keyword=${keyword}`,
+      `${process.env.REACT_APP_API_URL}/_api/v1/contacts?keyword=${keyword}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -212,7 +212,7 @@ export const updateContactAsync = (contact, token) => {
   return (dispatch) => {
     dispatch(updateContact());
     return fetch(
-      `http://localhost:4000/_api/v1/contacts/${contact._id}`,
+      `${process.env.REACT_APP_API_URL}/_api/v1/contacts/${contact._id}`,
       {
         method: 'PATCH',
         headers: {
@@ -239,7 +239,7 @@ export const updateContactAsync = (contact, token) => {
 export const inviteContactAsync = (contactId, email, token) => {
   return (dispatch) => {
     dispatch(inviteContact());
-    return fetch(`http://localhost:4000/_api/v1/contacts/${contactId}/invite`, {
+    return fetch(`${process.env.REACT_APP_API_URL}/_api/v1/contacts/${contactId}/invite`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -267,7 +267,7 @@ export const inviteContactAsync = (contactId, email, token) => {
 export const createProfileContactAsync = (token) => {
   return (dispatch) => {
     dispatch(createProfileContact());
-    return fetch(`http://localhost:4000/_api/v1/profile-contacts`, {
+    return fetch(`${process.env.REACT_APP_API_URL}/_api/v1/profile-contacts`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -293,7 +293,7 @@ export const getProfileContactAsync = (token) => {
   return (dispatch) => {
     dispatch(getProfileContact());
     return fetch(
-      `http://localhost:4000/_api/v1/profile-contacts`,
+      `${process.env.REACT_APP_API_URL}/_api/v1/profile-contacts`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -320,7 +320,7 @@ export const updateProfileContactAsync = (profileContact, token) => {
   return (dispatch) => {
     dispatch(updateProfileContact());
     return fetch(
-      `http://localhost:4000/_api/v1/profile-contacts`,
+      `${process.env.REACT_APP_API_URL}/_api/v1/profile-contacts`,
       {
         method: 'PATCH',
         headers: {
