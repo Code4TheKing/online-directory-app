@@ -11,6 +11,7 @@ import Admin from './pages/Admin';
 import Home from './pages/Home';
 import Profile from './pages/Profile';
 import Search from './pages/Search';
+import NotFound from './pages/NotFound';
 import { createProfileContactAsync, getProfileContactAsync } from "./redux/actions";
 
 const OnlineDirectoryApp = ({ getProfileContactError, isAdmin, profileContact, getProfileContact, createProfileContact }) => {
@@ -47,8 +48,9 @@ const OnlineDirectoryApp = ({ getProfileContactError, isAdmin, profileContact, g
         <Switch>
           <Route path="/" component={Home} exact />
           <PrivateRoute path="/search" component={Search} />
-          <PrivateRoute path="/admin" component={Admin} />
+          {isAdmin && <PrivateRoute path="/admin" component={Admin} />}
           <PrivateRoute path="/profile" component={Profile} />
+          <Route component={NotFound} />
         </Switch>
       </Jumbotron>
     </>
