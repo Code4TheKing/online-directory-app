@@ -29,7 +29,9 @@ router.post('/', (req, res, next) => {
           .then(accessToken => auth0.getUser(accessToken, idpSub)
             .then(user => Promise.all([
               user.user_metadata?.contact_id ?
-                repository.updateContact(user.user_metadata.contact_id, { idpSubject: idpSub }, true) :
+                repository.getContactById(user.user_metadata.contact_id)
+                  .then(contact => repository.updateContact(contact._id, { idpSubject: idpSub }, true))
+                  .catch(() => repository.addContact({ name: user.name, idpSubject: idpSub })) :
                 repository.addContact({ name: user.name, idpSubject: idpSub }),
               authz.isAdmin(accessToken, req.user)
             ]))
