@@ -10,7 +10,6 @@ const contactSchema = new Schema({
   },
   idpSubject: {
     type: String,
-    minlength: [1, 'Too short'],
     maxlength: [64, 'Too long']
   },
   name: {
@@ -21,12 +20,10 @@ const contactSchema = new Schema({
   },
   address: {
     type: String,
-    minlength: [1, 'Too short'],
     maxlength: [256, 'Too long']
   },
   phoneNumber: {
     type: String,
-    minlength: [1, 'Too short'],
     maxlength: [32, 'Too long']
   }
 });
