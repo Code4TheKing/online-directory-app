@@ -104,7 +104,7 @@ const ContactCard = ({
           { [fieldDefs.mainField.name]: mainField },
           fieldDefs.otherFields
             .reduce((acc, curr) => {
-              if (otherFields[curr.name]) acc[curr.name] = otherFields[curr.name];
+              if (otherFields[curr.name] || otherFields[curr.name] === '') acc[curr.name] = otherFields[curr.name];
               return acc;
             }, {})),
         token)
