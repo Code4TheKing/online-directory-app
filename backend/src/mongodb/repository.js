@@ -4,7 +4,7 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
   .catch(err => console.error(err));
 
 const contactSchema = require('./schema/contactSchema');
-const Contact = mongoose.model('Contact', contactSchema);
+const Contact = mongoose.model('Contact', contactSchema.schema);
 
 // Add contact
 const addContact = (contact) => {

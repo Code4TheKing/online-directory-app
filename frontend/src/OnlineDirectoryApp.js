@@ -9,20 +9,30 @@ import NavigationBar from './components/NavigationBar';
 import PrivateRoute from './components/PrivateRoute';
 import Admin from './pages/Admin';
 import Home from './pages/Home';
+import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
 import Search from './pages/Search';
-import NotFound from './pages/NotFound';
-import { createProfileContactAsync, getProfileContactAsync } from "./redux/actions";
+import { createProfileContactAsync, getFieldDefinitionsAsync, getProfileContactAsync } from './redux/actions';
 
-const OnlineDirectoryApp = ({ getProfileContactError, isAdmin, profileContact, getProfileContact, createProfileContact }) => {
+const OnlineDirectoryApp = ({
+  isGettingFieldDefinitions,
+  getProfileContactError,
+  isAdmin,
+  profileContact,
+  getFieldDefinitions,
+  getProfileContact,
+  createProfileContact
+}) => {
   const { isLoading, isAuthenticated, getAccessTokenSilently } = useAuth0();
 
   useEffect(() => {
     if (isAuthenticated) {
       getAccessTokenSilently()
+        .then(token => getFieldDefinitions(token));
+      getAccessTokenSilently()
         .then(token => getProfileContact(token));
     }
-  }, [isAuthenticated, getAccessTokenSilently, getProfileContact]);
+  }, [isAuthenticated, getAccessTokenSilently, getFieldDefinitions, getProfileContact]);
 
   useEffect(() => {
     if (getProfileContactError?.statusCode === 404) {
@@ -33,7 +43,7 @@ const OnlineDirectoryApp = ({ getProfileContactError, isAdmin, profileContact, g
     }
   }, [getProfileContactError, isAuthenticated, getAccessTokenSilently, createProfileContact]);
 
-  if (isLoading || (isAuthenticated && isAdmin === null)) {
+  if (isLoading || isGettingFieldDefinitions || (isAuthenticated && isAdmin === null)) {
     return (
       <Container className="d-flex justify-content-center">
         <CircularProgress className="w-25 h-25" />
@@ -58,12 +68,15 @@ const OnlineDirectoryApp = ({ getProfileContactError, isAdmin, profileContact, g
 }
 
 const mapStateToProps = (state) => ({
+  fieldDefinitions: state.contacts.fieldDefinitions,
+  isGettingFieldDefinitions: state.contacts.isGettingFieldDefinitions,
   getProfileContactError: state.profileContacts.getProfileContactError,
   isAdmin: state.profileContacts.isAdmin,
   profileContact: state.profileContacts.profileContact
 });
 
 const mapDispatchToProps = (dispatch) => ({
+  getFieldDefinitions: (token) => dispatch(getFieldDefinitionsAsync(token)),
   getProfileContact: (token) => dispatch(getProfileContactAsync(token)),
   createProfileContact: (token) => dispatch(createProfileContactAsync(token))
 });

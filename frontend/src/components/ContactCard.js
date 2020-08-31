@@ -17,24 +17,7 @@ import '../styles/contact-card.css';
 const ContactCard = ({
   width,
   editable = false,
-  fieldDefs = {
-    idField: {
-      name: "_id"
-    },
-    mainField: {
-      name: "name"
-    },
-    otherFields: [
-      {
-        name: "address",
-        displayName: "Address"
-      },
-      {
-        name: "phoneNumber",
-        displayName: "Phone Number"
-      }
-    ]
-  },
+  fieldDefinitions,
   contact = {},
   isSaving = false,
   isInviting = false,
@@ -42,12 +25,12 @@ const ContactCard = ({
   saveFunc,
   inviteFunc
 }) => {
-  const getIdValue = (fieldDefs, contact) => {
-    return getFieldValue(contact, fieldDefs.idField.name);
+  const getIdValue = (fieldDefinitions, contact) => {
+    return getFieldValue(contact, fieldDefinitions.idField.propName);
   }
 
-  const getMainValue = (fieldDefs, contact) => {
-    return getFieldValue(contact, fieldDefs.mainField.name);
+  const getMainValue = (fieldDefinitions, contact) => {
+    return getFieldValue(contact, fieldDefinitions.mainField.propName);
   }
 
   const getFieldValue = (contact, fieldName) => {
@@ -57,15 +40,15 @@ const ContactCard = ({
   const emptyIfNull = (contact, fieldName) => {
     return contact[fieldName] ?
       contact[fieldName] :
-      (fieldName === fieldDefs.idField.name ? 'no-id' : '');
+      (fieldName === fieldDefinitions.idField.propName ? 'no-id' : '');
   }
 
   const { getAccessTokenSilently } = useAuth0();
-  const [mainField, setMainField] = useState(getMainValue(fieldDefs, contact));
+  const [mainField, setMainField] = useState(getMainValue(fieldDefinitions, contact));
   const [otherFields, setOtherFields] = useState(
-    fieldDefs.otherFields
+    fieldDefinitions.otherFields
       .reduce((acc, curr) => {
-        acc[curr.name] = getFieldValue(contact, curr.name);
+        acc[curr.propName] = getFieldValue(contact, curr.propName);
         return acc;
       }, {}));
   const [modified, setModified] = useState(false);
@@ -77,12 +60,12 @@ const ContactCard = ({
   const otherRefs = useRef({});
 
   const isModified = () => {
-    return getMainValue(fieldDefs, contact) !== mainField || fieldDefs.otherFields.some(field => getFieldValue(contact, field.name) !== otherFields[field.name]);
+    return getMainValue(fieldDefinitions, contact) !== mainField || fieldDefinitions.otherFields.some(field => getFieldValue(contact, field.propName) !== otherFields[field.propName]);
   }
 
   useDeepCompareEffect(() => {
     Holder.run({
-      images: '#img-' + getIdValue(fieldDefs, contact)
+      images: '#img-' + getIdValue(fieldDefinitions, contact)
     });
     setModified(isModified());
   }, [contact]);
@@ -101,10 +84,10 @@ const ContactCard = ({
         Object.assign(
           {},
           contact,
-          { [fieldDefs.mainField.name]: mainField },
-          fieldDefs.otherFields
+          { [fieldDefinitions.mainField.propName]: mainField },
+          fieldDefinitions.otherFields
             .reduce((acc, curr) => {
-              if (otherFields[curr.name] || otherFields[curr.name] === '') acc[curr.name] = otherFields[curr.name];
+              if (otherFields[curr.propName] || otherFields[curr.propName] === '') acc[curr.propName] = otherFields[curr.propName];
               return acc;
             }, {})),
         token)
@@ -116,11 +99,11 @@ const ContactCard = ({
   }
 
   const reset = () => {
-    setMainField(getMainValue(fieldDefs, contact));
+    setMainField(getMainValue(fieldDefinitions, contact));
     setOtherFields(
-      fieldDefs.otherFields
+      fieldDefinitions.otherFields
         .reduce((acc, curr) => {
-          acc[curr.name] = getFieldValue(contact, curr.name);
+          acc[curr.propName] = getFieldValue(contact, curr.propName);
           return acc;
         }, {}));
   }
@@ -155,7 +138,7 @@ const ContactCard = ({
   return (
     <>
       <Card className="mb-3" style={{ width: width || '100%', maxWidth: '25rem' }} bg="dark" text="light">
-        <Card.Img id={"img-" + getIdValue(fieldDefs, contact)} variant="top" src="holder.js/100px200/auto" />
+        <Card.Img id={"img-" + getIdValue(fieldDefinitions, contact)} variant="top" src="holder.js/100px200/auto" />
         <Card.Header className="font-weight-bold">
           <Row key={0} className="align-items-center">
             <Col className="flex-grow-1 pr-0">
@@ -180,8 +163,8 @@ const ContactCard = ({
         </Card.Header>
         <Card.Body>
           {
-            fieldDefs.otherFields.map((field, idx) => {
-              return <Row key={idx} className={"align-items-center" + ((idx < fieldDefs.otherFields.length - 1) ? " mb-2" : "")}>
+            fieldDefinitions.otherFields.map((field, idx) => {
+              return <Row key={idx} className={"align-items-center" + ((idx < fieldDefinitions.otherFields.length - 1) ? " mb-2" : "")}>
                 <Col className="col-auto">
                   <span className="font-weight-bold">{field.displayName + ':'}</span>
                 </Col>
@@ -190,14 +173,14 @@ const ContactCard = ({
                     editable ?
                       <input
                         className="form-control editable cursor-pointer"
-                        ref={element => otherRefs.current[field.name] = element}
-                        value={otherFields[field.name]}
+                        ref={element => otherRefs.current[field.propName] = element}
+                        value={otherFields[field.propName]}
                         tabIndex={idx + 2}
-                        onChange={(event) => handleChange(event, (value) => setOtherFields(Object.assign({}, otherFields, { [field.name]: value })))} /> :
-                      <div>{otherFields[field.name]}</div>}
+                        onChange={(event) => handleChange(event, (value) => setOtherFields(Object.assign({}, otherFields, { [field.propName]: value })))} /> :
+                      <div>{otherFields[field.propName]}</div>}
                 </Col>
                 {editable && <Col className="col-auto pl-1">
-                  <div className="cursor-pointer" onClick={() => focus(otherRefs, field.name)}>
+                  <div className="cursor-pointer" onClick={() => focus(otherRefs, field.propName)}>
                     <Icon>edit</Icon>
                   </div>
                 </Col>}
