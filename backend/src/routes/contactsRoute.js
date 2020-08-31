@@ -3,6 +3,17 @@ const router = express.Router();
 const repository = require('../mongodb/repository');
 const authz = require('../utils/authz');
 const auth0 = require('../utils/auth0');
+const contactSchema = require('../mongodb/schema/contactSchema');
+
+// Get field definitions
+router.get('/field-definitions', (req, res, next) => {
+  authz.enforceAuthorization(
+    req.user,
+    ['read:contacts'],
+    req, res, next,
+    (req, res, next) => res.json(contactSchema.fieldDefinitions)
+  );
+});
 
 // Add contact
 router.post('/', (req, res, next) => {

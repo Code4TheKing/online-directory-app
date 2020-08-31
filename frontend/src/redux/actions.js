@@ -1,6 +1,7 @@
 import {
   ADD_CONTACT, ADD_CONTACT_ERROR, ADD_CONTACT_SUCCESS,
   CREATE_PROFILE_CONTACT, CREATE_PROFILE_CONTACT_ERROR, CREATE_PROFILE_CONTACT_SUCCESS,
+  GET_FIELD_DEFINITIONS, GET_FIELD_DEFINITIONS_ERROR, GET_FIELD_DEFINITIONS_SUCCESS,
   GET_PROFILE_CONTACT, GET_PROFILE_CONTACT_ERROR, GET_PROFILE_CONTACT_SUCCESS,
   INVITE_CONTACT, INVITE_CONTACT_ERROR, INVITE_CONTACT_SUCCESS,
   LIST_CONTACTS, LIST_CONTACTS_ERROR, LIST_CONTACTS_SUCCESS,
@@ -9,6 +10,26 @@ import {
 } from './actionTypes';
 
 // Action creators for contacts
+
+const getFieldDefinitions = () => {
+  return {
+    type: GET_FIELD_DEFINITIONS
+  }
+}
+
+const getFieldDefinitionsSuccess = (fieldDefinitions) => {
+  return {
+    type: GET_FIELD_DEFINITIONS_SUCCESS,
+    fieldDefinitions: fieldDefinitions
+  }
+}
+
+const getFieldDefinitionsError = (err) => {
+  return {
+    type: GET_FIELD_DEFINITIONS_ERROR,
+    error: err
+  }
+}
 
 const addContact = () => {
   return {
@@ -154,6 +175,31 @@ const updateProfileContactError = (err) => {
 }
 
 // Async dispatches for Contacts
+
+export const getFieldDefinitionsAsync = (token) => {
+  return (dispatch) => {
+    dispatch(getFieldDefinitions());
+    return fetch(
+      `${process.env.REACT_APP_API_URL}/_api/v1/contacts/field-definitions`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      })
+      .then(response => response.json()
+        .then((responseJson) => ({ responseJson, response }))
+        .then(({ responseJson, response }) => new Promise(resolve => { setTimeout(() => resolve({ responseJson, response }), 500) }))
+        .then(({ responseJson, response }) => {
+          if (!response.ok) {
+            dispatch(getFieldDefinitionsError(responseJson));
+            return Promise.reject(responseJson);
+          } else {
+            dispatch(getFieldDefinitionsSuccess(responseJson));
+          }
+        }))
+      .catch((err) => console.error(err));
+  }
+}
 
 export const addContactAsync = (contact, token) => {
   return (dispatch) => {
