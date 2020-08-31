@@ -5,18 +5,29 @@ import Container from 'react-bootstrap/Container';
 import '../styles/contact-card-list.scss';
 import ContactCard from './ContactCard';
 
-const ContactCardList = ({ searchText, contacts, isListing, isInviting, isAdmin = false, saveFunc, inviteFunc }) => {
+const ContactCardList = ({
+  fieldDefinitions,
+  searchText,
+  contacts,
+  isGettingFieldDefinitions,
+  isListing,
+  isInviting,
+  isAdmin = false,
+  saveFunc,
+  inviteFunc
+}) => {
 
   return (
     <Container className="d-flex justify-content-center px-3" style={!isListing && contacts.length > 0 ? { borderWidth: '1px', borderStyle: 'dashed' } : {}}>
       {
-        isListing ?
+        isGettingFieldDefinitions || isListing ?
           <CircularProgress /> :
           contacts.length > 0 ?
             <CardColumns className="mt-3">
               {
                 contacts.map(contact =>
                   <ContactCard
+                    fieldDefinitions={fieldDefinitions}
                     key={contact._id}
                     contact={contact}
                     isInviting={isInviting}
