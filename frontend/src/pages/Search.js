@@ -5,7 +5,18 @@ import ContactCardList from '../components/ContactCardList';
 import SearchBar from '../components/SearchBar';
 import { inviteContactAsync, listContactsByKeywordAsync, updateContactAsync } from '../redux/actions';
 
-const Search = ({ searchText, contacts, isListingContacts, isInvitingContact, isAdmin, listContactsByKeyword, updateContact, inviteContact }) => {
+const Search = ({
+  fieldDefinitions,
+  searchText,
+  contacts,
+  isGettingFieldDefinitions,
+  isListingContacts,
+  isInvitingContact,
+  isAdmin,
+  listContactsByKeyword,
+  updateContact,
+  inviteContact
+}) => {
 
   return (
     <div className="mx-5">
@@ -14,8 +25,10 @@ const Search = ({ searchText, contacts, isListingContacts, isInvitingContact, is
       </Row>
       <Row className="justify-content-center mt-5">
         <ContactCardList
+          fieldDefinitions={fieldDefinitions}
           searchText={searchText}
           contacts={contacts}
+          isGettingFieldDefinitions={isGettingFieldDefinitions}
           isListing={isListingContacts}
           isInviting={isInvitingContact}
           isAdmin={isAdmin}
@@ -27,8 +40,10 @@ const Search = ({ searchText, contacts, isListingContacts, isInvitingContact, is
 }
 
 const mapStateToProps = (state) => ({
+  fieldDefinitions: state.contacts.fieldDefinitions,
   searchText: state.contacts.searchText,
   contacts: state.contacts.searchContacts,
+  isGettingFieldDefinitions: state.contacts.isGettingFieldDefinitions,
   isListingContacts: state.contacts.isListingContacts,
   isInvitingContact: state.contacts.isInvitingContact,
   isAdmin: state.profileContacts.isAdmin
