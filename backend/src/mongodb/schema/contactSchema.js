@@ -1,9 +1,19 @@
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
+const NAME_REGEX = '^[A-Za-z0-9 ]+$';
+const NAME_MAX_LENGTH = 32;
+const NAME_VALIDATION_ERROR_MESSAGE = 'Alphabets (A-Z), numbers (0-9), or spaces';
+const ADDRESS_REGEX = '^[A-Za-z0-9 ,#-]*$';
+const ADDRESS_MAX_LENGTH = 128;
+const ADDRESS_VALIDATION_ERROR_MESSAGE = 'Alphabets (A-Z), numbers (0-9), spaces, or special characters (,#-)';
+const PHONE_NUMBER_REGEX = '^\\(\\d{3}\\) \\d{3}-\\d{4}$';
+const PHONE_NUMBER_MAX_LENGTH = 14;
+const PHONE_NUMBER_VALIDATION_ERROR_MESSAGE = 'Must be of the format (XXX) XXX-XXXX';
+
 const Schema = mongoose.Schema;
 
-const contactSchemaDefinition = {
+const contactSchema = new Schema({
   _id: {
     type: String,
     required: true,
@@ -17,18 +27,35 @@ const contactSchemaDefinition = {
     type: String,
     required: true,
     minlength: [1, 'Too short'],
-    maxlength: [64, 'Too long']
+    maxlength: [NAME_MAX_LENGTH, 'Too long'],
+    validate: {
+      validator: (value) => {
+        return new RegExp(NAME_REGEX).test(value);
+      },
+      message: NAME_VALIDATION_ERROR_MESSAGE
+    }
   },
   address: {
     type: String,
-    maxlength: [256, 'Too long']
+    maxlength: [ADDRESS_MAX_LENGTH, 'Too long'],
+    validate: {
+      validator: (value) => {
+        return new RegExp(ADDRESS_REGEX).test(value);
+      },
+      message: ADDRESS_VALIDATION_ERROR_MESSAGE
+    }
   },
   phoneNumber: {
     type: String,
-    maxlength: [32, 'Too long']
+    maxlength: [PHONE_NUMBER_MAX_LENGTH, 'Too long'],
+    validate: {
+      validator: (value) => {
+        return !value || new RegExp(PHONE_NUMBER_REGEX).test(value);
+      },
+      message: PHONE_NUMBER_VALIDATION_ERROR_MESSAGE
+    }
   }
-};
-const contactSchema = new Schema(contactSchemaDefinition);
+});
 
 const fieldDefinitions = {
   idField: {
@@ -36,20 +63,32 @@ const fieldDefinitions = {
   },
   mainField: {
     propName: 'name',
-    validationRegex: '^[A-Za-z0-9 ].+{0, 64}$'
+    validation: {
+      regex: NAME_REGEX,
+      maxLength: NAME_MAX_LENGTH,
+      errorMessage: NAME_VALIDATION_ERROR_MESSAGE
+    }
   },
   otherFields: [
     {
       propName: 'address',
       type: 'Address',
       displayName: 'Address',
-      validationRegex: '^[A-Za-z0-9,#-].+{0, 256}$'
+      validation: {
+        regex: ADDRESS_REGEX,
+        maxLength: ADDRESS_MAX_LENGTH,
+        errorMessage: ADDRESS_VALIDATION_ERROR_MESSAGE
+      }
     },
     {
       propName: 'phoneNumber',
       displayName: 'Phone Number',
       type: 'PhoneNumber',
-      validationRegex: '^\\(\\d{3}\\) \\d{3}-\\d{4}$'
+      validation: {
+        regex: PHONE_NUMBER_REGEX,
+        maxLength: PHONE_NUMBER_MAX_LENGTH,
+        errorMessage: PHONE_NUMBER_VALIDATION_ERROR_MESSAGE
+      }
     }
   ]
 }
