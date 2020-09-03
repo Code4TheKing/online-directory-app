@@ -7,7 +7,7 @@ import { IndexLinkContainer, LinkContainer } from 'react-router-bootstrap';
 import LoginButton from './LoginButton';
 import LogoutButton from './LogoutButton';
 
-const NavigationBar = ({ profileContact, isAdmin }) => {
+const NavigationBar = ({ fieldDefinitions, profileContact, isAdmin }) => {
   const { isAuthenticated } = useAuth0();
 
   return (
@@ -37,9 +37,9 @@ const NavigationBar = ({ profileContact, isAdmin }) => {
             <LinkContainer to="/profile">
               <Nav.Link className="d-inline-flex">
                 <Avatar className="mr-1">
-                  {profileContact.name.split(' ').map(word => word.charAt(0).toUpperCase()).join('').slice(0, 2)}
+                  {profileContact[fieldDefinitions.mainField.propName].split(' ').map(word => word.charAt(0).toUpperCase()).join('').slice(0, 2)}
                 </Avatar>
-                <span className="align-self-center"><u>{profileContact.name}</u></span>
+                <span className="align-self-center"><u>{profileContact[fieldDefinitions.mainField.propName]}</u></span>
               </Nav.Link>
             </LinkContainer>
           </Nav.Item>}

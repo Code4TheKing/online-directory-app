@@ -45,7 +45,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  updateProfileContact: (profileContact, token) => dispatch(updateProfileContactAsync(profileContact, token))
+  updateProfileContact: (fieldDefinitions, profileContact, token) => dispatch(updateProfileContactAsync(fieldDefinitions, profileContact, token))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);

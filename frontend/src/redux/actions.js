@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import {
   ADD_CONTACT, ADD_CONTACT_ERROR, ADD_CONTACT_SUCCESS,
   CREATE_PROFILE_CONTACT, CREATE_PROFILE_CONTACT_ERROR, CREATE_PROFILE_CONTACT_SUCCESS,
@@ -201,7 +202,7 @@ export const getFieldDefinitionsAsync = (token) => {
   }
 }
 
-export const addContactAsync = (contact, token) => {
+export const addContactAsync = (fieldDefinitions, contact, token) => {
   return (dispatch) => {
     dispatch(addContact());
     return fetch(`${process.env.REACT_APP_API_URL}/_api/v1/contacts`, {
@@ -218,9 +219,11 @@ export const addContactAsync = (contact, token) => {
         .then(({ responseJson, response }) => {
           if (!response.ok) {
             dispatch(addContactError(responseJson));
+            toast.error(`Error adding "${contact[fieldDefinitions.mainField.propName]}" - ${responseJson.message}`);
             return Promise.reject(responseJson);
           } else {
             dispatch(addContactSuccess(responseJson));
+            toast.success(`Added "${contact[fieldDefinitions.mainField.propName]}"`);
           }
         }))
       .catch((err) => console.error(err));
@@ -282,10 +285,10 @@ export const updateContactAsync = (contact, token) => {
   };
 }
 
-export const inviteContactAsync = (contactId, email, token) => {
+export const inviteContactAsync = (fieldDefinitions, contact, email, token) => {
   return (dispatch) => {
     dispatch(inviteContact());
-    return fetch(`${process.env.REACT_APP_API_URL}/_api/v1/contacts/${contactId}/invite`, {
+    return fetch(`${process.env.REACT_APP_API_URL}/_api/v1/contacts/${contact._id}/invite`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -299,9 +302,11 @@ export const inviteContactAsync = (contactId, email, token) => {
         .then(({ responseJson, response }) => {
           if (!response.ok) {
             dispatch(inviteContactError(responseJson));
+            toast.error(`Error inviting "${contact[fieldDefinitions.mainField.propName]}" - ${responseJson.message}`);
             return Promise.reject(responseJson);
           } else {
             dispatch(inviteContactSuccess(responseJson));
+            toast.success(`Invitation sent for "${contact[fieldDefinitions.mainField.propName]}"`);
           }
         }))
       .catch((err) => console.error(err));
@@ -360,7 +365,7 @@ export const getProfileContactAsync = (token) => {
   }
 }
 
-export const updateProfileContactAsync = (profileContact, token) => {
+export const updateProfileContactAsync = (fieldDefinitions, profileContact, token) => {
   const localProfileContact = Object.assign({}, profileContact);
   delete localProfileContact._id;
   return (dispatch) => {
@@ -381,9 +386,11 @@ export const updateProfileContactAsync = (profileContact, token) => {
         .then(({ responseJson, response }) => {
           if (!response.ok) {
             dispatch(updateProfileContactError(responseJson));
+            toast.error(`Error saving profile - ${responseJson.message}`);
             return Promise.reject(responseJson);
           } else {
             dispatch(updateProfileContactSuccess(responseJson));
+            toast.success('Profile saved!');
           }
         }))
       .catch((err) => console.error(err));
