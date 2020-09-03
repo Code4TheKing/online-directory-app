@@ -26,24 +26,27 @@ const ContactCard = ({
   inviteFunc
 }) => {
   const getIdValue = (fieldDefinitions, contact) => {
-    return getFieldValue(contact, fieldDefinitions.idField.propName);
+    return getFieldValue(contact, fieldDefinitions.idField.propName, 'no-id');
+  }
+
+  const getPictureValue = (fieldDefinitions, contact) => {
+    return getFieldValue(contact, fieldDefinitions.pictureField.propName, { link: 'holder.js/100px200/auto?random=yes' });
   }
 
   const getMainValue = (fieldDefinitions, contact) => {
-    return getFieldValue(contact, fieldDefinitions.mainField.propName);
+    return getFieldValue(contact, fieldDefinitions.mainField.propName, '');
   }
 
-  const getFieldValue = (contact, fieldName) => {
-    return emptyIfNull(contact, fieldName);
+  const getFieldValue = (contact, fieldName, defaultValue) => {
+    return emptyIfNull(contact, fieldName, defaultValue);
   }
 
-  const emptyIfNull = (contact, fieldName) => {
-    return contact[fieldName] ?
-      contact[fieldName] :
-      (fieldName === fieldDefinitions.idField.propName ? 'no-id' : '');
+  const emptyIfNull = (contact, fieldName, defaultValue) => {
+    return contact[fieldName] ? contact[fieldName] : defaultValue;
   }
 
   const { getAccessTokenSilently } = useAuth0();
+  const [pictureField, setPictureField] = useState(getPictureValue(fieldDefinitions, contact));
   const [mainField, setMainField] = useState(getMainValue(fieldDefinitions, contact));
   const [otherFields, setOtherFields] = useState(
     fieldDefinitions.otherFields
@@ -61,54 +64,74 @@ const ContactCard = ({
   const otherRefs = useRef({});
 
   const isModified = () => {
-    return getMainValue(fieldDefinitions, contact) !== mainField
+    return getPictureValue(fieldDefinitions, contact).link !== pictureField.link
+      || getMainValue(fieldDefinitions, contact) !== mainField
       || fieldDefinitions.otherFields.some(field => getFieldValue(contact, field.propName) !== otherFields[field.propName]);
   }
 
   useDeepCompareEffect(() => {
-    Holder.run({
-      images: '#img-' + getIdValue(fieldDefinitions, contact)
-    });
+    if (pictureField.link.startsWith('holder.js')) {
+      Holder.run({
+        images: '#img-' + getIdValue(fieldDefinitions, contact)
+      });
+    }
     setModified(isModified());
-  }, [contact]);
+  }, [pictureField, contact]);
 
   useDeepCompareEffect(() => {
     setModified(isModified());
-  }, [mainField, otherFields]);
+  }, [pictureField, mainField, otherFields]);
+
+  const handlePictureChange = (event) => {
+    if (event.target.files && event.target.files[0]) {
+      setPictureField({ link: URL.createObjectURL(event.target.files[0]) });
+    }
+  }
 
   const handleChange = (event, setFunc, maxLength) => {
-    setFunc(event.target.value?.trim().substring(0, maxLength));
+    setFunc(event.target.value?.substring(0, maxLength));
   };
 
-  const save = (event) => {
+  const saveContact = (event) => {
     const saveForm = event.currentTarget;
     event.preventDefault();
     event.stopPropagation();
 
     if (saveForm.checkValidity()) {
-      getAccessTokenSilently()
-        .then(token => saveFunc(
-          fieldDefinitions,
-          Object.assign(
-            {},
-            contact,
-            { [fieldDefinitions.mainField.propName]: mainField },
-            fieldDefinitions.otherFields
-              .reduce((acc, curr) => {
-                if (otherFields[curr.propName] || otherFields[curr.propName] === '') acc[curr.propName] = otherFields[curr.propName];
-                return acc;
-              }, {})),
-          token)
-          .then(() => { if (Object.keys(contact).length === 0) reset(); }));
+      const localPictureFormField = saveForm.elements[0];
+      if (localPictureFormField.files) {
+        saveWithPicture(localPictureFormField.files[0]);
+      } else {
+        saveWithPicture();
+      }
     }
     setSaveValidated(!saveForm.checkValidity());
   };
+
+  const saveWithPicture = (pictureFile) => {
+    getAccessTokenSilently()
+      .then(token => saveFunc(
+        fieldDefinitions,
+        Object.assign(
+          {},
+          contact,
+          { [fieldDefinitions.mainField.propName]: mainField },
+          fieldDefinitions.otherFields
+            .reduce((acc, curr) => {
+              if (otherFields[curr.propName] || otherFields[curr.propName] === '') acc[curr.propName] = otherFields[curr.propName];
+              return acc;
+            }, {})),
+        pictureFile,
+        token)
+        .then(() => { if (Object.keys(contact).length === 0) reset(); }));
+  }
 
   const focus = (ref, fieldName) => {
     fieldName ? ref.current[fieldName].focus() : ref.current.focus();
   }
 
   const reset = () => {
+    setPictureField(getPictureValue(fieldDefinitions, contact));
     setMainField(getMainValue(fieldDefinitions, contact));
     setOtherFields(
       fieldDefinitions.otherFields
@@ -149,8 +172,22 @@ const ContactCard = ({
   return (
     <>
       <Card className="mb-3" style={{ width: width || '100%', maxWidth: '25rem' }} bg="dark" text="light">
-        <Form noValidate validated={saveValidated} onSubmit={save}>
-          <Card.Img id={"img-" + getIdValue(fieldDefinitions, contact)} variant="top" src="holder.js/100px200/auto" />
+        <Form noValidate validated={saveValidated} onSubmit={saveContact}>
+          <Form.Group className="profile-picture mb-0">
+            <Form.Label className="w-100" htmlFor={"profile-picture-upload-" + getIdValue(fieldDefinitions, contact)}>
+              <Card.Img
+                className={editable ? "cursor-pointer" : ""}
+                id={"img-" + getIdValue(fieldDefinitions, contact)}
+                variant="top"
+                src={pictureField.link} />
+            </Form.Label>
+            <Form.Control
+              id={"profile-picture-upload-" + getIdValue(fieldDefinitions, contact)}
+              type="file"
+              accept="image/png, image/jpeg"
+              onChange={handlePictureChange}
+              disabled={!editable} />
+          </Form.Group>
           <Card.Header className="font-weight-bold">
             <Form.Row key={0} className="align-items-center">
               <Form.Group as={Col} className="flex-grow-1 pr-0 mb-0">
@@ -193,7 +230,7 @@ const ContactCard = ({
                           <Form.Control
                             className="form-control editable cursor-pointer"
                             ref={element => otherRefs.current[field.propName] = element}
-                            value={otherFields[field.propName]?.trim().substring(0, field.validation.maxLength)}
+                            value={otherFields[field.propName]?.substring(0, field.validation.maxLength)}
                             tabIndex={idx + 2}
                             onChange={(event) =>
                               handleChange(
