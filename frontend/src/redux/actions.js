@@ -202,32 +202,54 @@ export const getFieldDefinitionsAsync = (token) => {
   }
 }
 
-export const addContactAsync = (fieldDefinitions, contact, token) => {
+export const addContactAsync = (fieldDefinitions, contact, pictureFile, token) => {
   return (dispatch) => {
     dispatch(addContact());
-    return fetch(`${process.env.REACT_APP_API_URL}/_api/v1/contacts`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(contact)
-    })
-      .then(response => response.json()
-        .then((responseJson) => ({ responseJson, response }))
-        .then(({ responseJson, response }) => new Promise(resolve => { setTimeout(() => resolve({ responseJson, response }), 500) }))
-        .then(({ responseJson, response }) => {
-          if (!response.ok) {
-            dispatch(addContactError(responseJson));
-            toast.error(`Error adding "${contact[fieldDefinitions.mainField.propName]}" - ${responseJson.message}`);
-            return Promise.reject(responseJson);
-          } else {
-            dispatch(addContactSuccess(responseJson));
-            toast.success(`Added "${contact[fieldDefinitions.mainField.propName]}"`);
-          }
-        }))
+    if (pictureFile) {
+      return uploadProfilePicture(dispatch, pictureFile)
+        .then(responseJson => addContactTextFields(
+          dispatch,
+          fieldDefinitions,
+          Object.assign(
+            {},
+            contact,
+            {
+              picture: {
+                link: responseJson.data.link,
+                hash: responseJson.data.deletehash
+              }
+            }
+          ),
+          token))
+        .catch((err) => console.error(err));
+    }
+    return addContactTextFields(dispatch, fieldDefinitions, contact, token)
       .catch((err) => console.error(err));
   };
+}
+
+const addContactTextFields = (dispatch, fieldDefinitions, contact, token) => {
+  return fetch(`${process.env.REACT_APP_API_URL}/_api/v1/contacts`, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(contact)
+  })
+    .then(response => response.json()
+      .then((responseJson) => ({ responseJson, response }))
+      .then(({ responseJson, response }) => new Promise(resolve => { setTimeout(() => resolve({ responseJson, response }), 500) }))
+      .then(({ responseJson, response }) => {
+        if (!response.ok) {
+          dispatch(addContactError(responseJson));
+          toast.error(`Error adding "${contact[fieldDefinitions.mainField.propName]}" - ${responseJson.message}`);
+          return Promise.reject(responseJson);
+        } else {
+          dispatch(addContactSuccess(responseJson));
+          toast.success(`Added "${contact[fieldDefinitions.mainField.propName]}"`);
+        }
+      }));
 }
 
 export const listContactsByKeywordAsync = (keyword, token) => {
@@ -365,34 +387,81 @@ export const getProfileContactAsync = (token) => {
   }
 }
 
-export const updateProfileContactAsync = (fieldDefinitions, profileContact, token) => {
+export const updateProfileContactAsync = (fieldDefinitions, profileContact, pictureFile, token) => {
   const localProfileContact = Object.assign({}, profileContact);
   delete localProfileContact._id;
   return (dispatch) => {
     dispatch(updateProfileContact());
-    return fetch(
-      `${process.env.REACT_APP_API_URL}/_api/v1/profile-contacts`,
-      {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(localProfileContact)
-      })
-      .then(response => response.json()
-        .then((responseJson) => ({ responseJson, response }))
-        .then(({ responseJson, response }) => new Promise(resolve => { setTimeout(() => resolve({ responseJson, response }), 500) }))
-        .then(({ responseJson, response }) => {
-          if (!response.ok) {
-            dispatch(updateProfileContactError(responseJson));
-            toast.error(`Error saving profile - ${responseJson.message}`);
-            return Promise.reject(responseJson);
-          } else {
-            dispatch(updateProfileContactSuccess(responseJson));
-            toast.success('Profile saved!');
-          }
-        }))
+    if (pictureFile) {
+      return uploadProfilePicture(dispatch, pictureFile)
+        .then(responseJson =>
+          updateProfileContactTextFields(
+            dispatch,
+            Object.assign(
+              {},
+              localProfileContact,
+              {
+                picture: {
+                  link: responseJson.data.link,
+                  hash: responseJson.data.deletehash
+                }
+              }
+            ),
+            token))
+        .catch((err) => console.error(err));
+    }
+    return updateProfileContactTextFields(dispatch, localProfileContact, token)
       .catch((err) => console.error(err));
   };
+}
+
+const uploadProfilePicture = (dispatch, pictureFile) => {
+  const formdata = new FormData();
+  formdata.append("image", pictureFile);
+  return fetch(
+    process.env.REACT_APP_IMGUR_UPLOAD_ENDPOINT,
+    {
+      method: 'POST',
+      headers: {
+        Authorization: `Client-ID ${process.env.REACT_APP_IMGUR_CLIENT_ID}`
+      },
+      body: formdata
+    })
+    .then(response => response.json()
+      .then((responseJson) => ({ responseJson, response }))
+      .then(({ responseJson, response }) => {
+        if (!response.ok) {
+          dispatch(updateProfileContactError(responseJson));
+          toast.error(`Error saving profile - ${responseJson.message}`);
+          return Promise.reject(responseJson);
+        }
+        return responseJson;
+      }));
+}
+
+const updateProfileContactTextFields = (dispatch, localProfileContact, token) => {
+  return fetch(
+    `${process.env.REACT_APP_API_URL}/_api/v1/profile-contacts`,
+    {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(localProfileContact)
+    })
+    .then(response => response.json()
+      .then((responseJson) => ({ responseJson, response }))
+      .then(({ responseJson, response }) => new Promise(resolve => { setTimeout(() => resolve({ responseJson, response }), 500) }))
+      .then(({ responseJson, response }) => {
+        if (!response.ok) {
+          dispatch(updateProfileContactError(responseJson));
+          toast.error(`Error saving profile - ${responseJson.message}`);
+          return Promise.reject(responseJson);
+        } else {
+          dispatch(updateProfileContactSuccess(responseJson));
+          toast.success('Profile saved!');
+        }
+      }))
+    .catch((err) => console.error(err));
 }

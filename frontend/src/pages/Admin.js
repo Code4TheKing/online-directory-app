@@ -41,7 +41,7 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  addContact: (fieldDefinitions, contact, token) => dispatch(addContactAsync(fieldDefinitions, contact, token))
+  addContact: (fieldDefinitions, contact, pictureFile, token) => dispatch(addContactAsync(fieldDefinitions, contact, pictureFile, token))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Admin);
