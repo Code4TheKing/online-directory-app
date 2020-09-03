@@ -88,6 +88,7 @@ const ContactCard = ({
     if (saveForm.checkValidity()) {
       getAccessTokenSilently()
         .then(token => saveFunc(
+          fieldDefinitions,
           Object.assign(
             {},
             contact,
@@ -137,7 +138,7 @@ const ContactCard = ({
 
     if (inviteForm.checkValidity()) {
       getAccessTokenSilently()
-        .then(token => inviteFunc(contact._id, inviteEmailAddress, token))
+        .then(token => inviteFunc(fieldDefinitions, contact, inviteEmailAddress, token))
         .then(() => {
           setInviteEmailAddress('');
         });

@@ -1,10 +1,12 @@
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth0 } from '@auth0/auth0-react';
 import { CircularProgress } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Jumbotron from 'react-bootstrap/Jumbotron';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import NavigationBar from './components/NavigationBar';
 import PrivateRoute from './components/PrivateRoute';
 import Admin from './pages/Admin';
@@ -15,6 +17,7 @@ import Search from './pages/Search';
 import { createProfileContactAsync, getFieldDefinitionsAsync, getProfileContactAsync } from './redux/actions';
 
 const OnlineDirectoryApp = ({
+  fieldDefinitions,
   isGettingFieldDefinitions,
   getProfileContactError,
   isAdmin,
@@ -53,8 +56,9 @@ const OnlineDirectoryApp = ({
 
   return (
     <>
-      <NavigationBar profileContact={profileContact} isAdmin={isAdmin} />
+      <NavigationBar fieldDefinitions={fieldDefinitions} profileContact={profileContact} isAdmin={isAdmin} />
       <Jumbotron>
+        <ToastContainer />
         <Switch>
           <Route path="/" component={Home} exact />
           <PrivateRoute path="/search" component={Search} />
