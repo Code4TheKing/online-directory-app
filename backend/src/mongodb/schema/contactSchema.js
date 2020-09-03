@@ -23,6 +23,16 @@ const contactSchema = new Schema({
     type: String,
     maxlength: [64, 'Too long']
   },
+  picture: {
+    link: {
+      type: String,
+      required: true
+    },
+    hash: {
+      type: String,
+      required: true
+    }
+  },
   name: {
     type: String,
     required: true,
@@ -60,6 +70,9 @@ const contactSchema = new Schema({
 const fieldDefinitions = {
   idField: {
     propName: '_id'
+  },
+  pictureField: {
+    propName: 'picture'
   },
   mainField: {
     propName: 'name',
