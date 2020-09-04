@@ -1,4 +1,4 @@
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth0 } from '@auth0/auth0-react';
 import { Icon, LinearProgress } from '@material-ui/core';
 import 'holderjs';
 import Holder from 'holderjs';
@@ -11,6 +11,7 @@ import Modal from 'react-bootstrap/Modal';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Row from 'react-bootstrap/Row';
 import Tooltip from 'react-bootstrap/Tooltip';
+import { LinkContainer } from 'react-router-bootstrap';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import '../styles/contact-card.css';
 
@@ -30,7 +31,7 @@ const ContactCard = ({
   }
 
   const getPictureValue = (fieldDefinitions, contact) => {
-    return getFieldValue(contact, fieldDefinitions.pictureField.propName, { link: 'holder.js/100px200/auto?random=yes' });
+    return getFieldValue(contact, fieldDefinitions.pictureField.propName, { link: 'holder.js/100px200/auto?random=yes&text=No Image' });
   }
 
   const getMainValue = (fieldDefinitions, contact) => {
@@ -68,6 +69,10 @@ const ContactCard = ({
       || getMainValue(fieldDefinitions, contact) !== mainField
       || fieldDefinitions.otherFields.some(field => getFieldValue(contact, field.propName) !== otherFields[field.propName]);
   }
+
+  useDeepCompareEffect(() => {
+    reset();
+  }, [contact]);
 
   useDeepCompareEffect(() => {
     if (pictureField.link.startsWith('holder.js')) {
@@ -273,15 +278,25 @@ const ContactCard = ({
               </Col>
             </Row>}
           </Card.Body>}
-          {!contact.idpSubject && isAdmin && <Card.Body className="pt-0 pb-1">
-            <Row className="justify-content-end">
-              <div className="cursor-pointer d-flex align-items-center">
-                <OverlayTrigger placement="top" transition={false} overlay={<Tooltip>Invite user</Tooltip>}>
+          {isAdmin && <Card.Body className="pt-0 pb-1">
+            <Row>
+              {!contact.idpSubject && <div className="cursor-pointer d-flex align-items-center">
+                <OverlayTrigger placement="top" transition={false} overlay={<Tooltip>Invite contact</Tooltip>}>
                   {({ ref, ...triggerHandler }) => (
                     <Icon ref={ref} onClick={handleShowInviteModal} {...triggerHandler}>person_add</Icon>
                   )}
                 </OverlayTrigger>
-              </div>
+              </div>}
+              <div className="d-flex flex-grow-1" />
+              {contact._id && <div className="cursor-pointer d-flex align-items-center">
+                <OverlayTrigger placement="top" transition={false} overlay={<Tooltip>Edit contact</Tooltip>}>
+                  {({ ref, ...triggerHandler }) => (
+                    <LinkContainer to={`/edit-contact?id=${contact[fieldDefinitions.idField.propName]}`}>
+                      <Icon ref={ref} {...triggerHandler}>edit</Icon>
+                    </LinkContainer>
+                  )}
+                </OverlayTrigger>
+              </div>}
             </Row>
           </Card.Body>}
         </Form>

@@ -6,7 +6,7 @@ import { connect } from 'react-redux';
 import ContactCard from '../components/ContactCard';
 import { addContactAsync } from '../redux/actions';
 
-const Admin = ({ fieldDefinitions, isGettingFieldDefinitions, isAddingContact, isAdmin, addContact }) => {
+const AddContact = ({ fieldDefinitions, isGettingFieldDefinitions, isAddingContact, isAdmin, addContact }) => {
 
   if (!isAdmin) {
     return (
@@ -19,9 +19,6 @@ const Admin = ({ fieldDefinitions, isGettingFieldDefinitions, isAddingContact, i
   return (
     <Container>
       <Row className="justify-content-center">
-        <h1>Admin</h1>
-      </Row>
-      <Row className="justify-content-center mt-3">
         <h2>Add Contact</h2>
       </Row>
       <Row className="justify-content-center mt-3">
@@ -44,4 +41,4 @@ const mapDispatchToProps = (dispatch) => ({
   addContact: (fieldDefinitions, contact, pictureFile, token) => dispatch(addContactAsync(fieldDefinitions, contact, pictureFile, token))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Admin);
+export default connect(mapStateToProps, mapDispatchToProps)(AddContact);

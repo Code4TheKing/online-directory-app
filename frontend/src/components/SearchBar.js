@@ -1,11 +1,11 @@
-import { useAuth0 } from "@auth0/auth0-react";
+import { useAuth0 } from '@auth0/auth0-react';
 import React, { useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
 
-const SearchBar = ({ searchFunc }) => {
+const SearchBar = ({ searchText, searchFunc }) => {
   const { getAccessTokenSilently } = useAuth0();
-  const [input, setInput] = useState(':all:');
+  const [input, setInput] = useState(searchText);
 
   const handleChange = (event) => {
     setInput(event.target.value);
@@ -19,7 +19,13 @@ const SearchBar = ({ searchFunc }) => {
 
   return (
     <Form className="justify-content-center" inline onSubmit={performSearch}>
-      <Form.Control className="mx-2" type="text" placeholder="Search" size="lg" value={input} onChange={handleChange} />
+      <Form.Control
+        className="mx-2"
+        type="text"
+        placeholder="Search (:all: for everything)"
+        size="lg"
+        value={input}
+        onChange={handleChange} />
       {input.trim().length > 0 ?
         <Button type="submit" variant="success">Search</Button> :
         <Button type="submit" variant="outline-success" disabled>Search</Button>}

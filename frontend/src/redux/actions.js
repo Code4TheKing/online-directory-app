@@ -1,179 +1,16 @@
-import { toast } from "react-toastify";
+import { toast } from 'react-toastify';
 import {
-  ADD_CONTACT, ADD_CONTACT_ERROR, ADD_CONTACT_SUCCESS,
-  CREATE_PROFILE_CONTACT, CREATE_PROFILE_CONTACT_ERROR, CREATE_PROFILE_CONTACT_SUCCESS,
-  GET_FIELD_DEFINITIONS, GET_FIELD_DEFINITIONS_ERROR, GET_FIELD_DEFINITIONS_SUCCESS,
-  GET_PROFILE_CONTACT, GET_PROFILE_CONTACT_ERROR, GET_PROFILE_CONTACT_SUCCESS,
-  INVITE_CONTACT, INVITE_CONTACT_ERROR, INVITE_CONTACT_SUCCESS,
-  LIST_CONTACTS, LIST_CONTACTS_ERROR, LIST_CONTACTS_SUCCESS,
-  UPDATE_CONTACT, UPDATE_CONTACT_ERROR, UPDATE_CONTACT_SUCCESS,
-  UPDATE_PROFILE_CONTACT, UPDATE_PROFILE_CONTACT_ERROR, UPDATE_PROFILE_CONTACT_SUCCESS
-} from './actionTypes';
-
-// Action creators for contacts
-
-const getFieldDefinitions = () => {
-  return {
-    type: GET_FIELD_DEFINITIONS
-  }
-}
-
-const getFieldDefinitionsSuccess = (fieldDefinitions) => {
-  return {
-    type: GET_FIELD_DEFINITIONS_SUCCESS,
-    fieldDefinitions: fieldDefinitions
-  }
-}
-
-const getFieldDefinitionsError = (err) => {
-  return {
-    type: GET_FIELD_DEFINITIONS_ERROR,
-    error: err
-  }
-}
-
-const addContact = () => {
-  return {
-    type: ADD_CONTACT
-  }
-}
-
-const addContactSuccess = (contact) => {
-  return {
-    type: ADD_CONTACT_SUCCESS,
-    contact: contact
-  }
-}
-
-const addContactError = (err) => {
-  return {
-    type: ADD_CONTACT_ERROR,
-    error: err
-  }
-}
-
-const listContacts = (searchText) => {
-  return {
-    type: LIST_CONTACTS,
-    searchText: searchText
-  }
-}
-
-const listContactsSuccess = (searchText, json) => {
-  return {
-    type: LIST_CONTACTS_SUCCESS,
-    searchText: searchText,
-    contacts: json.contacts
-  }
-}
-
-const listContactsError = (err) => {
-  return {
-    type: LIST_CONTACTS_ERROR,
-    error: err
-  }
-}
-
-const updateContact = () => {
-  return {
-    type: UPDATE_CONTACT
-  }
-}
-
-const updateContactSuccess = (contact) => {
-  return {
-    type: UPDATE_CONTACT_SUCCESS,
-    contact: contact
-  }
-}
-
-const updateContactError = (err) => {
-  return {
-    type: UPDATE_CONTACT_ERROR,
-    error: err
-  }
-}
-
-const inviteContact = () => {
-  return {
-    type: INVITE_CONTACT
-  }
-}
-
-const inviteContactSuccess = () => {
-  return {
-    type: INVITE_CONTACT_SUCCESS
-  }
-}
-
-const inviteContactError = (err) => {
-  return {
-    type: INVITE_CONTACT_ERROR,
-    error: err
-  }
-}
-
-// Action creators for profile contacts
-
-const createProfileContact = () => {
-  return {
-    type: CREATE_PROFILE_CONTACT
-  }
-}
-
-const createProfileContactSuccess = (profileContact) => {
-  return {
-    type: CREATE_PROFILE_CONTACT_SUCCESS,
-    profileContact: profileContact
-  }
-}
-
-const createProfileContactError = (err) => {
-  return {
-    type: CREATE_PROFILE_CONTACT_ERROR,
-    error: err
-  }
-}
-
-const getProfileContact = () => {
-  return {
-    type: GET_PROFILE_CONTACT
-  }
-}
-
-const getProfileContactSuccess = (profileContact) => {
-  return {
-    type: GET_PROFILE_CONTACT_SUCCESS,
-    profileContact: profileContact
-  }
-}
-
-const getProfileContactError = (err) => {
-  return {
-    type: GET_PROFILE_CONTACT_ERROR,
-    error: err
-  }
-}
-
-const updateProfileContact = () => {
-  return {
-    type: UPDATE_PROFILE_CONTACT
-  }
-}
-
-const updateProfileContactSuccess = (profileContact) => {
-  return {
-    type: UPDATE_PROFILE_CONTACT_SUCCESS,
-    profileContact: profileContact
-  }
-}
-
-const updateProfileContactError = (err) => {
-  return {
-    type: UPDATE_PROFILE_CONTACT_ERROR,
-    error: err
-  }
-}
+  addContact, addContactError, addContactSuccess,
+  createProfileContact, createProfileContactError, createProfileContactSuccess,
+  getContact, getContactError, getContactSuccess,
+  getFieldDefinitions, getFieldDefinitionsError, getFieldDefinitionsSuccess,
+  getProfileContact, getProfileContactError, getProfileContactSuccess,
+  inviteContact, inviteContactError, inviteContactSuccess,
+  listAllContacts, listAllContactsError, listAllContactsSuccess,
+  searchContacts, searchContactsError, searchContactsSuccess,
+  updateContact, updateContactError, updateContactSuccess,
+  updateProfileContact, updateProfileContactError, updateProfileContactSuccess
+} from './actionCreators';
 
 // Async dispatches for Contacts
 
@@ -252,11 +89,11 @@ const addContactTextFields = (dispatch, fieldDefinitions, contact, token) => {
       }));
 }
 
-export const listContactsByKeywordAsync = (keyword, token) => {
+export const getContactAsync = (contactId, token) => {
   return (dispatch) => {
-    dispatch(listContacts(keyword));
+    dispatch(getContact());
     return fetch(
-      `${process.env.REACT_APP_API_URL}/_api/v1/contacts?keyword=${keyword}`,
+      `${process.env.REACT_APP_API_URL}/_api/v1/contacts/${contactId}`,
       {
         headers: {
           Authorization: `Bearer ${token}`,
@@ -267,44 +104,114 @@ export const listContactsByKeywordAsync = (keyword, token) => {
         .then(({ responseJson, response }) => new Promise(resolve => { setTimeout(() => resolve({ responseJson, response }), 500) }))
         .then(({ responseJson, response }) => {
           if (!response.ok) {
-            dispatch(listContactsError(responseJson));
+            dispatch(getContactError(responseJson));
+            toast.error(`Error getting contact for ID "${contactId}" - ${responseJson.message}`);
             return Promise.reject(responseJson);
           } else {
-            dispatch(listContactsSuccess(keyword, responseJson));
+            dispatch(getContactSuccess(responseJson));
           }
         }))
+      .catch((err) => console.error(err));
+  }
+}
+
+export const searchContactsAsync = (keyword, token) => {
+  return (dispatch) => {
+    dispatch(searchContacts(keyword));
+    return listContacts(keyword, token)
+      .then(({ responseJson, response }) => {
+        if (!response.ok) {
+          dispatch(searchContactsError(responseJson));
+          toast.error(`Error searching contacts for keyword "${keyword}" - ${responseJson.message}`);
+          return Promise.reject(responseJson);
+        } else {
+          dispatch(searchContactsSuccess(keyword, responseJson));
+        }
+      })
       .catch((err) => console.error(err));
   };
 }
 
-export const updateContactAsync = (contact, token) => {
-  const localContact = Object.assign({}, contact);
-  delete localContact._id;
+export const listAllContactsAsync = (token) => {
   return (dispatch) => {
-    dispatch(updateContact());
-    return fetch(
-      `${process.env.REACT_APP_API_URL}/_api/v1/contacts/${contact._id}`,
-      {
-        method: 'PATCH',
-        headers: {
-          Authorization: `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(localContact)
+    dispatch(listAllContacts());
+    return listContacts(':all:', token)
+      .then(({ responseJson, response }) => {
+        if (!response.ok) {
+          dispatch(listAllContactsError(responseJson));
+          toast.error(`Error listing all contacts - ${responseJson.message}`);
+          return Promise.reject(responseJson);
+        } else {
+          dispatch(listAllContactsSuccess(responseJson));
+        }
       })
-      .then(response => response.json()
-        .then((responseJson) => ({ responseJson, response }))
-        .then(({ responseJson, response }) => new Promise(resolve => { setTimeout(() => resolve({ responseJson, response }), 500) }))
-        .then(({ responseJson, response }) => {
-          if (!response.ok) {
-            dispatch(updateContactError(responseJson));
-            return Promise.reject(responseJson);
-          } else {
-            dispatch(updateContactSuccess(responseJson));
-          }
-        }))
       .catch((err) => console.error(err));
   };
+}
+
+const listContacts = (keyword, token) => {
+  return fetch(
+    `${process.env.REACT_APP_API_URL}/_api/v1/contacts?keyword=${keyword}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      }
+    })
+    .then(response => response.json()
+      .then((responseJson) => ({ responseJson, response }))
+      .then(({ responseJson, response }) => new Promise(resolve => { setTimeout(() => resolve({ responseJson, response }), 500) })));
+}
+
+export const updateContactAsync = (fieldDefinitions, contact, pictureFile, token) => {
+  return (dispatch) => {
+    dispatch(updateContact());
+    if (pictureFile) {
+      return uploadProfilePicture(dispatch, pictureFile)
+        .then(responseJson =>
+          updateContactTextFields(
+            dispatch,
+            Object.assign(
+              {},
+              contact,
+              {
+                picture: {
+                  link: responseJson.data.link,
+                  hash: responseJson.data.deletehash
+                }
+              }
+            ),
+            token))
+        .catch((err) => console.error(err));
+    }
+    return updateContactTextFields(dispatch, contact, token)
+      .catch((err) => console.error(err));
+  };
+}
+
+const updateContactTextFields = (dispatch, contact, token) => {
+  return fetch(
+    `${process.env.REACT_APP_API_URL}/_api/v1/contacts/${contact._id}`,
+    {
+      method: 'PATCH',
+      headers: {
+        Authorization: `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(contact)
+    })
+    .then(response => response.json()
+      .then((responseJson) => ({ responseJson, response }))
+      .then(({ responseJson, response }) => new Promise(resolve => { setTimeout(() => resolve({ responseJson, response }), 500) }))
+      .then(({ responseJson, response }) => {
+        if (!response.ok) {
+          dispatch(updateContactError(responseJson));
+          toast.error(`Error editing contact - ${responseJson.message}`);
+          return Promise.reject(responseJson);
+        } else {
+          dispatch(updateContactSuccess(responseJson));
+          toast.success('Contact edited!');
+        }
+      }));
 }
 
 export const inviteContactAsync = (fieldDefinitions, contact, email, token) => {
@@ -378,6 +285,7 @@ export const getProfileContactAsync = (token) => {
         .then(({ responseJson, response }) => {
           if (!response.ok) {
             dispatch(getProfileContactError(responseJson));
+            toast.error(`Error getting profile contact - ${responseJson.message}`);
             return Promise.reject(responseJson);
           } else {
             dispatch(getProfileContactSuccess(responseJson));
@@ -388,8 +296,6 @@ export const getProfileContactAsync = (token) => {
 }
 
 export const updateProfileContactAsync = (fieldDefinitions, profileContact, pictureFile, token) => {
-  const localProfileContact = Object.assign({}, profileContact);
-  delete localProfileContact._id;
   return (dispatch) => {
     dispatch(updateProfileContact());
     if (pictureFile) {
@@ -399,7 +305,7 @@ export const updateProfileContactAsync = (fieldDefinitions, profileContact, pict
             dispatch,
             Object.assign(
               {},
-              localProfileContact,
+              profileContact,
               {
                 picture: {
                   link: responseJson.data.link,
@@ -410,7 +316,7 @@ export const updateProfileContactAsync = (fieldDefinitions, profileContact, pict
             token))
         .catch((err) => console.error(err));
     }
-    return updateProfileContactTextFields(dispatch, localProfileContact, token)
+    return updateProfileContactTextFields(dispatch, profileContact, token)
       .catch((err) => console.error(err));
   };
 }
@@ -462,6 +368,5 @@ const updateProfileContactTextFields = (dispatch, localProfileContact, token) =>
           dispatch(updateProfileContactSuccess(responseJson));
           toast.success('Profile saved!');
         }
-      }))
-    .catch((err) => console.error(err));
+      }));
 }
