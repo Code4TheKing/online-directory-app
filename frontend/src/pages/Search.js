@@ -3,24 +3,24 @@ import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
 import ContactCardList from '../components/ContactCardList';
 import SearchBar from '../components/SearchBar';
-import { inviteContactAsync, listContactsByKeywordAsync } from '../redux/actions';
+import { inviteContactAsync, searchContactsAsync } from '../redux/actions';
 
 const Search = ({
   fieldDefinitions,
   searchText,
   contacts,
   isGettingFieldDefinitions,
-  isListingContacts,
+  isSearchingContacts,
   isInvitingContact,
   isAdmin,
-  listContactsByKeyword,
+  searchContacts,
   inviteContact
 }) => {
 
   return (
     <div className="mx-5">
       <Row className="justify-content-center">
-        <SearchBar searchFunc={listContactsByKeyword} />
+        <SearchBar searchText={searchText} searchFunc={searchContacts} />
       </Row>
       <Row className="justify-content-center mt-5">
         <ContactCardList
@@ -28,7 +28,7 @@ const Search = ({
           searchText={searchText}
           contacts={contacts}
           isGettingFieldDefinitions={isGettingFieldDefinitions}
-          isListing={isListingContacts}
+          isListing={isSearchingContacts}
           isInviting={isInvitingContact}
           isAdmin={isAdmin}
           inviteFunc={inviteContact} />
@@ -42,13 +42,13 @@ const mapStateToProps = (state) => ({
   searchText: state.contacts.searchText,
   contacts: state.contacts.searchContacts,
   isGettingFieldDefinitions: state.contacts.isGettingFieldDefinitions,
-  isListingContacts: state.contacts.isListingContacts,
+  isSearchingContacts: state.contacts.isSearchingContacts,
   isInvitingContact: state.contacts.isInvitingContact,
   isAdmin: state.profileContacts.isAdmin
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  listContactsByKeyword: (searchText, token) => dispatch(listContactsByKeywordAsync(searchText, token)),
+  searchContacts: (searchText, token) => dispatch(searchContactsAsync(searchText, token)),
   inviteContact: (fieldDefinitions, contact, email, token) => dispatch(inviteContactAsync(fieldDefinitions, contact, email, token))
 });
 

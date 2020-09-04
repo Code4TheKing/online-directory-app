@@ -9,12 +9,19 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NavigationBar from './components/NavigationBar';
 import PrivateRoute from './components/PrivateRoute';
-import Admin from './pages/Admin';
+import AddContact from './pages/AddContact';
+import EditContact from './pages/EditContact';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
 import Search from './pages/Search';
 import { createProfileContactAsync, getFieldDefinitionsAsync, getProfileContactAsync } from './redux/actions';
+
+export const HOME_PATH = '/';
+export const SEARCH_PATH = '/search';
+export const ADD_CONTACT_PATH = '/add-contact';
+export const EDIT_CONTACT_PATH = '/edit-contact';
+export const PROFILE_PATH = '/profile';
 
 const OnlineDirectoryApp = ({
   fieldDefinitions,
@@ -60,10 +67,11 @@ const OnlineDirectoryApp = ({
       <Jumbotron>
         <ToastContainer />
         <Switch>
-          <Route path="/" component={Home} exact />
-          <PrivateRoute path="/search" component={Search} />
-          {isAdmin && <PrivateRoute path="/admin" component={Admin} />}
-          <PrivateRoute path="/profile" component={Profile} />
+          <Route path={HOME_PATH} component={Home} exact />
+          <PrivateRoute path={SEARCH_PATH} component={Search} />
+          {isAdmin && <PrivateRoute path={ADD_CONTACT_PATH} component={AddContact} />}
+          {isAdmin && <PrivateRoute path={EDIT_CONTACT_PATH} component={EditContact} />}
+          <PrivateRoute path={PROFILE_PATH} component={Profile} />
           <Route component={NotFound} />
         </Switch>
       </Jumbotron>
