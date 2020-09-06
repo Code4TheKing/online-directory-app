@@ -1,13 +1,12 @@
 import { useAuth0 } from '@auth0/auth0-react';
+import { CircularProgress } from '@material-ui/core';
 import React, { useEffect, useRef, useState } from 'react';
-import Container from 'react-bootstrap/Container';
+import Autosuggest from 'react-autosuggest';
+import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import { connect } from 'react-redux';
 import { useHistory, useLocation } from 'react-router-dom';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import ContactHandler from '../components/ContactHandler';
-import { resetContact } from '../redux/actionCreators';
-import { getContactAsync, listAllContactsAsync, updateContactAsync } from '../redux/actions';
+import ContactCard from '../components/ContactCard';
 import '../styles/edit-contact-auto-suggest.scss';
 
 const useQuery = () => {
@@ -22,14 +21,16 @@ function usePrevious(value) {
   return ref.current;
 }
 
-const EditContact = ({
+const ContactHandler = ({
   fieldDefinitions,
   contact,
   allContacts = [],
+  editable,
   isGettingFieldDefinitions,
   isGettingContact,
   isUpdatingContact,
   isListingAllContacts,
+  isProtected,
   isAdmin,
   getContact,
   updateContact,
@@ -115,54 +116,46 @@ const EditContact = ({
     }
   }
 
-  if (!isAdmin) {
+  if (isProtected && !isAdmin) {
     return (
-      <Container>
-        <h1 className="text-center text-danger">You are not authorized to view this page</h1>
-      </Container>
+      <h1 className="text-center text-danger">You are not authorized to view this page</h1>
     );
   }
 
   return (
-    <Container>
-      <Row className="justify-content-center mb-3">
-        <h2>Edit Contact</h2>
+    <>
+      <Row className="justify-content-center">
+        <Form onSubmit={loadContact}>
+          <Autosuggest
+            suggestions={contactSuggestions}
+            onSuggestionsFetchRequested={onSuggestionsFetchRequested}
+            onSuggestionsClearRequested={onSuggestionsClearRequested}
+            onSuggestionSelected={onSuggestionSelected}
+            getSuggestionValue={getContactSuggestionValue}
+            highlightFirstSuggestion={true}
+            alwaysRenderSuggestions={true}
+            renderSuggestion={renderSuggestion}
+            inputProps={{
+              placeholder: 'Type a name',
+              value: autoSuggestInput,
+              onChange
+            }} />
+        </Form>
       </Row>
-      <ContactHandler
-        fieldDefinitions={fieldDefinitions}
-        contact={contact}
-        allContacts={allContacts}
-        editable={true}
-        isGettingFieldDefinitions={isGettingFieldDefinitions}
-        isGettingContact={isGettingContact}
-        isUpdatingContact={isUpdatingContact}
-        isProtected={true}
-        isAdmin={isAdmin}
-        getContact={getContact}
-        updateContact={updateContact}
-        resetContact={resetContact}
-        listAllContacts={listAllContacts} />
-    </Container>
+      <Row className="justify-content-center mt-3">
+        {isGettingFieldDefinitions || isGettingContact ?
+          <CircularProgress /> :
+          contact && <ContactCard
+            fieldDefinitions={fieldDefinitions}
+            editable={editable}
+            contact={contact}
+            isSaving={isUpdatingContact}
+            saveFunc={updateContact}
+            width={'25rem'} />
+        }
+      </Row>
+    </>
   );
 }
 
-const mapStateToProps = (state) => ({
-  fieldDefinitions: state.contacts.fieldDefinitions,
-  contact: state.contacts.contact,
-  allContacts: state.contacts.allContacts,
-  isGettingFieldDefinitions: state.contacts.isGettingFieldDefinitions,
-  isGettingContact: state.contacts.isGettingContact,
-  isUpdatingContact: state.contacts.isUpdatingContact,
-  isListingAllContacts: state.contacts.isListingAllContacts,
-  isAdmin: state.profileContacts.isAdmin
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  getContact: (contactId, token) => dispatch(getContactAsync(contactId, token)),
-  updateContact: (fieldDefinitions, contact, pictureFile, token) =>
-    dispatch(updateContactAsync(fieldDefinitions, contact, pictureFile, token)),
-  resetContact: () => dispatch(resetContact()),
-  listAllContacts: (token) => dispatch(listAllContactsAsync(token))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(EditContact);
+export default ContactHandler;
