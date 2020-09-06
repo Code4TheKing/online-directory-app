@@ -1,9 +1,9 @@
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
-const NAME_REGEX = '^[A-Za-z0-9 ]+$';
+const NAME_REGEX = '^[A-Za-z0-9 _]+$';
 const NAME_MAX_LENGTH = 32;
-const NAME_VALIDATION_ERROR_MESSAGE = 'Alphabets (A-Z), numbers (0-9), or spaces';
+const NAME_VALIDATION_ERROR_MESSAGE = 'Alphabets (A-Z), numbers (0-9), spaces, or underscores(_)';
 const ADDRESS_REGEX = '^[A-Za-z0-9 ,#-]*$';
 const ADDRESS_MAX_LENGTH = 128;
 const ADDRESS_VALIDATION_ERROR_MESSAGE = 'Alphabets (A-Z), numbers (0-9), spaces, or special characters (,#-)';
@@ -24,13 +24,15 @@ const contactSchema = new Schema({
     maxlength: [64, 'Too long']
   },
   picture: {
-    link: {
-      type: String,
-      required: true
-    },
-    hash: {
-      type: String,
-      required: true
+    type: {
+      link: {
+        type: String,
+        required: true
+      },
+      hash: {
+        type: String,
+        required: true
+      }
     }
   },
   name: {
@@ -65,7 +67,7 @@ const contactSchema = new Schema({
       message: PHONE_NUMBER_VALIDATION_ERROR_MESSAGE
     }
   }
-});
+}, { typePojoToMixed: false });
 
 const fieldDefinitions = {
   idField: {

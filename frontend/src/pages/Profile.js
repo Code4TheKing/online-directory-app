@@ -18,7 +18,7 @@ const Profile = ({
   return (
     <Container>
       <Row className="justify-content-center">
-        <h1>Profile</h1>
+        <h2>Profile</h2>
       </Row>
       <Row className="justify-content-center mt-3">
         {isGettingFieldDefinitions || isGettingProfileContact ?
@@ -45,7 +45,8 @@ const mapStateToProps = (state) => ({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  updateProfileContact: (fieldDefinitions, profileContact, pictureFile, token) => dispatch(updateProfileContactAsync(fieldDefinitions, profileContact, pictureFile, token))
+  updateProfileContact: (fieldDefinitions, profileContact, pictureFile, token) =>
+    dispatch(updateProfileContactAsync(fieldDefinitions, profileContact, pictureFile, token))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
