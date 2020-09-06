@@ -1,16 +1,16 @@
 .editable:hover {
-  background: #ffffff;
-  color: #000000;
+  background: #ffffff !important;
+  color: #000000 !important;
 }
 
 .editable:focus {
-  background: #ffffff;
-  color: #000000;
+  background: #ffffff !important;
+  color: #000000 !important;
 }
 
 .editable {
-  background: #343a40;
-  color: #ffffff;
+  background: #343a40 !important;
+  color: #ffffff !important;
 }
 
 .cursor-pointer {
