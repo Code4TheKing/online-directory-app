@@ -9,7 +9,7 @@
 }
 
 .editable {
-  background: #343a40 !important;
+  background: var(--dark) !important;
   color: #ffffff !important;
 }
 

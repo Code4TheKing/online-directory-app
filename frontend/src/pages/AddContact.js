@@ -1,6 +1,5 @@
 import { CircularProgress } from '@material-ui/core';
 import React from 'react';
-import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
 import ContactCard from '../components/ContactCard';
@@ -10,14 +9,14 @@ const AddContact = ({ fieldDefinitions, isGettingFieldDefinitions, isAddingConta
 
   if (!isAdmin) {
     return (
-      <Container>
+      <>
         <h1 className="text-center text-danger">You are not authorized to view this page</h1>
-      </Container>
+      </>
     );
   }
 
   return (
-    <Container>
+    <>
       <Row className="justify-content-center">
         <h2>Add Contact</h2>
       </Row>
@@ -26,7 +25,7 @@ const AddContact = ({ fieldDefinitions, isGettingFieldDefinitions, isAddingConta
           <CircularProgress /> :
           <ContactCard fieldDefinitions={fieldDefinitions} editable={true} isSaving={isAddingContact} saveFunc={addContact} width={'25rem'} />}
       </Row>
-    </Container>
+    </>
   );
 }
 

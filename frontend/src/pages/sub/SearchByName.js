@@ -2,13 +2,13 @@ import React from 'react';
 import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
-import ContactHandler from '../components/ContactHandler';
-import useQuery from '../hooks/useQuery';
-import { EDIT_CONTACT_PATH } from '../OnlineDirectoryApp';
-import { resetContact } from '../redux/actionCreators';
-import { getContactAsync, listAllContactsAsync, updateContactAsync } from '../redux/actions';
+import ContactHandler from '../../components/ContactHandler';
+import useQuery from '../../hooks/useQuery';
+import { SEARCH_BY_NAME_PATH, SEARCH_PATH } from '../../OnlineDirectoryApp';
+import { resetContact } from '../../redux/actionCreators';
+import { getContactAsync, listAllContactsAsync, updateContactAsync } from '../../redux/actions';
 
-const EditContact = ({
+const SearchByName = ({
   fieldDefinitions,
   contact,
   allContacts = [],
@@ -16,7 +16,6 @@ const EditContact = ({
   isGettingContact,
   isUpdatingContact,
   isListingAllContacts,
-  isAdmin,
   getContact,
   updateContact,
   resetContact,
@@ -28,20 +27,19 @@ const EditContact = ({
   return (
     <>
       <Row className="justify-content-center mb-3">
-        <h2>Edit Contact</h2>
+        <h2>Search By Name</h2>
       </Row>
       <ContactHandler
         contactId={query.get('id')}
         fieldDefinitions={fieldDefinitions}
         contact={contact}
         allContacts={allContacts}
-        editable={true}
+        editable={false}
         isGettingFieldDefinitions={isGettingFieldDefinitions}
         isGettingContact={isGettingContact}
         isUpdatingContact={isUpdatingContact}
-        isProtected={true}
-        isAdmin={isAdmin}
-        redirectPath={(contactId) => history.push(`${EDIT_CONTACT_PATH}?id=${contactId}`)}
+        isProtected={false}
+        redirectPath={(contactId) => history.push(`${SEARCH_PATH}${SEARCH_BY_NAME_PATH}?id=${contactId}`)}
         getContact={getContact}
         updateContact={updateContact}
         resetContact={resetContact}
@@ -57,8 +55,7 @@ const mapStateToProps = (state) => ({
   isGettingFieldDefinitions: state.contacts.isGettingFieldDefinitions,
   isGettingContact: state.contacts.isGettingContact,
   isUpdatingContact: state.contacts.isUpdatingContact,
-  isListingAllContacts: state.contacts.isListingAllContacts,
-  isAdmin: state.profileContacts.isAdmin
+  isListingAllContacts: state.contacts.isListingAllContacts
 });
 
 const mapDispatchToProps = (dispatch) => ({
@@ -69,4 +66,4 @@ const mapDispatchToProps = (dispatch) => ({
   listAllContacts: (token) => dispatch(listAllContactsAsync(token))
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditContact);
+export default connect(mapStateToProps, mapDispatchToProps)(SearchByName);

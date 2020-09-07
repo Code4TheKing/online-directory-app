@@ -4,7 +4,7 @@ import {
   GET_FIELD_DEFINITIONS, GET_FIELD_DEFINITIONS_ERROR, GET_FIELD_DEFINITIONS_SUCCESS,
   INVITE_CONTACT, INVITE_CONTACT_ERROR, INVITE_CONTACT_SUCCESS,
   LIST_ALL_CONTACTS, LIST_ALL_CONTACTS_ERROR, LIST_ALL_CONTACTS_SUCCESS,
-  RESET_CONTACT,
+  RESET_CONTACT, RESET_SEARCH_CONTACTS,
   SEARCH_CONTACTS, SEARCH_CONTACTS_ERROR, SEARCH_CONTACTS_SUCCESS,
   UPDATE_CONTACT, UPDATE_CONTACT_ERROR, UPDATE_CONTACT_SUCCESS
 } from '../actionTypes';
@@ -53,6 +53,8 @@ const contacts = (
       return Object.assign({}, state, { isSearchingContacts: false, searchText: action.searchText, searchContacts: action.contacts, searchContactsError: null });
     case SEARCH_CONTACTS_ERROR:
       return Object.assign({}, state, { isSearchingContacts: false, searchContactsError: action.error });
+    case RESET_SEARCH_CONTACTS:
+      return Object.assign({}, state, { searchContacts: [] });
     case LIST_ALL_CONTACTS:
       return Object.assign({}, state, { isListingAllContacts: true, listAllContactsError: null });
     case LIST_ALL_CONTACTS_SUCCESS:
