@@ -1,7 +1,6 @@
 import { CircularProgress } from '@material-ui/core';
 import React from 'react';
 import CardColumns from 'react-bootstrap/CardColumns';
-import Container from 'react-bootstrap/Container';
 import '../styles/contact-card-list.scss';
 import ContactCard from './ContactCard';
 
@@ -18,7 +17,7 @@ const ContactCardList = ({
 }) => {
 
   return (
-    <Container className="d-flex justify-content-center px-3" style={!isListing && contacts.length > 0 ? { borderWidth: '1px', borderStyle: 'dashed' } : {}}>
+    <>
       {
         isGettingFieldDefinitions || isListing ?
           <CircularProgress /> :
@@ -40,7 +39,7 @@ const ContactCardList = ({
               <p className="text-center text-info my-2">No contacts found for the given search text</p> :
               <p className="text-center text-info my-2">Use the search to display some contacts</p>
       }
-    </Container>
+    </>
   );
 }
 
