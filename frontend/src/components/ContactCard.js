@@ -70,12 +70,16 @@ const ContactCard = ({
       || fieldDefinitions.otherFields.some(field => getFieldValue(contact, field.propName) !== otherFields[field.propName]);
   }
 
+  const isPicturePlaceholder = (pictureField) => {
+    return pictureField.link.startsWith('holder.js');
+  }
+
   useDeepCompareEffect(() => {
     reset();
   }, [contact]);
 
   useDeepCompareEffect(() => {
-    if (pictureField.link.startsWith('holder.js')) {
+    if (isPicturePlaceholder(pictureField)) {
       Holder.run({
         images: '#img-' + getIdValue(fieldDefinitions, contact)
       });
@@ -93,6 +97,12 @@ const ContactCard = ({
     }
   }
 
+  const handleClearPicture = (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    setPictureField(getPictureValue(fieldDefinitions, {}));
+  }
+
   const handleChange = (event, setFunc, maxLength) => {
     setFunc(event.target.value?.substring(0, maxLength));
   };
@@ -104,10 +114,10 @@ const ContactCard = ({
 
     if (saveForm.checkValidity()) {
       const localPictureFormField = saveForm.elements[0];
-      if (localPictureFormField.files) {
+      if (localPictureFormField.files && localPictureFormField.files[0]) {
         saveWithPicture(localPictureFormField.files[0]);
       } else {
-        saveWithPicture();
+        saveWithPicture(isPicturePlaceholder(pictureField) ? null : undefined);
       }
     }
     setSaveValidated(!saveForm.checkValidity());
@@ -178,8 +188,8 @@ const ContactCard = ({
     <>
       <Card className="mb-3" style={{ width: width || '100%', maxWidth: '25rem' }} bg="dark" text="light">
         <Form noValidate validated={saveValidated} onSubmit={saveContact}>
-          <Form.Group className="profile-picture mb-0">
-            <Form.Label className="w-100" htmlFor={"profile-picture-upload-" + getIdValue(fieldDefinitions, contact)}>
+          <Form.Group className="profile-picture position-relative mb-0">
+            <Form.Label className="w-100 mb-0" htmlFor={"profile-picture-upload-" + getIdValue(fieldDefinitions, contact)}>
               <Card.Img
                 className={editable ? "cursor-pointer" : ""}
                 id={"img-" + getIdValue(fieldDefinitions, contact)}
@@ -192,6 +202,14 @@ const ContactCard = ({
               accept="image/png, image/jpeg"
               onChange={handlePictureChange}
               disabled={!editable} />
+            {editable && contact[fieldDefinitions.pictureField.propName] &&
+              <Button
+                variant="outline-dark"
+                style={{ top: 0, right: 0, backgroundColor: 'white', width: 20, height: 20, fontSize: 20 }}
+                className="close position-absolute"
+                onClick={handleClearPicture}>
+                <span>&times;</span>
+              </Button>}
           </Form.Group>
           <Card.Header className="font-weight-bold">
             <Form.Row key={0} className="align-items-center">
