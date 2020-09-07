@@ -60,7 +60,7 @@ export const addContactAsync = (fieldDefinitions, contact, pictureFile, token) =
           token))
         .catch((err) => console.error(err));
     }
-    return addContactTextFields(dispatch, fieldDefinitions, contact, token)
+    return addContactTextFields(dispatch, fieldDefinitions, maybeClearPicture(contact, pictureFile), token)
       .catch((err) => console.error(err));
   };
 }
@@ -183,7 +183,7 @@ export const updateContactAsync = (fieldDefinitions, contact, pictureFile, token
             token))
         .catch((err) => console.error(err));
     }
-    return updateContactTextFields(dispatch, contact, token)
+    return updateContactTextFields(dispatch, maybeClearPicture(contact, pictureFile), token)
       .catch((err) => console.error(err));
   };
 }
@@ -316,7 +316,7 @@ export const updateProfileContactAsync = (fieldDefinitions, profileContact, pict
             token))
         .catch((err) => console.error(err));
     }
-    return updateProfileContactTextFields(dispatch, profileContact, token)
+    return updateProfileContactTextFields(dispatch, maybeClearPicture(profileContact, pictureFile), token)
       .catch((err) => console.error(err));
   };
 }
@@ -338,7 +338,7 @@ const uploadProfilePicture = (dispatch, pictureFile) => {
       .then(({ responseJson, response }) => {
         if (!response.ok) {
           dispatch(updateProfileContactError(responseJson));
-          toast.error(`Error saving profile - ${responseJson.message}`);
+          toast.error(`Error uploading picture - ${responseJson.message}`);
           return Promise.reject(responseJson);
         }
         return responseJson;
@@ -369,4 +369,16 @@ const updateProfileContactTextFields = (dispatch, localProfileContact, token) =>
           toast.success('Profile saved!');
         }
       }));
+}
+
+const maybeClearPicture = (contact, pictureFile) => {
+  return Object.assign(
+    {},
+    contact,
+    pictureFile === null ?
+      {
+        picture: null
+      } :
+      {}
+  );
 }
