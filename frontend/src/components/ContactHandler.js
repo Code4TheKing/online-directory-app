@@ -19,11 +19,13 @@ const ContactHandler = ({
   isGettingContact,
   isUpdatingContact,
   isListingAllContacts,
+  isInvitingContact,
   isProtected,
   isAdmin,
   redirectPath,
   getContact,
   updateContact,
+  inviteContact,
   resetContact,
   listAllContacts
 }) => {
@@ -136,8 +138,11 @@ const ContactHandler = ({
             fieldDefinitions={fieldDefinitions}
             editable={editable}
             contact={contact}
+            isAdmin={isAdmin}
             isSaving={isUpdatingContact}
+            isInviting={isInvitingContact}
             saveFunc={updateContact}
+            inviteFunc={inviteContact}
             width={'25rem'} />
         }
       </Row>

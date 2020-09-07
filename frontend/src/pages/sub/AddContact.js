@@ -2,8 +2,8 @@ import { CircularProgress } from '@material-ui/core';
 import React from 'react';
 import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
-import ContactCard from '../components/ContactCard';
-import { addContactAsync } from '../redux/actions';
+import ContactCard from '../../components/ContactCard';
+import { addContactAsync } from '../../redux/actions';
 
 const AddContact = ({ fieldDefinitions, isGettingFieldDefinitions, isAddingContact, isAdmin, addContact }) => {
 
@@ -23,7 +23,12 @@ const AddContact = ({ fieldDefinitions, isGettingFieldDefinitions, isAddingConta
       <Row className="justify-content-center mt-3">
         {isGettingFieldDefinitions ?
           <CircularProgress /> :
-          <ContactCard fieldDefinitions={fieldDefinitions} editable={true} isSaving={isAddingContact} saveFunc={addContact} width={'25rem'} />}
+          <ContactCard
+            fieldDefinitions={fieldDefinitions}
+            editable={true}
+            isSaving={isAddingContact}
+            saveFunc={addContact}
+            width={'25rem'} />}
       </Row>
     </>
   );

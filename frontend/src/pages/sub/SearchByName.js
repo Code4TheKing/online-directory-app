@@ -6,7 +6,7 @@ import ContactHandler from '../../components/ContactHandler';
 import useQuery from '../../hooks/useQuery';
 import { SEARCH_BY_NAME_PATH, SEARCH_PATH } from '../../OnlineDirectoryApp';
 import { resetContact } from '../../redux/actionCreators';
-import { getContactAsync, listAllContactsAsync, updateContactAsync } from '../../redux/actions';
+import { getContactAsync, inviteContactAsync, listAllContactsAsync, updateContactAsync } from '../../redux/actions';
 
 const SearchByName = ({
   fieldDefinitions,
@@ -16,8 +16,11 @@ const SearchByName = ({
   isGettingContact,
   isUpdatingContact,
   isListingAllContacts,
+  isInvitingContact,
+  isAdmin,
   getContact,
   updateContact,
+  inviteContact,
   resetContact,
   listAllContacts
 }) => {
@@ -38,10 +41,13 @@ const SearchByName = ({
         isGettingFieldDefinitions={isGettingFieldDefinitions}
         isGettingContact={isGettingContact}
         isUpdatingContact={isUpdatingContact}
+        isInvitingContact={isInvitingContact}
+        isAdmin={isAdmin}
         isProtected={false}
         redirectPath={(contactId) => history.push(`${SEARCH_PATH}${SEARCH_BY_NAME_PATH}?id=${contactId}`)}
         getContact={getContact}
         updateContact={updateContact}
+        inviteContact={inviteContact}
         resetContact={resetContact}
         listAllContacts={listAllContacts} />
     </>
@@ -55,13 +61,17 @@ const mapStateToProps = (state) => ({
   isGettingFieldDefinitions: state.contacts.isGettingFieldDefinitions,
   isGettingContact: state.contacts.isGettingContact,
   isUpdatingContact: state.contacts.isUpdatingContact,
-  isListingAllContacts: state.contacts.isListingAllContacts
+  isListingAllContacts: state.contacts.isListingAllContacts,
+  isInvitingContact: state.contacts.isInvitingContact,
+  isAdmin: state.profileContacts.isAdmin
 });
 
 const mapDispatchToProps = (dispatch) => ({
   getContact: (contactId, token) => dispatch(getContactAsync(contactId, token)),
   updateContact: (fieldDefinitions, contact, pictureFile, token) =>
     dispatch(updateContactAsync(fieldDefinitions, contact, pictureFile, token)),
+  inviteContact: (fieldDefinitions, contact, email, token) =>
+    dispatch(inviteContactAsync(fieldDefinitions, contact, email, token)),
   resetContact: () => dispatch(resetContact()),
   listAllContacts: (token) => dispatch(listAllContactsAsync(token))
 });
