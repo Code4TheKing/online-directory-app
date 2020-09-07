@@ -1,27 +1,16 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { CircularProgress } from '@material-ui/core';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Autosuggest from 'react-autosuggest';
 import Form from 'react-bootstrap/Form';
 import Row from 'react-bootstrap/Row';
-import { useHistory, useLocation } from 'react-router-dom';
 import useDeepCompareEffect from 'use-deep-compare-effect';
 import ContactCard from '../components/ContactCard';
-import '../styles/edit-contact-auto-suggest.scss';
-
-const useQuery = () => {
-  return new URLSearchParams(useLocation().search);
-}
-
-function usePrevious(value) {
-  const ref = useRef();
-  useEffect(() => {
-    ref.current = value;
-  });
-  return ref.current;
-}
+import usePrevious from '../hooks/usePrevious';
+import '../styles/auto-suggest.scss';
 
 const ContactHandler = ({
+  contactId,
   fieldDefinitions,
   contact,
   allContacts = [],
@@ -32,27 +21,25 @@ const ContactHandler = ({
   isListingAllContacts,
   isProtected,
   isAdmin,
+  redirectPath,
   getContact,
   updateContact,
   resetContact,
   listAllContacts
 }) => {
   const { getAccessTokenSilently } = useAuth0();
-  const history = useHistory();
-  const query = useQuery();
   const previousContact = usePrevious(contact);
   const [contactSuggestions, setContactSuggestions] = useState([]);
   const [autoSuggestInput, setAutoSuggestInput] = useState('');
 
-  useDeepCompareEffect(() => {
-    const contactId = query.get('id');
+  useEffect(() => {
     if (contactId) {
       getAccessTokenSilently()
         .then(token => getContact(contactId, token))
     } else {
       resetContact();
     }
-  }, [query, getAccessTokenSilently, getContact]);
+  }, [contactId, getAccessTokenSilently, getContact, resetContact]);
 
   useDeepCompareEffect(() => {
     if (contact) {
@@ -112,7 +99,7 @@ const ContactHandler = ({
     }
     if (suggestion) {
       resetContact();
-      history.push(`/edit-contact?id=${suggestion[fieldDefinitions.idField.propName]}`);
+      redirectPath(suggestion[fieldDefinitions.idField.propName]);
     }
   }
 

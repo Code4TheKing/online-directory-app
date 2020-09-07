@@ -2,7 +2,6 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { CircularProgress } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
-import Jumbotron from 'react-bootstrap/Jumbotron';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -19,6 +18,8 @@ import { createProfileContactAsync, getFieldDefinitionsAsync, getProfileContactA
 
 export const HOME_PATH = '/';
 export const SEARCH_PATH = '/search';
+export const SEARCH_BY_NAME_PATH = '/name';
+export const SEARCH_BY_KEYWORD_PATH = '/keyword';
 export const ADD_CONTACT_PATH = '/add-contact';
 export const EDIT_CONTACT_PATH = '/edit-contact';
 export const PROFILE_PATH = '/profile';
@@ -55,7 +56,7 @@ const OnlineDirectoryApp = ({
 
   if (isLoading || isGettingFieldDefinitions || (isAuthenticated && isAdmin === null)) {
     return (
-      <Container className="d-flex justify-content-center">
+      <Container className="d-flex justify-content-center align-items-center vw-100 vh-100">
         <CircularProgress className="w-25 h-25" />
       </Container>
     );
@@ -64,8 +65,8 @@ const OnlineDirectoryApp = ({
   return (
     <>
       <NavigationBar fieldDefinitions={fieldDefinitions} profileContact={profileContact} isAdmin={isAdmin} />
-      <Jumbotron>
-        <ToastContainer />
+      <ToastContainer />
+      <Container className="mt-3" fluid>
         <Switch>
           <Route path={HOME_PATH} component={Home} exact />
           <PrivateRoute path={SEARCH_PATH} component={Search} />
@@ -74,7 +75,7 @@ const OnlineDirectoryApp = ({
           <PrivateRoute path={PROFILE_PATH} component={Profile} />
           <Route component={NotFound} />
         </Switch>
-      </Jumbotron>
+      </Container>
     </>
   );
 }
