@@ -1,6 +1,6 @@
 FROM node:12-alpine AS build
 WORKDIR /frontend
-COPY package.json yarn.lock ./
+COPY package.json ./
 RUN yarn install --production
 COPY . .
 RUN yarn build
