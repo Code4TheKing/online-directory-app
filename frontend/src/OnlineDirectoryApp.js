@@ -8,8 +8,7 @@ import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import NavigationBar from './components/NavigationBar';
 import PrivateRoute from './components/PrivateRoute';
-import AddContact from './pages/AddContact';
-import EditContact from './pages/EditContact';
+import Admin from './pages/Admin';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
@@ -20,8 +19,9 @@ export const HOME_PATH = '/';
 export const SEARCH_PATH = '/search';
 export const SEARCH_BY_NAME_PATH = '/name';
 export const SEARCH_BY_KEYWORD_PATH = '/keyword';
-export const ADD_CONTACT_PATH = '/add-contact';
-export const EDIT_CONTACT_PATH = '/edit-contact';
+export const ADMIN_PATH = '/admin';
+export const ADMIN_ADD_CONTACT_PATH = '/add-contact';
+export const ADMIN_EDIT_CONTACT_PATH = '/edit-contact';
 export const PROFILE_PATH = '/profile';
 
 const OnlineDirectoryApp = ({
@@ -70,8 +70,7 @@ const OnlineDirectoryApp = ({
         <Switch>
           <Route path={HOME_PATH} component={Home} exact />
           <PrivateRoute path={SEARCH_PATH} component={Search} />
-          {isAdmin && <PrivateRoute path={ADD_CONTACT_PATH} component={AddContact} />}
-          {isAdmin && <PrivateRoute path={EDIT_CONTACT_PATH} component={EditContact} />}
+          {isAdmin && <PrivateRoute path={ADMIN_PATH} component={Admin} />}
           <PrivateRoute path={PROFILE_PATH} component={Profile} />
           <Route component={NotFound} />
         </Switch>

@@ -13,6 +13,7 @@ import Row from 'react-bootstrap/Row';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { LinkContainer } from 'react-router-bootstrap';
 import useDeepCompareEffect from 'use-deep-compare-effect';
+import { ADMIN_EDIT_CONTACT_PATH, ADMIN_PATH } from '../OnlineDirectoryApp';
 import '../styles/contact-card.css';
 
 const ContactCard = ({
@@ -31,14 +32,17 @@ const ContactCard = ({
   }
 
   const getPictureValue = (fieldDefinitions, contact) => {
-    return getFieldValue(contact, fieldDefinitions.pictureField.propName, { link: 'holder.js/100px200/auto?random=yes&text=No Image' });
+    return getFieldValue(
+      contact,
+      fieldDefinitions.pictureField.propName,
+      { link: 'holder.js/100px250/auto?random=yes&text=No Image' });
   }
 
   const getMainValue = (fieldDefinitions, contact) => {
-    return getFieldValue(contact, fieldDefinitions.mainField.propName, '');
+    return getFieldValue(contact, fieldDefinitions.mainField.propName);
   }
 
-  const getFieldValue = (contact, fieldName, defaultValue) => {
+  const getFieldValue = (contact, fieldName, defaultValue = '') => {
     return emptyIfNull(contact, fieldName, defaultValue);
   }
 
@@ -133,7 +137,8 @@ const ContactCard = ({
           { [fieldDefinitions.mainField.propName]: mainField },
           fieldDefinitions.otherFields
             .reduce((acc, curr) => {
-              if (otherFields[curr.propName] || otherFields[curr.propName] === '') acc[curr.propName] = otherFields[curr.propName];
+              if (otherFields[curr.propName]
+                || otherFields[curr.propName] === '') acc[curr.propName] = otherFields[curr.propName];
               return acc;
             }, {})),
         pictureFile,
@@ -202,7 +207,7 @@ const ContactCard = ({
               accept="image/png, image/jpeg"
               onChange={handlePictureChange}
               disabled={!editable} />
-            {editable && contact[fieldDefinitions.pictureField.propName] &&
+            {editable && !isPicturePlaceholder(pictureField) &&
               <Button
                 variant="outline-dark"
                 style={{ top: 0, right: 0, backgroundColor: 'white', width: 20, height: 20, fontSize: 20 }}
@@ -223,6 +228,7 @@ const ContactCard = ({
                         ref={mainRef}
                         value={mainField}
                         tabIndex="1"
+                        placeholder={fieldDefinitions.mainField.displayName}
                         onChange={(event) => handleChange(event, setMainField, fieldDefinitions.mainField.validation.maxLength)}
                         pattern={fieldDefinitions.mainField.validation.regex} />
                       <Form.Control.Feedback className="text-center" type="invalid">
@@ -306,10 +312,10 @@ const ContactCard = ({
                 </OverlayTrigger>
               </div>}
               <div className="d-flex flex-grow-1" />
-              {contact._id && <div className="cursor-pointer d-flex align-items-center">
+              {!editable && contact._id && <div className="cursor-pointer d-flex align-items-center">
                 <OverlayTrigger placement="top" transition={false} overlay={<Tooltip>Edit contact</Tooltip>}>
                   {({ ref, ...triggerHandler }) => (
-                    <LinkContainer to={`/edit-contact?id=${contact[fieldDefinitions.idField.propName]}`}>
+                    <LinkContainer to={`${ADMIN_PATH}${ADMIN_EDIT_CONTACT_PATH}?id=${contact[fieldDefinitions.idField.propName]}`}>
                       <Icon ref={ref} {...triggerHandler}>edit</Icon>
                     </LinkContainer>
                   )}
