@@ -1,55 +1,43 @@
 import React from 'react';
+import Container from 'react-bootstrap/Container';
+import Nav from 'react-bootstrap/Nav';
 import Row from 'react-bootstrap/Row';
-import { connect } from 'react-redux';
-import ContactCardList from '../components/ContactCardList';
-import SearchBar from '../components/SearchBar';
-import { inviteContactAsync, searchContactsAsync } from '../redux/actions';
+import { LinkContainer } from 'react-router-bootstrap';
+import { Route, Switch, useRouteMatch } from 'react-router-dom';
+import { SEARCH_BY_KEYWORD_PATH, SEARCH_BY_NAME_PATH } from '../OnlineDirectoryApp';
+import '../styles/search.css';
+import SearchByKeyword from './sub/SearchByKeyword';
+import SearchByName from './sub/SearchByName';
 
-const Search = ({
-  fieldDefinitions,
-  searchText,
-  contacts,
-  isGettingFieldDefinitions,
-  isSearchingContacts,
-  isInvitingContact,
-  isAdmin,
-  searchContacts,
-  inviteContact
-}) => {
+const Search = () => {
+  const { path } = useRouteMatch();
 
   return (
-    <div className="mx-5">
+    <>
       <Row className="justify-content-center">
-        <SearchBar searchText={searchText} searchFunc={searchContacts} />
+        <Nav className="w-25" variant="pills" defaultActiveKey="name" fill>
+          <Nav.Item>
+            <LinkContainer to={`${path}${SEARCH_BY_NAME_PATH}`}>
+              <Nav.Link eventKey="name" active={path === SEARCH_BY_NAME_PATH}>Name</Nav.Link>
+            </LinkContainer>
+          </Nav.Item>
+          <Nav.Item>
+            <LinkContainer to={`${path}${SEARCH_BY_KEYWORD_PATH}`}>
+              <Nav.Link eventKey="keyword" active={path === SEARCH_BY_KEYWORD_PATH}>Keyword</Nav.Link>
+            </LinkContainer>
+          </Nav.Item>
+        </Nav>
       </Row>
-      <Row className="justify-content-center mt-5">
-        <ContactCardList
-          fieldDefinitions={fieldDefinitions}
-          searchText={searchText}
-          contacts={contacts}
-          isGettingFieldDefinitions={isGettingFieldDefinitions}
-          isListing={isSearchingContacts}
-          isInviting={isInvitingContact}
-          isAdmin={isAdmin}
-          inviteFunc={inviteContact} />
+      <Row>
+        <Container className="border-dark pt-3" style={{ borderTop: '1px solid var(--dark)' }}>
+          <Switch>
+            <Route path={`${path}${SEARCH_BY_NAME_PATH}`} component={SearchByName} />
+            <Route path={`${path}${SEARCH_BY_KEYWORD_PATH}`} component={SearchByKeyword} />
+          </Switch>
+        </Container>
       </Row>
-    </div>
-  )
+    </>
+  );
 }
 
-const mapStateToProps = (state) => ({
-  fieldDefinitions: state.contacts.fieldDefinitions,
-  searchText: state.contacts.searchText,
-  contacts: state.contacts.searchContacts,
-  isGettingFieldDefinitions: state.contacts.isGettingFieldDefinitions,
-  isSearchingContacts: state.contacts.isSearchingContacts,
-  isInvitingContact: state.contacts.isInvitingContact,
-  isAdmin: state.profileContacts.isAdmin
-});
-
-const mapDispatchToProps = (dispatch) => ({
-  searchContacts: (searchText, token) => dispatch(searchContactsAsync(searchText, token)),
-  inviteContact: (fieldDefinitions, contact, email, token) => dispatch(inviteContactAsync(fieldDefinitions, contact, email, token))
-});
-
-export default connect(mapStateToProps, mapDispatchToProps)(Search);
+export default Search;
