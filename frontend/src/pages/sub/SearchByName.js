@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import ContactHandler from '../../components/ContactHandler';
 import useQuery from '../../hooks/useQuery';
-import { SEARCH_BY_NAME_PATH, SEARCH_PATH } from '../../OnlineDirectoryApp';
+import { SEARCH_BY_NAME_PATH } from '../../OnlineDirectoryApp';
 import { resetContact } from '../../redux/actionCreators';
 import { getContactAsync, inviteContactAsync, listAllContactsAsync, updateContactAsync } from '../../redux/actions';
 
@@ -44,7 +44,7 @@ const SearchByName = ({
         isInvitingContact={isInvitingContact}
         isAdmin={isAdmin}
         isProtected={false}
-        redirectPath={(contactId) => history.push(`${SEARCH_PATH}${SEARCH_BY_NAME_PATH}?id=${contactId}`)}
+        redirectOnClick={(contactId) => history.push(`${SEARCH_BY_NAME_PATH}?id=${contactId}`)}
         getContact={getContact}
         updateContact={updateContact}
         inviteContact={inviteContact}

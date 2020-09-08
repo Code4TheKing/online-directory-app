@@ -2,10 +2,13 @@ import { CircularProgress } from '@material-ui/core';
 import React from 'react';
 import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
+import { useHistory } from 'react-router-dom';
 import ContactCard from '../../components/ContactCard';
+import { SEARCH_BY_NAME_PATH } from '../../OnlineDirectoryApp';
 import { addContactAsync } from '../../redux/actions';
 
 const AddContact = ({ fieldDefinitions, isGettingFieldDefinitions, isAddingContact, isAdmin, addContact }) => {
+  const history = useHistory();
 
   if (!isAdmin) {
     return (
@@ -28,6 +31,7 @@ const AddContact = ({ fieldDefinitions, isGettingFieldDefinitions, isAddingConta
             editable={true}
             isSaving={isAddingContact}
             saveFunc={addContact}
+            redirectAfterSave={(savedContact) => history.push(`${SEARCH_BY_NAME_PATH}?id=${savedContact[fieldDefinitions.idField.propName]}`)}
             width={'25rem'} />}
       </Row>
     </>

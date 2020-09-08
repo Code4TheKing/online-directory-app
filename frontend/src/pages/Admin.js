@@ -17,12 +17,12 @@ const Admin = () => {
       <Row className="justify-content-center">
         <Nav className="w-25" variant="pills" defaultActiveKey="name" fill>
           <Nav.Item>
-            <LinkContainer to={`${path}${ADMIN_ADD_CONTACT_PATH}`}>
+            <LinkContainer to={`${ADMIN_ADD_CONTACT_PATH}`}>
               <Nav.Link eventKey="name" active={path === ADMIN_ADD_CONTACT_PATH}>Add</Nav.Link>
             </LinkContainer>
           </Nav.Item>
           <Nav.Item>
-            <LinkContainer to={`${path}${ADMIN_EDIT_CONTACT_PATH}`}>
+            <LinkContainer to={`${ADMIN_EDIT_CONTACT_PATH}`}>
               <Nav.Link eventKey="keyword" active={path === ADMIN_EDIT_CONTACT_PATH}>Edit</Nav.Link>
             </LinkContainer>
           </Nav.Item>
@@ -31,8 +31,8 @@ const Admin = () => {
       <Row>
         <Container className="border-dark pt-3" style={{ borderTop: '1px solid var(--dark)' }}>
           <Switch>
-            <Route path={`${path}${ADMIN_ADD_CONTACT_PATH}`} component={AddContact} />
-            <Route path={`${path}${ADMIN_EDIT_CONTACT_PATH}`} component={EditContact} />
+            <Route path={`${ADMIN_ADD_CONTACT_PATH}`} component={AddContact} />
+            <Route path={`${ADMIN_EDIT_CONTACT_PATH}`} component={EditContact} />
           </Switch>
         </Container>
       </Row>

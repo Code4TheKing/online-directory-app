@@ -33,6 +33,7 @@ export const getFieldDefinitionsAsync = (token) => {
             return Promise.reject(responseJson);
           } else {
             dispatch(getFieldDefinitionsSuccess(responseJson));
+            return responseJson;
           }
         }))
       .catch((err) => console.error(err));
@@ -85,6 +86,7 @@ const addContactTextFields = (dispatch, fieldDefinitions, contact, token) => {
         } else {
           dispatch(addContactSuccess(responseJson));
           toast.success(`Added "${contact[fieldDefinitions.mainField.propName]}"`);
+          return responseJson;
         }
       }));
 }
@@ -109,6 +111,7 @@ export const getContactAsync = (contactId, token) => {
             return Promise.reject(responseJson);
           } else {
             dispatch(getContactSuccess(responseJson));
+            return responseJson;
           }
         }))
       .catch((err) => console.error(err));
@@ -126,6 +129,7 @@ export const searchContactsAsync = (keyword, token) => {
           return Promise.reject(responseJson);
         } else {
           dispatch(searchContactsSuccess(keyword, responseJson));
+          return responseJson;
         }
       })
       .catch((err) => console.error(err));
@@ -143,6 +147,7 @@ export const listAllContactsAsync = (token) => {
           return Promise.reject(responseJson);
         } else {
           dispatch(listAllContactsSuccess(responseJson));
+          return responseJson;
         }
       })
       .catch((err) => console.error(err));
@@ -210,6 +215,7 @@ const updateContactTextFields = (dispatch, contact, token) => {
         } else {
           dispatch(updateContactSuccess(responseJson));
           toast.success('Contact edited!');
+          return responseJson;
         }
       }));
 }
@@ -236,6 +242,7 @@ export const inviteContactAsync = (fieldDefinitions, contact, email, token) => {
           } else {
             dispatch(inviteContactSuccess(responseJson));
             toast.success(`Invitation sent for "${contact[fieldDefinitions.mainField.propName]}"`);
+            return responseJson;
           }
         }))
       .catch((err) => console.error(err));
@@ -263,6 +270,7 @@ export const createProfileContactAsync = (token) => {
             return Promise.reject(responseJson);
           } else {
             dispatch(createProfileContactSuccess(responseJson));
+            return responseJson;
           }
         }))
       .catch((err) => console.error(err));
@@ -285,10 +293,10 @@ export const getProfileContactAsync = (token) => {
         .then(({ responseJson, response }) => {
           if (!response.ok) {
             dispatch(getProfileContactError(responseJson));
-            toast.error(`Error getting profile contact - ${responseJson.message}`);
             return Promise.reject(responseJson);
           } else {
             dispatch(getProfileContactSuccess(responseJson));
+            return responseJson;
           }
         }))
       .catch((err) => console.error(err));
@@ -367,6 +375,7 @@ const updateProfileContactTextFields = (dispatch, localProfileContact, token) =>
         } else {
           dispatch(updateProfileContactSuccess(responseJson));
           toast.success('Profile saved!');
+          return responseJson;
         }
       }));
 }
