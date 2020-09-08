@@ -13,7 +13,7 @@ import Row from 'react-bootstrap/Row';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { LinkContainer } from 'react-router-bootstrap';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { ADMIN_EDIT_CONTACT_PATH, ADMIN_PATH } from '../OnlineDirectoryApp';
+import { ADMIN_EDIT_CONTACT_PATH } from '../OnlineDirectoryApp';
 import '../styles/contact-card.css';
 
 const ContactCard = ({
@@ -25,7 +25,8 @@ const ContactCard = ({
   isInviting = false,
   isAdmin = false,
   saveFunc,
-  inviteFunc
+  inviteFunc,
+  redirectAfterSave
 }) => {
   const getIdValue = (fieldDefinitions, contact) => {
     return getFieldValue(contact, fieldDefinitions.idField.propName, 'no-id');
@@ -143,7 +144,11 @@ const ContactCard = ({
             }, {})),
         pictureFile,
         token)
-        .then(() => { if (Object.keys(contact).length === 0) reset(); }));
+        .then((savedContact) => {
+          if (redirectAfterSave) {
+            redirectAfterSave(savedContact);
+          }
+        }));
   }
 
   const focus = (ref, fieldName) => {
@@ -315,7 +320,7 @@ const ContactCard = ({
               {!editable && contact._id && <div className="cursor-pointer d-flex align-items-center">
                 <OverlayTrigger placement="top" transition={false} overlay={<Tooltip>Edit contact</Tooltip>}>
                   {({ ref, ...triggerHandler }) => (
-                    <LinkContainer to={`${ADMIN_PATH}${ADMIN_EDIT_CONTACT_PATH}?id=${contact[fieldDefinitions.idField.propName]}`}>
+                    <LinkContainer to={`${ADMIN_EDIT_CONTACT_PATH}?id=${contact[fieldDefinitions.idField.propName]}`}>
                       <Icon ref={ref} {...triggerHandler}>edit</Icon>
                     </LinkContainer>
                   )}

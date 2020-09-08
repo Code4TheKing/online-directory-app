@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { useHistory } from 'react-router-dom';
 import ContactHandler from '../../components/ContactHandler';
 import useQuery from '../../hooks/useQuery';
-import { ADMIN_EDIT_CONTACT_PATH, ADMIN_PATH } from '../../OnlineDirectoryApp';
+import { ADMIN_EDIT_CONTACT_PATH } from '../../OnlineDirectoryApp';
 import { resetContact } from '../../redux/actionCreators';
 import { getContactAsync, inviteContactAsync, listAllContactsAsync, updateContactAsync } from '../../redux/actions';
 
@@ -44,7 +44,7 @@ const EditContact = ({
         isInvitingContact={isInvitingContact}
         isProtected={true}
         isAdmin={isAdmin}
-        redirectPath={(contactId) => history.push(`${ADMIN_PATH}${ADMIN_EDIT_CONTACT_PATH}?id=${contactId}`)}
+        redirectOnClick={(contactId) => history.push(`${ADMIN_EDIT_CONTACT_PATH}?id=${contactId}`)}
         getContact={getContact}
         updateContact={updateContact}
         inviteContact={inviteContact}

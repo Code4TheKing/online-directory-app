@@ -7,7 +7,7 @@ const Home = () => {
   return (
     <>
       <div className="text-center">
-        <h1>Welcome to the Online Directory App</h1>
+        <h1>Welcome to the {process.env.REACT_APP_WEBSITE_NAME}</h1>
         {isAuthenticated ?
           <h2>Hope you enjoy your stay!</h2> :
           <h2>Please login by clicking the button in the top right</h2>}

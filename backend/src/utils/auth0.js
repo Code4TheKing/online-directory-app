@@ -4,14 +4,14 @@ const pwdGenerator = require('generate-password');
 const getAccessToken = () => {
   return axios({
     method: 'POST',
-    url: process.env.AUTH0_TOKEN_ENDPOINT,
+    url: process.env.API_AUTH0_TOKEN_ENDPOINT,
     headers: {
       'Content-Type': 'application/json'
     },
     data: {
       client_id: process.env.API_AUTH0_CLIENT_ID,
       client_secret: process.env.API_AUTH0_CLIENT_SECRET,
-      audience: process.env.AUTH0_MANAGEMENT_API_AUDIENCE,
+      audience: process.env.API_AUTH0_MANAGEMENT_API_AUDIENCE,
       grant_type: 'client_credentials'
     }
   })
@@ -21,7 +21,7 @@ const getAccessToken = () => {
 const getUser = (accessToken, userId) => {
   return axios({
     method: 'GET',
-    url: `${process.env.AUTH0_MANAGEMENT_API_AUDIENCE}users/${userId}`,
+    url: `${process.env.API_AUTH0_MANAGEMENT_API_AUDIENCE}users/${userId}`,
     headers: {
       'Authorization': `Bearer ${accessToken}`
     },
@@ -32,7 +32,7 @@ const getUser = (accessToken, userId) => {
 const createUser = (accessToken, email, name, contactId) => {
   return axios({
     method: 'POST',
-    url: `${process.env.AUTH0_MANAGEMENT_API_AUDIENCE}users`,
+    url: `${process.env.API_AUTH0_MANAGEMENT_API_AUDIENCE}users`,
     headers: {
       'Authorization': `Bearer ${accessToken}`,
       'Content-Type': 'application/json'
@@ -48,7 +48,7 @@ const createUser = (accessToken, email, name, contactId) => {
         strict: true
       }),
       name: name,
-      connection: process.env.AUTH0_DB_CONNECTION_NAME,
+      connection: process.env.API_AUTH0_DB_CONNECTION_NAME,
       email_verified: false,
       verify_email: false,
       user_metadata: {
@@ -62,7 +62,7 @@ const createUser = (accessToken, email, name, contactId) => {
 const getUserByEmail = (accessToken, email) => {
   return axios({
     method: 'GET',
-    url: `${process.env.AUTH0_MANAGEMENT_API_AUDIENCE}users-by-email`,
+    url: `${process.env.API_AUTH0_MANAGEMENT_API_AUDIENCE}users-by-email`,
     headers: {
       'Authorization': `Bearer ${accessToken}`
     },
@@ -84,7 +84,7 @@ const getUserByEmail = (accessToken, email) => {
 const getParticipantRoleId = (accessToken) => {
   return axios({
     method: 'GET',
-    url: `${process.env.AUTH0_MANAGEMENT_API_AUDIENCE}roles`,
+    url: `${process.env.API_AUTH0_MANAGEMENT_API_AUDIENCE}roles`,
     headers: {
       'Authorization': `Bearer ${accessToken}`
     },
@@ -105,7 +105,7 @@ const getParticipantRoleId = (accessToken) => {
 const assignParticipantRoleToUser = (accessToken, userId, participantRoleId) => {
   return axios({
     method: 'POST',
-    url: `${process.env.AUTH0_MANAGEMENT_API_AUDIENCE}users/${userId}/roles`,
+    url: `${process.env.API_AUTH0_MANAGEMENT_API_AUDIENCE}users/${userId}/roles`,
     headers: {
       'Authorization': `Bearer ${accessToken}`,
       'Content-Type': 'application/json'
@@ -119,14 +119,14 @@ const assignParticipantRoleToUser = (accessToken, userId, participantRoleId) => 
 const triggerChangePassword = (email) => {
   return axios({
     method: 'POST',
-    url: `${process.env.AUTH0_ISSUER}dbconnections/change_password`,
+    url: `${process.env.API_AUTH0_ISSUER}dbconnections/change_password`,
     headers: {
       'Content-Type': 'application/json'
     },
     data: {
       client_id: process.env.REACT_APP_AUTH0_CLIENT_ID,
       email: email,
-      connection: process.env.AUTH0_DB_CONNECTION_NAME
+      connection: process.env.API_AUTH0_DB_CONNECTION_NAME
     }
   });
 }

@@ -5,7 +5,7 @@ import { useHistory } from 'react-router-dom';
 import ContactCardList from '../../components/ContactCardList';
 import SearchBar from '../../components/SearchBar';
 import useQuery from '../../hooks/useQuery';
-import { SEARCH_BY_KEYWORD_PATH, SEARCH_PATH } from '../../OnlineDirectoryApp';
+import { SEARCH_BY_KEYWORD_PATH } from '../../OnlineDirectoryApp';
 import { resetSearchContacts } from '../../redux/actionCreators';
 import { inviteContactAsync, searchContactsAsync } from '../../redux/actions';
 
@@ -34,7 +34,7 @@ const SearchByKeyword = ({
           searchText={keyword}
           searchFunc={searchContacts}
           resetSearch={resetSearchContacts}
-          redirectPath={(input) => history.push(`${SEARCH_PATH}${SEARCH_BY_KEYWORD_PATH}?text=${input}`)} />
+          redirectOnSearch={(input) => history.push(`${SEARCH_BY_KEYWORD_PATH}?text=${input}`)} />
       </Row>
       <Row className="justify-content-center">
         <ContactCardList
