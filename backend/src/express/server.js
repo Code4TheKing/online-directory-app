@@ -1,5 +1,7 @@
 const express = require('express');
+const path = require('path');
 const cors = require('cors')
+const serverless = require('serverless-http');
 const app = express();
 try {
   var mongoose = require('mongoose');
@@ -10,7 +12,7 @@ const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
 
 app.use(require('body-parser').json());
-app.use(express.static(__dirname + '/static'));
+app.use(express.static(path.join(__dirname, '../static')));
 
 // CORS handler
 const corsHandler = cors({
@@ -57,12 +59,12 @@ app.get('/is-mongoose-ok', (req, res) => {
 });
 
 // Contacts route
-const contactsRoute = require('./routes/contactsRoute');
-app.use('/_api/v1/contacts', contactsRoute);
+const contactsRoute = require('../routes/contactsRoute');
+app.use(`/${process.env.REACT_APP_API_BASE_PATH}/contacts`, contactsRoute);
 
 // Profile Contacts route
-const profileContactsRoute = require('./routes/profileContactsRoute');
-app.use('/_api/v1/profile-contacts', profileContactsRoute);
+const profileContactsRoute = require('../routes/profileContactsRoute');
+app.use(`/${process.env.REACT_APP_API_BASE_PATH}/profile-contacts`, profileContactsRoute);
 
 // Error handler
 app.use((err, req, res, next) => {
@@ -95,9 +97,6 @@ app.use((req, res) => {
   }
 })
 
-const port = process.env.API_PORT || 4000;
-app.listen(port, () => console.log(`Listening on port ${port}`));
-
 const gracefulShutdown = () => {
   process.exit();
 };
@@ -105,3 +104,6 @@ const gracefulShutdown = () => {
 process.on('SIGINT', gracefulShutdown);
 process.on('SIGTERM', gracefulShutdown);
 process.on('SIGUSR2', gracefulShutdown); // Sent by nodemon
+
+module.exports = app;
+module.exports.handler = serverless(app);
