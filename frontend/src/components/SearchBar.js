@@ -8,13 +8,13 @@ const SearchBar = ({ searchText, searchFunc, resetSearch, redirectPath }) => {
   const [input, setInput] = useState(searchText);
 
   useEffect(() => {
-    if (input) {
+    if (searchText) {
       getAccessTokenSilently()
-        .then(token => searchFunc(input, token));
+        .then(token => searchFunc(searchText, token));
     } else {
       resetSearch();
     }
-  }, []);
+  }, [searchText, getAccessTokenSilently, searchFunc, resetSearch]);
 
   const handleChange = (event) => {
     setInput(event.target.value);
