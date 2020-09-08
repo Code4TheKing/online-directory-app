@@ -17,7 +17,7 @@ const isAuthorized = (user, allowedPermissions) => {
 const isAdmin = (accessToken, user) => {
   return axios({
     method: 'GET',
-    url: `${process.env.AUTH0_MANAGEMENT_API_AUDIENCE}users/${user.sub}/roles`,
+    url: `${process.env.API_AUTH0_MANAGEMENT_API_AUDIENCE}users/${user.sub}/roles`,
     headers: {
       'Authorization': `Bearer ${accessToken}`
     }

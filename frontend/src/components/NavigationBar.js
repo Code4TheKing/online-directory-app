@@ -20,7 +20,7 @@ const NavigationBar = ({ fieldDefinitions, profileContact, isAdmin }) => {
 
   return (
     <Navbar bg="dark" variant="dark" sticky="top" expand="md">
-      <Navbar.Brand className="align-self-center" href="/">Online Directory App</Navbar.Brand>
+      <Navbar.Brand className="align-self-center" href="/">{process.env.REACT_APP_WEBSITE_NAME}</Navbar.Brand>
       <Navbar.Toggle aria-controls="navbar" />
       <Navbar.Collapse id="navbar">
         <Nav className="w-100">
@@ -31,20 +31,20 @@ const NavigationBar = ({ fieldDefinitions, profileContact, isAdmin }) => {
           </Nav.Item>
           {isAuthenticated &&
             <NavDropdown className="align-self-center" active={location.pathname.startsWith(SEARCH_PATH)} title="Search" id="search-dropdown">
-              <LinkContainer to={`${SEARCH_PATH}${SEARCH_BY_NAME_PATH}`}>
-                <NavDropdown.Item active={location.pathname === `${SEARCH_PATH}${SEARCH_BY_NAME_PATH}`}>Search by name</NavDropdown.Item>
+              <LinkContainer to={`${SEARCH_BY_NAME_PATH}`}>
+                <NavDropdown.Item active={location.pathname === `${SEARCH_BY_NAME_PATH}`}>Search by name</NavDropdown.Item>
               </LinkContainer>
-              <LinkContainer to={`${SEARCH_PATH}${SEARCH_BY_KEYWORD_PATH}`}>
-                <NavDropdown.Item active={location.pathname === `${SEARCH_PATH}${SEARCH_BY_KEYWORD_PATH}`}>Search by keyword</NavDropdown.Item>
+              <LinkContainer to={`${SEARCH_BY_KEYWORD_PATH}`}>
+                <NavDropdown.Item active={location.pathname === `${SEARCH_BY_KEYWORD_PATH}`}>Search by keyword</NavDropdown.Item>
               </LinkContainer>
             </NavDropdown>}
           {isAuthenticated && isAdmin &&
             <NavDropdown className="align-self-center" active={location.pathname.startsWith(ADMIN_PATH)} title="Admin" id="admin-dropdown">
-              <LinkContainer to={`${ADMIN_PATH}${ADMIN_ADD_CONTACT_PATH}`}>
-                <NavDropdown.Item active={location.pathname === `${ADMIN_PATH}${ADMIN_ADD_CONTACT_PATH}`}>Add Contact</NavDropdown.Item>
+              <LinkContainer to={`${ADMIN_ADD_CONTACT_PATH}`}>
+                <NavDropdown.Item active={location.pathname === `${ADMIN_ADD_CONTACT_PATH}`}>Add Contact</NavDropdown.Item>
               </LinkContainer>
-              <LinkContainer to={`${ADMIN_PATH}${ADMIN_EDIT_CONTACT_PATH}`}>
-                <NavDropdown.Item active={location.pathname === `${ADMIN_PATH}${ADMIN_EDIT_CONTACT_PATH}`}>Edit Contact</NavDropdown.Item>
+              <LinkContainer to={`${ADMIN_EDIT_CONTACT_PATH}`}>
+                <NavDropdown.Item active={location.pathname === `${ADMIN_EDIT_CONTACT_PATH}`}>Edit Contact</NavDropdown.Item>
               </LinkContainer>
             </NavDropdown>}
           <Nav.Item className="flex-grow-1" />

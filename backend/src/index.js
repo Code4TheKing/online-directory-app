@@ -15,7 +15,7 @@ app.use(express.static(__dirname + '/static'));
 // CORS handler
 const corsHandler = cors({
   origin: (origin, callback) => {
-    const originWhitelist = ["http://localhost", "http://localhost:3000"];
+    const originWhitelist = process.env.API_ALLOWED_ORIGINS.split(',');
     if (originWhitelist.indexOf(origin) > -1) {
       callback(null, true);
     } else {
@@ -39,10 +39,10 @@ var jwtCheck = jwt({
     cache: true,
     rateLimit: true,
     jwksRequestsPerMinute: 5,
-    jwksUri: process.env.AUTH0_JWKS_URI
+    jwksUri: process.env.API_AUTH0_JWKS_URI
   }),
-  audience: process.env.AUTH0_AUDIENCE,
-  issuer: process.env.AUTH0_ISSUER,
+  audience: process.env.API_AUTH0_AUDIENCE,
+  issuer: process.env.API_AUTH0_ISSUER,
   algorithms: ['RS256']
 });
 app.use(jwtCheck);

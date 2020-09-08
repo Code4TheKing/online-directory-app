@@ -17,12 +17,12 @@ const Search = () => {
       <Row className="justify-content-center">
         <Nav className="w-25" variant="pills" defaultActiveKey="name" fill>
           <Nav.Item>
-            <LinkContainer to={`${path}${SEARCH_BY_NAME_PATH}`}>
+            <LinkContainer to={`${SEARCH_BY_NAME_PATH}`}>
               <Nav.Link eventKey="name" active={path === SEARCH_BY_NAME_PATH}>Name</Nav.Link>
             </LinkContainer>
           </Nav.Item>
           <Nav.Item>
-            <LinkContainer to={`${path}${SEARCH_BY_KEYWORD_PATH}`}>
+            <LinkContainer to={`${SEARCH_BY_KEYWORD_PATH}`}>
               <Nav.Link eventKey="keyword" active={path === SEARCH_BY_KEYWORD_PATH}>Keyword</Nav.Link>
             </LinkContainer>
           </Nav.Item>
@@ -31,8 +31,8 @@ const Search = () => {
       <Row>
         <Container className="border-dark pt-3" style={{ borderTop: '1px solid var(--dark)' }}>
           <Switch>
-            <Route path={`${path}${SEARCH_BY_NAME_PATH}`} component={SearchByName} />
-            <Route path={`${path}${SEARCH_BY_KEYWORD_PATH}`} component={SearchByKeyword} />
+            <Route path={`${SEARCH_BY_NAME_PATH}`} component={SearchByName} />
+            <Route path={`${SEARCH_BY_KEYWORD_PATH}`} component={SearchByKeyword} />
           </Switch>
         </Container>
       </Row>

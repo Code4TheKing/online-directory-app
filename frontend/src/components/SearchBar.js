@@ -2,8 +2,9 @@ import { useAuth0 } from '@auth0/auth0-react';
 import React, { useEffect, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import { resetContact } from '../redux/actionCreators';
 
-const SearchBar = ({ searchText, searchFunc, resetSearch, redirectPath }) => {
+const SearchBar = ({ searchText, searchFunc, resetSearch, redirectOnSearch }) => {
   const { getAccessTokenSilently } = useAuth0();
   const [input, setInput] = useState(searchText);
 
@@ -14,6 +15,9 @@ const SearchBar = ({ searchText, searchFunc, resetSearch, redirectPath }) => {
     } else {
       resetSearch();
     }
+    return function cleanup() {
+      resetContact();
+    }
   }, [searchText, getAccessTokenSilently, searchFunc, resetSearch]);
 
   const handleChange = (event) => {
@@ -22,7 +26,7 @@ const SearchBar = ({ searchText, searchFunc, resetSearch, redirectPath }) => {
 
   const performSearch = (event) => {
     event.preventDefault();
-    redirectPath(input);
+    redirectOnSearch(input);
   }
 
   return (
