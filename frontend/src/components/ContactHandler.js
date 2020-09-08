@@ -22,7 +22,7 @@ const ContactHandler = ({
   isInvitingContact,
   isProtected,
   isAdmin,
-  redirectPath,
+  redirectOnClick,
   getContact,
   updateContact,
   inviteContact,
@@ -39,6 +39,9 @@ const ContactHandler = ({
       getAccessTokenSilently()
         .then(token => getContact(contactId, token))
     } else {
+      resetContact();
+    }
+    return function cleanup() {
       resetContact();
     }
   }, [contactId, getAccessTokenSilently, getContact, resetContact]);
@@ -100,8 +103,7 @@ const ContactHandler = ({
       event.stopPropagation();
     }
     if (suggestion) {
-      resetContact();
-      redirectPath(suggestion[fieldDefinitions.idField.propName]);
+      redirectOnClick(suggestion[fieldDefinitions.idField.propName]);
     }
   }
 

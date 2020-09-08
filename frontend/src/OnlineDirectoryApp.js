@@ -17,11 +17,11 @@ import { createProfileContactAsync, getFieldDefinitionsAsync, getProfileContactA
 
 export const HOME_PATH = '/';
 export const SEARCH_PATH = '/search';
-export const SEARCH_BY_NAME_PATH = '/name';
-export const SEARCH_BY_KEYWORD_PATH = '/keyword';
+export const SEARCH_BY_NAME_PATH = '/search/name';
+export const SEARCH_BY_KEYWORD_PATH = '/search/keyword';
 export const ADMIN_PATH = '/admin';
-export const ADMIN_ADD_CONTACT_PATH = '/add-contact';
-export const ADMIN_EDIT_CONTACT_PATH = '/edit-contact';
+export const ADMIN_ADD_CONTACT_PATH = '/admin/add-contact';
+export const ADMIN_EDIT_CONTACT_PATH = '/admin/edit-contact';
 export const PROFILE_PATH = '/profile';
 
 const OnlineDirectoryApp = ({
