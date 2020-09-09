@@ -36,7 +36,7 @@ const ContactCard = ({
     return getFieldValue(
       contact,
       fieldDefinitions.pictureField.propName,
-      { link: 'holder.js/100px250/auto?random=yes&text=No Image' });
+      { link: 'holder.js/100px250/auto?text=No Image' });
   }
 
   const getMainValue = (fieldDefinitions, contact) => {
