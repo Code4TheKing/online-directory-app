@@ -22,7 +22,7 @@ const contacts = (
     contact: null,
     searchText: '',
     searchContacts: [],
-    allContacts: [],
+    allContacts: null,
     getFieldDefinitionsError: null,
     addContactError: null,
     getContactError: null,
