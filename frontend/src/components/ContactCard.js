@@ -144,6 +144,7 @@ const ContactCard = ({
             }, {})),
         pictureFile,
         token)
+        .then(() => { if (Object.keys(contact).length === 0) reset(); })
         .then((savedContact) => {
           if (redirectAfterSave) {
             redirectAfterSave(savedContact);

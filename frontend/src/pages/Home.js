@@ -5,7 +5,12 @@ import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
 import LoginButton from '../components/LoginButton';
 
-const Home = ({ fieldDefinitions, profileContact, isGettingFieldDefinitions, isGettingProfileContact }) => {
+const Home = ({
+  fieldDefinitions,
+  profileContact,
+  isGettingFieldDefinitions,
+  isGettingProfileContact
+}) => {
   const { isAuthenticated } = useAuth0();
 
   if (!isAuthenticated) {

@@ -60,7 +60,7 @@ const OnlineDirectoryApp = ({
   if (isLoading || isGettingFieldDefinitions || (isAuthenticated && isAdmin === null)) {
     return (
       <Container className="d-flex justify-content-center align-items-center vw-100 vh-100">
-        <CircularProgress className="w-25 h-25" />
+        <CircularProgress className="w-25 h-auto" />
       </Container>
     );
   }
