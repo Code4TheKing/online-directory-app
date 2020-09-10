@@ -1,7 +1,9 @@
+import { useAuth0 } from '@auth0/auth0-react';
 import { CircularProgress } from '@material-ui/core';
 import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { SEARCH_BY_NAME_PATH } from '../OnlineDirectoryApp';
+import { ADMIN_VIEW_CONTACT_SEARCH_BY_NAME_PATH } from '../OnlineDirectoryApp';
+import { listAllContacts } from '../redux/actionCreators';
 import ContactCard from './ContactCard';
 
 const ContactLoader = ({
@@ -19,6 +21,7 @@ const ContactLoader = ({
   inviteContact,
   addContact
 }) => {
+  const { getAccessTokenSilently } = useAuth0();
   const history = useHistory();
 
   if (isGettingFieldDefinitions || isGettingContact) {
@@ -46,8 +49,11 @@ const ContactLoader = ({
       editable={true}
       isSaving={isAddingContact}
       saveFunc={addContact}
-      redirectAfterSave={(savedContact) =>
-        history.push(`${SEARCH_BY_NAME_PATH}?id=${savedContact[fieldDefinitions.idField.propName]}`)}
+      redirectAfterSave={(savedContact) => {
+        getAccessTokenSilently()
+          .then(token => listAllContacts(token))
+          .then(() => history.push(`${ADMIN_VIEW_CONTACT_SEARCH_BY_NAME_PATH}?id=${savedContact[fieldDefinitions.idField.propName]}`));
+      }}
       width={'25rem'} />
   );
 }

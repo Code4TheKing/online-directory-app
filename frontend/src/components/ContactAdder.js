@@ -6,7 +6,7 @@ const ContactAdder = ({
   isGettingFieldDefinitions,
   isAddingContact,
   isAdmin,
-  addContact
+  addContact,
 }) => {
 
   return (
@@ -15,7 +15,7 @@ const ContactAdder = ({
       fieldDefinitions={fieldDefinitions}
       editable={true}
       isGettingFieldDefinitions={isGettingFieldDefinitions}
-      isSaving={isAddingContact}
+      isAddingContact={isAddingContact}
       isAdmin={isAdmin}
       addContact={addContact} />
   );

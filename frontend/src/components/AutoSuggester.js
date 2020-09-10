@@ -1,3 +1,4 @@
+import { CircularProgress } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import Autosuggest from 'react-autosuggest';
 import Button from 'react-bootstrap/Button';
@@ -19,14 +20,16 @@ const AutoSuggester = ({
     setAutoSuggestInput(input);
   }, [input]);
 
-  const getContactSuggestions = (input) => {
+  const loadSuggestions = (input) => {
     const sanitizedInput = input.trim().toLowerCase();
 
-    setContactSuggestions(
-      allContacts
-        .filter(contact => contact[fieldDefinitions.mainField.propName].toLowerCase().includes(sanitizedInput)
-          || fieldDefinitions.otherFields.some(otherField => contact[otherField.propName]?.toLowerCase().includes(sanitizedInput)))
-        .sort((c1, c2) => (c1[fieldDefinitions.mainField.propName] > c2[fieldDefinitions.mainField.propName]) ? 1 : -1));
+    if (allContacts) {
+      setContactSuggestions(
+        allContacts
+          .filter(contact => contact[fieldDefinitions.mainField.propName].toLowerCase().includes(sanitizedInput)
+            || fieldDefinitions.otherFields.some(otherField => contact[otherField.propName]?.toLowerCase().includes(sanitizedInput)))
+          .sort((c1, c2) => (c1[fieldDefinitions.mainField.propName] > c2[fieldDefinitions.mainField.propName]) ? 1 : -1));
+    }
   }
 
   const getContactSuggestionValue = (suggestion) => suggestion[fieldDefinitions.mainField.propName];
@@ -36,7 +39,7 @@ const AutoSuggester = ({
   }
 
   const onSuggestionsFetchRequested = ({ value }) => {
-    getContactSuggestions(value);
+    loadSuggestions(value);
   }
 
   const onSuggestionsClearRequested = () => {
@@ -51,6 +54,13 @@ const AutoSuggester = ({
     return (
       <div>{suggestion[fieldDefinitions.mainField.propName]}</div>
     );
+  }
+
+  const renderInputComponent = (inputProps) => {
+    if (isListingAllContacts) {
+      return <input {...inputProps} disabled />
+    }
+    return <input {...inputProps} />
   }
 
   const handleSearch = (event) => {
@@ -69,14 +79,15 @@ const AutoSuggester = ({
         getSuggestionValue={getContactSuggestionValue}
         alwaysRenderSuggestions={true}
         renderSuggestion={renderSuggestion}
+        renderInputComponent={renderInputComponent}
         inputProps={{
           placeholder: 'Type a name',
           value: autoSuggestInput,
           onChange
         }} />
-      {autoSuggestInput.trim().length > 0 ?
-        <Button className="ml-2" type="submit" variant="success">Search</Button> :
-        <Button className="ml-2" type="submit" variant="outline-success" disabled>Search</Button>}
+      <Button className="ml-2" style={{ width: '5rem' }} type="submit" variant="outline-success" disabled={autoSuggestInput.trim().length === 0}>
+        {isListingAllContacts ? <CircularProgress size={20} /> : 'Search'}
+      </Button>
     </Form>
   );
 }
