@@ -4,7 +4,7 @@ import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import AutoSuggester from '../components/AutoSuggester';
-import ContactsSearcher from '../components/ContactsSearcher';
+import ContactViewer from '../components/ContactViewer';
 import { useGetContactById, useListAllContacts, useListAllContactsNameChange, useSearchContacts, useUpdateSuggestInput } from '../hooks/useContacts';
 import usePrevious from '../hooks/usePrevious';
 import useQuery from '../hooks/useQuery';
@@ -65,7 +65,7 @@ const Search = ({
       <Row className="justify-content-center mt-3">
         <Switch>
           <Route path={`${SEARCH_BY_NAME_PATH}`}>
-            <ContactsSearcher
+            <ContactViewer
               contactId={contactId}
               fieldDefinitions={fieldDefinitions}
               contact={contact}

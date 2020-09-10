@@ -1,7 +1,7 @@
 import React from 'react';
 import ContactLoader from './ContactLoader';
 
-const ContactsSearcher = ({
+const ContactViewer = ({
   fieldDefinitions,
   contact,
   isGettingFieldDefinitions,
@@ -29,4 +29,4 @@ const ContactsSearcher = ({
   );
 }
 
-export default ContactsSearcher;
+export default ContactViewer;

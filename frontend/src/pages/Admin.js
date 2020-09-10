@@ -8,7 +8,7 @@ import { Redirect, Route, Switch, useHistory, useRouteMatch } from 'react-router
 import AutoSuggester from '../components/AutoSuggester';
 import ContactAdder from '../components/ContactAdder';
 import ContactEditor from '../components/ContactEditor';
-import ContactsSearcher from '../components/ContactsSearcher';
+import ContactViewer from '../components/ContactViewer';
 import KeywordSearcher from '../components/KeywordSearcher';
 import { useGetContactById, useListAllContacts, useListAllContactsNameChange, useSearchContacts, useUpdateSuggestInput } from '../hooks/useContacts';
 import usePrevious from '../hooks/usePrevious';
@@ -146,7 +146,7 @@ const Admin = ({
           <Switch>
             <Route path={`${ADMIN_VIEW_CONTACT_SEARCH_BY_NAME_PATH}`}>
               <Row className="justify-content-center mt-3">
-                <ContactsSearcher
+                <ContactViewer
                   contactId={contactId}
                   fieldDefinitions={fieldDefinitions}
                   contact={contact}
