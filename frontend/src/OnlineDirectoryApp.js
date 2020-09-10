@@ -22,6 +22,9 @@ export const SEARCH_BY_KEYWORD_PATH = '/search/keyword';
 export const ADMIN_PATH = '/admin';
 export const ADMIN_ADD_CONTACT_PATH = '/admin/add-contact';
 export const ADMIN_EDIT_CONTACT_PATH = '/admin/edit-contact';
+export const ADMIN_VIEW_CONTACT_PATH = '/admin/view-contact';
+export const ADMIN_VIEW_CONTACT_SEARCH_BY_NAME_PATH = '/admin/view-contact/name';
+export const ADMIN_VIEW_CONTACT_SEARCH_BY_KEYWORD_PATH = '/admin/view-contact/keyword';
 export const PROFILE_PATH = '/profile';
 
 const OnlineDirectoryApp = ({
