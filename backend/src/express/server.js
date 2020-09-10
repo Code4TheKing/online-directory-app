@@ -17,8 +17,8 @@ app.use(express.static(path.join(__dirname, '../static')));
 // CORS handler
 const corsHandler = cors({
   origin: (origin, callback) => {
-    const originWhitelist = process.env.API_ALLOWED_ORIGINS.split(',');
-    if (originWhitelist.indexOf(origin) > -1) {
+    const originWhitelist = process.env.API_ALLOWED_ORIGINS.split(';');
+    if (originWhitelist.indexOf(origin) > -1 || originWhitelist.map(origin => new RegExp(origin)).some(regex => regex.test(origin))) {
       callback(null, true);
     } else {
       const error = new Error(`Origin ${origin} not allowed by CORS`);
