@@ -1,7 +1,7 @@
 import { withAuthenticationRequired } from '@auth0/auth0-react';
-import { CircularProgress } from '@material-ui/core';
 import React from 'react';
 import Container from 'react-bootstrap/Container';
+import Spinner from 'react-bootstrap/Spinner';
 import { Route } from 'react-router-dom';
 
 const PrivateRoute = ({ component, ...args }) => (
@@ -12,7 +12,7 @@ const PrivateRoute = ({ component, ...args }) => (
         {
           onRedirecting: () => (
             <Container className="d-flex justify-content-center">
-              <CircularProgress className="w-25 h-25" />
+              <Spinner className="w-25 h-auto" animation="border" variant="primary" />
             </Container>
           )
         })}

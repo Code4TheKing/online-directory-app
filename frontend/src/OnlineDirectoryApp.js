@@ -1,7 +1,7 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import { CircularProgress } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
+import Spinner from 'react-bootstrap/Spinner';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
 import { ToastContainer } from 'react-toastify';
@@ -60,7 +60,7 @@ const OnlineDirectoryApp = ({
   if (isLoading || isGettingFieldDefinitions || (isAuthenticated && isAdmin === null)) {
     return (
       <Container className="d-flex justify-content-center align-items-center vw-100 vh-100">
-        <CircularProgress className="w-25 h-auto" />
+        <Spinner animation="border" variant="primary" />
       </Container>
     );
   }

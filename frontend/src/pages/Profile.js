@@ -1,6 +1,6 @@
-import { CircularProgress } from '@material-ui/core';
 import React from 'react';
 import Row from 'react-bootstrap/Row';
+import Spinner from 'react-bootstrap/Spinner';
 import { connect } from 'react-redux';
 import ContactCard from '../components/ContactCard';
 import { updateProfileContactAsync } from '../redux/actions';
@@ -21,7 +21,7 @@ const Profile = ({
       </Row>
       <Row className="justify-content-center mt-3">
         {isGettingFieldDefinitions || isGettingProfileContact ?
-          <CircularProgress /> :
+          <Spinner animation="border" variant="primary" /> :
           profileContact &&
           <ContactCard
             fieldDefinitions={fieldDefinitions}
