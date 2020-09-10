@@ -1,6 +1,6 @@
-import { CircularProgress } from '@material-ui/core';
 import React from 'react';
 import CardColumns from 'react-bootstrap/CardColumns';
+import Spinner from 'react-bootstrap/Spinner';
 import '../styles/contact-card-list.scss';
 import ContactCard from './ContactCard';
 
@@ -20,7 +20,7 @@ const ContactCardList = ({
     <>
       {
         isGettingFieldDefinitions || isListing ?
-          <CircularProgress /> :
+          <Spinner animation="border" variant="primary" /> :
           contacts.length > 0 ?
             <CardColumns className="px-3 pt-3 mt-3 mb-3" style={{ backgroundColor: '#eef1f5' }}>
               {

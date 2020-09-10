@@ -14,6 +14,15 @@ import LogoutButton from './LogoutButton';
 const NavigationBar = ({ fieldDefinitions, profileContact, isAdmin }) => {
   const { isAuthenticated } = useAuth0();
   const location = useLocation();
+  const generateAvatarText = (fieldDefinitions, profileContact) =>
+    (profileContact[fieldDefinitions.mainField.propName]
+      .split(/\s+/)
+      .map(word => {
+        const letter = word.charAt(0).toUpperCase();
+        return /[A-Za-z]/.test(letter) ? letter : '';
+      })
+      .join('')
+      .slice(0, 2));
 
   return (
     <Navbar bg="dark" variant="dark" sticky="top" expand="md" collapseOnSelect>
@@ -43,7 +52,9 @@ const NavigationBar = ({ fieldDefinitions, profileContact, isAdmin }) => {
             <LinkContainer to={PROFILE_PATH}>
               <Nav.Link className="d-inline-flex" active={location.pathname === PROFILE_PATH}>
                 <Avatar className="mr-1">
-                  {profileContact[fieldDefinitions.mainField.propName].split(' ').map(word => word.charAt(0).toUpperCase()).join('').slice(0, 2)}
+                  {generateAvatarText(fieldDefinitions, profileContact) ?
+                    generateAvatarText(fieldDefinitions, profileContact) :
+                    'XX'}
                 </Avatar>
                 <span className="align-self-center"><u>{profileContact[fieldDefinitions.mainField.propName]}</u></span>
               </Nav.Link>

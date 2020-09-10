@@ -1,7 +1,7 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import { CircularProgress } from '@material-ui/core';
 import React from 'react';
 import Row from 'react-bootstrap/Row';
+import Spinner from 'react-bootstrap/Spinner';
 import { connect } from 'react-redux';
 import LoginButton from '../components/LoginButton';
 
@@ -29,7 +29,7 @@ const Home = ({
   return (
     <Row className="justify-content-center text-center">
       {isGettingFieldDefinitions || isGettingProfileContact ?
-        <CircularProgress /> :
+        <Spinner animation="border" variant="primary" /> :
         <h2>Hello, {profileContact[fieldDefinitions.mainField.propName]}!</h2>}
     </Row>
   );

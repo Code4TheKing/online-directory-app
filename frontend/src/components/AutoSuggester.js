@@ -1,8 +1,8 @@
-import { CircularProgress } from '@material-ui/core';
 import React, { useEffect, useState } from 'react';
 import Autosuggest from 'react-autosuggest';
 import Button from 'react-bootstrap/Button';
 import Form from 'react-bootstrap/Form';
+import Spinner from 'react-bootstrap/Spinner';
 import '../styles/auto-suggest.scss';
 
 const AutoSuggester = ({
@@ -85,8 +85,8 @@ const AutoSuggester = ({
           value: autoSuggestInput,
           onChange
         }} />
-      <Button className="ml-2" style={{ width: '5rem' }} type="submit" variant="outline-success" disabled={autoSuggestInput.trim().length === 0}>
-        {isListingAllContacts ? <CircularProgress size={20} /> : 'Search'}
+      <Button className="ml-2" style={{ width: '5rem' }} type="submit" variant="outline-success" active={autoSuggestInput.trim().length > 0}>
+        {isListingAllContacts ? <Spinner as="span" animation="border" variant="primary" size="sm" /> : 'Search'}
       </Button>
     </Form>
   );

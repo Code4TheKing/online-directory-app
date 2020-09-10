@@ -1,6 +1,6 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import { CircularProgress } from '@material-ui/core';
 import React from 'react';
+import Spinner from 'react-bootstrap/Spinner';
 import { useHistory } from 'react-router-dom';
 import { ADMIN_VIEW_CONTACT_SEARCH_BY_NAME_PATH } from '../OnlineDirectoryApp';
 import { listAllContacts } from '../redux/actionCreators';
@@ -25,7 +25,7 @@ const ContactLoader = ({
   const history = useHistory();
 
   if (isGettingFieldDefinitions || isGettingContact) {
-    return <CircularProgress />;
+    return <Spinner animation="border" variant="primary" />;
   }
 
   if (mode === 'View' || mode === 'Edit') {
