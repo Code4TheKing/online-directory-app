@@ -4,7 +4,7 @@ import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner';
 import '../styles/contact-card-list.scss';
 import ContactCard from './ContactCard';
-import { SEARCH_ALL_KEYWORD } from '../pages/Search';
+import { SEARCH_ALL_KEYWORD } from '../pages/Directory';
 
 const ContactCardList = ({
   fieldDefinitions,

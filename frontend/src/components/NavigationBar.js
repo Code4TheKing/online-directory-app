@@ -7,7 +7,7 @@ import { IndexLinkContainer, LinkContainer } from 'react-router-bootstrap';
 import { useLocation } from 'react-router-dom';
 import {
   ADMIN_PATH,
-  HOME_PATH, PROFILE_PATH, SEARCH_PATH
+  DIRECTORY_PATH, HOME_PATH, PROFILE_PATH
 } from '../OnlineDirectoryApp';
 import LogoutButton from './LogoutButton';
 
@@ -37,8 +37,8 @@ const NavigationBar = ({ fieldDefinitions, profileContact, isAdmin }) => {
           </Nav.Item>
           {isAuthenticated &&
             <Nav.Item className="align-self-center">
-              <LinkContainer to={SEARCH_PATH}>
-                <Nav.Link active={location.pathname.startsWith(SEARCH_PATH)}>Search</Nav.Link>
+              <LinkContainer to={DIRECTORY_PATH}>
+                <Nav.Link active={location.pathname.startsWith(DIRECTORY_PATH)}>Directory</Nav.Link>
               </LinkContainer>
             </Nav.Item>}
           {isAuthenticated && isAdmin &&

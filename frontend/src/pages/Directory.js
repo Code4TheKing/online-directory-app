@@ -9,14 +9,13 @@ import KeywordSearcher from '../components/KeywordSearcher';
 import { useGetContactById, useListAllContacts, useListAllContactsNameChange, useSearchContacts, useUpdateSuggestInput } from '../hooks/useContacts';
 import usePrevious from '../hooks/usePrevious';
 import useQuery from '../hooks/useQuery';
-import { SEARCH_BY_KEYWORD_PATH, SEARCH_BY_NAME_PATH, SEARCH_PATH } from '../OnlineDirectoryApp';
+import { DIRECTORY_PATH, DIRECTORY_SEARCH_BY_KEYWORD_PATH, DIRECTORY_SEARCH_BY_NAME_PATH } from '../OnlineDirectoryApp';
 import { resetContact, resetSearchContacts } from '../redux/actionCreators';
 import { getContactAsync, inviteContactAsync, listAllContactsAsync, searchContactsAsync, updateContactAsync } from '../redux/actions';
-import '../styles/search.css';
 
 export const SEARCH_ALL_KEYWORD = ':all:';
 
-const Search = ({
+const Directory = ({
   fieldDefinitions,
   contact,
   searchContactList,
@@ -64,7 +63,7 @@ const Search = ({
   return (
     <>
       <Row className="justify-content-center">
-        <h2>Search</h2>
+        <h2>Directory</h2>
       </Row>
       <Row className="justify-content-center mt-3">
         <AutoSuggester
@@ -72,15 +71,15 @@ const Search = ({
           fieldDefinitions={fieldDefinitions}
           allContacts={allContacts}
           isListingAllContacts={isListingAllContacts}
-          suggestionRedirect={(contactId) => history.push(`${SEARCH_BY_NAME_PATH}?id=${contactId}`)}
+          suggestionRedirect={(contactId) => history.push(`${DIRECTORY_SEARCH_BY_NAME_PATH}?id=${contactId}`)}
           searchRedirect={(input) =>
             input ?
-              history.push(`${SEARCH_BY_KEYWORD_PATH}?text=${input}`) :
-              history.push(`${SEARCH_PATH}`)} />
+              history.push(`${DIRECTORY_SEARCH_BY_KEYWORD_PATH}?text=${input}`) :
+              history.push(`${DIRECTORY_PATH}`)} />
       </Row>
       <Row className="justify-content-center mt-3">
         <Switch>
-          <Route path={`${SEARCH_BY_NAME_PATH}`}>
+          <Route path={`${DIRECTORY_SEARCH_BY_NAME_PATH}`}>
             <ContactViewer
               contactId={contactId}
               fieldDefinitions={fieldDefinitions}
@@ -97,10 +96,10 @@ const Search = ({
               resetContact={resetContact}
               listAllContacts={listAllContacts} />
           </Route>
-          <Route path={`${SEARCH_PATH}`} exact>
+          <Route path={`${DIRECTORY_PATH}`} exact>
             {keywordSearcher}
           </Route>
-          <Route path={`${SEARCH_BY_KEYWORD_PATH}`}>
+          <Route path={`${DIRECTORY_SEARCH_BY_KEYWORD_PATH}`}>
             {keywordSearcher}
           </Route>
         </Switch>
@@ -135,4 +134,4 @@ const mapDispatchToProps = (dispatch) => ({
   resetSearchContacts: () => dispatch(resetSearchContacts())
 });
 
-export default connect(mapStateToProps, mapDispatchToProps)(Search);
+export default connect(mapStateToProps, mapDispatchToProps)(Directory);

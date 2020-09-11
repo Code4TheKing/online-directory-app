@@ -19,8 +19,7 @@ import {
 } from '../OnlineDirectoryApp';
 import { resetContact, resetSearchContacts } from '../redux/actionCreators';
 import { addContactAsync, getContactAsync, inviteContactAsync, listAllContactsAsync, searchContactsAsync, updateContactAsync } from '../redux/actions';
-import '../styles/search.css';
-import { SEARCH_ALL_KEYWORD } from './Search';
+import '../styles/admin.css';
 
 const Admin = ({
   fieldDefinitions,
@@ -50,12 +49,12 @@ const Admin = ({
   const history = useHistory();
   const previousContact = usePrevious(contact);
   const [suggestInput, setSuggestInput] = useState('');
-  const [keyword] = useState(query.get('text') ? query.get('text') : SEARCH_ALL_KEYWORD);
+  const [keyword] = useState(query.get('text') ? query.get('text') : '');
   const [contactId] = useState(query.get('id') ? query.get('id') : '');
 
   useListAllContacts(allContacts, getAccessTokenSilently, listAllContacts);
   useListAllContactsNameChange(contact, previousContact, fieldDefinitions, getAccessTokenSilently, listAllContacts);
-  useUpdateSuggestInput(contact, keyword, fieldDefinitions, setSuggestInput);
+  useUpdateSuggestInput(contact, keyword, fieldDefinitions, setSuggestInput, true);
   useGetContactById(contactId, getAccessTokenSilently, getContact, resetContact);
   useSearchContacts(keyword, getAccessTokenSilently, searchContacts, resetSearchContacts);
 
@@ -71,7 +70,7 @@ const Admin = ({
     <KeywordSearcher
       keyword={keyword}
       fieldDefinitions={fieldDefinitions}
-      contacts={keyword === SEARCH_ALL_KEYWORD ? allContacts : searchContactList}
+      contacts={searchContactList}
       isGettingFieldDefinitions={isGettingFieldDefinitions}
       isSearchingContacts={isSearchingContacts}
       isInvitingContact={isInvitingContact}
@@ -176,11 +175,6 @@ const Admin = ({
                   inviteContact={inviteContact}
                   resetContact={resetContact}
                   listAllContacts={listAllContacts} />
-              </Row>
-            </Route>
-            <Route path={`${ADMIN_VIEW_CONTACT_PATH}`} exact>
-              <Row className="justify-content-center mt-3">
-                {keywordSearcher}
               </Row>
             </Route>
             <Route path={`${ADMIN_VIEW_CONTACT_SEARCH_BY_KEYWORD_PATH}`}>
