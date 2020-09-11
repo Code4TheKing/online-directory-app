@@ -5,14 +5,16 @@ import { connect } from 'react-redux';
 import { Route, Switch, useHistory } from 'react-router-dom';
 import AutoSuggester from '../components/AutoSuggester';
 import ContactViewer from '../components/ContactViewer';
+import KeywordSearcher from '../components/KeywordSearcher';
 import { useGetContactById, useListAllContacts, useListAllContactsNameChange, useSearchContacts, useUpdateSuggestInput } from '../hooks/useContacts';
 import usePrevious from '../hooks/usePrevious';
 import useQuery from '../hooks/useQuery';
-import { SEARCH_BY_KEYWORD_PATH, SEARCH_BY_NAME_PATH } from '../OnlineDirectoryApp';
+import { SEARCH_BY_KEYWORD_PATH, SEARCH_BY_NAME_PATH, SEARCH_PATH } from '../OnlineDirectoryApp';
 import { resetContact, resetSearchContacts } from '../redux/actionCreators';
 import { getContactAsync, inviteContactAsync, listAllContactsAsync, searchContactsAsync, updateContactAsync } from '../redux/actions';
 import '../styles/search.css';
-import KeywordSearcher from '../components/KeywordSearcher';
+
+export const SEARCH_ALL_KEYWORD = ':all:';
 
 const Search = ({
   fieldDefinitions,
@@ -39,7 +41,7 @@ const Search = ({
   const history = useHistory();
   const previousContact = usePrevious(contact);
   const [suggestInput, setSuggestInput] = useState('');
-  const [keyword] = useState(query.get('text') ? query.get('text') : '');
+  const [keyword] = useState(query.get('text') ? query.get('text') : SEARCH_ALL_KEYWORD);
   const [contactId] = useState(query.get('id') ? query.get('id') : '');
 
   useListAllContacts(allContacts, getAccessTokenSilently, listAllContacts);
@@ -47,6 +49,17 @@ const Search = ({
   useUpdateSuggestInput(contact, keyword, fieldDefinitions, setSuggestInput);
   useGetContactById(contactId, getAccessTokenSilently, getContact, resetContact);
   useSearchContacts(keyword, getAccessTokenSilently, searchContacts, resetSearchContacts);
+
+  const keywordSearcher =
+    <KeywordSearcher
+      keyword={keyword}
+      fieldDefinitions={fieldDefinitions}
+      contacts={keyword === SEARCH_ALL_KEYWORD ? allContacts : searchContactList}
+      isGettingFieldDefinitions={isGettingFieldDefinitions}
+      isSearchingContacts={isSearchingContacts}
+      isInvitingContact={isInvitingContact}
+      isAdmin={isAdmin}
+      inviteContact={inviteContact} />;
 
   return (
     <>
@@ -60,7 +73,10 @@ const Search = ({
           allContacts={allContacts}
           isListingAllContacts={isListingAllContacts}
           suggestionRedirect={(contactId) => history.push(`${SEARCH_BY_NAME_PATH}?id=${contactId}`)}
-          searchRedirect={(input) => history.push(`${SEARCH_BY_KEYWORD_PATH}?text=${input}`)} />
+          searchRedirect={(input) =>
+            input ?
+              history.push(`${SEARCH_BY_KEYWORD_PATH}?text=${input}`) :
+              history.push(`${SEARCH_PATH}`)} />
       </Row>
       <Row className="justify-content-center mt-3">
         <Switch>
@@ -81,16 +97,11 @@ const Search = ({
               resetContact={resetContact}
               listAllContacts={listAllContacts} />
           </Route>
+          <Route path={`${SEARCH_PATH}`} exact>
+            {keywordSearcher}
+          </Route>
           <Route path={`${SEARCH_BY_KEYWORD_PATH}`}>
-            <KeywordSearcher
-              keyword={keyword}
-              fieldDefinitions={fieldDefinitions}
-              contacts={searchContactList}
-              isGettingFieldDefinitions={isGettingFieldDefinitions}
-              isSearchingContacts={isSearchingContacts}
-              isInvitingContact={isInvitingContact}
-              isAdmin={isAdmin}
-              inviteContact={inviteContact} />
+            {keywordSearcher}
           </Route>
         </Switch>
       </Row>
