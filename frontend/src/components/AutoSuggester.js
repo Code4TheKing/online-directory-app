@@ -86,7 +86,13 @@ const AutoSuggester = ({
           onChange,
           type: 'search'
         }} />
-      <Button className="ml-2" style={{ width: '5rem' }} type="submit" variant="outline-success" active={autoSuggestInput.trim().length > 0}>
+      <Button
+        className="ml-2"
+        style={{ width: '5rem' }}
+        type="submit"
+        variant="outline-success"
+        active={autoSuggestInput.trim().length > 0}
+        disabled={autoSuggestInput.trim().length === 0}>
         {isListingAllContacts ? <Spinner as="span" animation="border" variant="primary" size="sm" /> : 'Search'}
       </Button>
     </Form>
