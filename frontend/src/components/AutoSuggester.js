@@ -90,7 +90,8 @@ const AutoSuggester = ({
         className="ml-2"
         style={{ width: '5rem' }}
         type="submit"
-        variant="success">
+        variant={autoSuggestInput.trim().length === 0 ? "outline-success" : "success"}
+        disabled={autoSuggestInput.trim().length === 0}>
         {isListingAllContacts ? <Spinner as="span" animation="border" variant="primary" size="sm" /> : 'Search'}
       </Button>
     </Form>

@@ -1,5 +1,5 @@
 import { toast } from 'react-toastify';
-import { SEARCH_ALL_KEYWORD } from '../pages/Search';
+import { SEARCH_ALL_KEYWORD } from '../pages/Directory';
 import {
   addContact, addContactError, addContactSuccess,
   createProfileContact, createProfileContactError, createProfileContactSuccess,

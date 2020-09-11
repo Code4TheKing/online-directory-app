@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { SEARCH_ALL_KEYWORD } from '../pages/Search';
+import { SEARCH_ALL_KEYWORD } from '../pages/Directory';
 
 export const useListAllContacts = (allContacts, getAccessTokenSilently, listAllContacts) => {
   useEffect(() => {
@@ -22,11 +22,11 @@ export const useListAllContactsNameChange = (contact, previousContact, fieldDefi
   }, [contact, previousContact, fieldDefinitions, getAccessTokenSilently, listAllContacts]);
 }
 
-export const useUpdateSuggestInput = (contact, keyword, fieldDefinitions, setSuggestInput) => {
+export const useUpdateSuggestInput = (contact, keyword, fieldDefinitions, setSuggestInput, renderAllText = false) => {
   useDeepCompareEffect(() => {
     if (contact) {
       setSuggestInput(contact[fieldDefinitions.mainField.propName]);
-    } else if (keyword && keyword !== SEARCH_ALL_KEYWORD) {
+    } else if (keyword && (renderAllText || keyword !== SEARCH_ALL_KEYWORD)) {
       setSuggestInput(keyword);
     } else {
       setSuggestInput('');

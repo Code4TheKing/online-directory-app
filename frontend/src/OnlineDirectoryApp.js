@@ -9,16 +9,16 @@ import 'react-toastify/dist/ReactToastify.css';
 import NavigationBar from './components/NavigationBar';
 import PrivateRoute from './components/PrivateRoute';
 import Admin from './pages/Admin';
+import Directory from './pages/Directory';
 import Home from './pages/Home';
 import NotFound from './pages/NotFound';
 import Profile from './pages/Profile';
-import Search from './pages/Search';
 import { createProfileContactAsync, getFieldDefinitionsAsync, getProfileContactAsync } from './redux/actions';
 
 export const HOME_PATH = '/';
-export const SEARCH_PATH = '/search';
-export const SEARCH_BY_NAME_PATH = '/search/name';
-export const SEARCH_BY_KEYWORD_PATH = '/search/keyword';
+export const DIRECTORY_PATH = '/directory';
+export const DIRECTORY_SEARCH_BY_NAME_PATH = '/directory/name';
+export const DIRECTORY_SEARCH_BY_KEYWORD_PATH = '/directory/keyword';
 export const ADMIN_PATH = '/admin';
 export const ADMIN_ADD_CONTACT_PATH = '/admin/add-contact';
 export const ADMIN_EDIT_CONTACT_PATH = '/admin/edit-contact';
@@ -72,7 +72,7 @@ const OnlineDirectoryApp = ({
       <Container className="mt-3" fluid>
         <Switch>
           <Route path={HOME_PATH} component={Home} exact />
-          <PrivateRoute path={SEARCH_PATH} component={Search} />
+          <PrivateRoute path={DIRECTORY_PATH} component={Directory} />
           {isAdmin && <PrivateRoute path={ADMIN_PATH} component={Admin} />}
           <PrivateRoute path={PROFILE_PATH} component={Profile} />
           <Route component={NotFound} />
