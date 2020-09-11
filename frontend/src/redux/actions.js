@@ -1,4 +1,5 @@
 import { toast } from 'react-toastify';
+import { SEARCH_ALL_KEYWORD } from '../pages/Search';
 import {
   addContact, addContactError, addContactSuccess,
   createProfileContact, createProfileContactError, createProfileContactSuccess,
@@ -139,7 +140,7 @@ export const searchContactsAsync = (keyword, token) => {
 export const listAllContactsAsync = (token) => {
   return (dispatch) => {
     dispatch(listAllContacts());
-    return listContacts(':all:', token)
+    return listContacts(SEARCH_ALL_KEYWORD, token)
       .then(({ responseJson, response }) => {
         if (!response.ok) {
           dispatch(listAllContactsError(responseJson));

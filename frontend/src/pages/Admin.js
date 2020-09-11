@@ -20,6 +20,7 @@ import {
 import { resetContact, resetSearchContacts } from '../redux/actionCreators';
 import { addContactAsync, getContactAsync, inviteContactAsync, listAllContactsAsync, searchContactsAsync, updateContactAsync } from '../redux/actions';
 import '../styles/search.css';
+import { SEARCH_ALL_KEYWORD } from './Search';
 
 const Admin = ({
   fieldDefinitions,
@@ -49,7 +50,7 @@ const Admin = ({
   const history = useHistory();
   const previousContact = usePrevious(contact);
   const [suggestInput, setSuggestInput] = useState('');
-  const [keyword] = useState(query.get('text') ? query.get('text') : '');
+  const [keyword] = useState(query.get('text') ? query.get('text') : SEARCH_ALL_KEYWORD);
   const [contactId] = useState(query.get('id') ? query.get('id') : '');
 
   useListAllContacts(allContacts, getAccessTokenSilently, listAllContacts);
@@ -65,6 +66,17 @@ const Admin = ({
       </>
     );
   }
+
+  const keywordSearcher =
+    <KeywordSearcher
+      keyword={keyword}
+      fieldDefinitions={fieldDefinitions}
+      contacts={keyword === SEARCH_ALL_KEYWORD ? allContacts : searchContactList}
+      isGettingFieldDefinitions={isGettingFieldDefinitions}
+      isSearchingContacts={isSearchingContacts}
+      isInvitingContact={isInvitingContact}
+      isAdmin={isAdmin}
+      inviteContact={inviteContact} />;
 
   return (
     <>
@@ -114,7 +126,10 @@ const Admin = ({
               allContacts={allContacts}
               isListingAllContacts={isListingAllContacts}
               suggestionRedirect={(contactId) => history.push(`${ADMIN_EDIT_CONTACT_PATH}?id=${contactId}`)}
-              searchRedirect={(input) => history.push(`${ADMIN_VIEW_CONTACT_SEARCH_BY_KEYWORD_PATH}?text=${input}`)} />
+              searchRedirect={(input) =>
+                input ?
+                  history.push(`${ADMIN_VIEW_CONTACT_SEARCH_BY_KEYWORD_PATH}?text=${input}`) :
+                  history.push(`${ADMIN_VIEW_CONTACT_PATH}`)} />
           </Row>
           <Row className="justify-content-center mt-3">
             <ContactEditor
@@ -163,19 +178,16 @@ const Admin = ({
                   listAllContacts={listAllContacts} />
               </Row>
             </Route>
-            <Route path={`${ADMIN_VIEW_CONTACT_SEARCH_BY_KEYWORD_PATH}`}>
+            <Route path={`${ADMIN_VIEW_CONTACT_PATH}`} exact>
               <Row className="justify-content-center mt-3">
-                <KeywordSearcher
-                  keyword={keyword}
-                  fieldDefinitions={fieldDefinitions}
-                  contacts={searchContactList}
-                  isGettingFieldDefinitions={isGettingFieldDefinitions}
-                  isSearchingContacts={isSearchingContacts}
-                  isInvitingContact={isInvitingContact}
-                  isAdmin={isAdmin}
-                  inviteContact={inviteContact} />
+                {keywordSearcher}
               </Row>
             </Route>
+            <Route path={`${ADMIN_VIEW_CONTACT_SEARCH_BY_KEYWORD_PATH}`}>
+              <Row className="justify-content-center mt-3">
+                {keywordSearcher}
+              </Row>
+            </Route>=
           </Switch>
         </Route>
         <Route>
