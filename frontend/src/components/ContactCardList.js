@@ -43,7 +43,7 @@ const ContactCardList = ({
               </CardColumns>
             </Row> :
             searchText ?
-              <p className="text-center text-info my-2">No contacts found for the given search text</p> :
+              <p className="text-center text-info my-2">No contacts found for the given keyword</p> :
               <p className="text-center text-info my-2">Use the search to display some contacts</p>
       }
     </>
