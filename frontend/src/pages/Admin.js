@@ -20,6 +20,7 @@ import {
 import { resetContact, resetSearchContacts } from '../redux/actionCreators';
 import { addContactAsync, getContactAsync, inviteContactAsync, listAllContactsAsync, searchContactsAsync, updateContactAsync } from '../redux/actions';
 import '../styles/admin.css';
+import { SEARCH_ALL_KEYWORD } from './Directory';
 
 const Admin = ({
   fieldDefinitions,
@@ -70,7 +71,7 @@ const Admin = ({
     <KeywordSearcher
       keyword={keyword}
       fieldDefinitions={fieldDefinitions}
-      contacts={searchContactList}
+      contacts={keyword === SEARCH_ALL_KEYWORD ? allContacts : searchContactList}
       isGettingFieldDefinitions={isGettingFieldDefinitions}
       isSearchingContacts={isSearchingContacts}
       isInvitingContact={isInvitingContact}
@@ -110,7 +111,8 @@ const Admin = ({
               isGettingFieldDefinitions={isGettingFieldDefinitions}
               isAddingContact={isAddingContact}
               isAdmin={isAddingContact}
-              addContact={addContact} />
+              addContact={addContact}
+              listAllContacts={listAllContacts} />
           </Row>
         </Route>
         {/* Edit Contact */}

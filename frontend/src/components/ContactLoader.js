@@ -3,7 +3,6 @@ import React from 'react';
 import Spinner from 'react-bootstrap/Spinner';
 import { useHistory } from 'react-router-dom';
 import { ADMIN_VIEW_CONTACT_SEARCH_BY_NAME_PATH } from '../OnlineDirectoryApp';
-import { listAllContacts } from '../redux/actionCreators';
 import ContactCard from './ContactCard';
 
 const ContactLoader = ({
@@ -19,7 +18,8 @@ const ContactLoader = ({
   isAdmin,
   updateContact,
   inviteContact,
-  addContact
+  addContact,
+  listAllContacts
 }) => {
   const { getAccessTokenSilently } = useAuth0();
   const history = useHistory();
