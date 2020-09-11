@@ -14,6 +14,12 @@ const jwks = require('jwks-rsa');
 app.use(require('body-parser').json());
 app.use(express.static(path.join(__dirname, '../static')));
 
+// Root-level logger
+app.use((req, res, next) => {
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - ${req.ip}`, '-', req.body, '-', req.query);
+  next();
+});
+
 // CORS handler
 const corsHandler = cors({
   origin: (origin, callback) => {
@@ -28,12 +34,6 @@ const corsHandler = cors({
   }
 });
 app.use(corsHandler);
-
-// Root-level logger
-app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - ${req.ip}`, '-', req.body, '-', req.query);
-  next();
-});
 
 // JWT handler
 var jwtCheck = jwt({
