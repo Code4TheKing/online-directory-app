@@ -20,7 +20,6 @@ import {
 import { resetContact, resetSearchContacts } from '../redux/actionCreators';
 import { addContactAsync, getContactAsync, inviteContactAsync, listAllContactsAsync, searchContactsAsync, updateContactAsync } from '../redux/actions';
 import '../styles/admin.css';
-import { SEARCH_ALL_KEYWORD } from './Directory';
 
 const Admin = ({
   fieldDefinitions,
