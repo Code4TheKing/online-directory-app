@@ -6,6 +6,7 @@ import React, { useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
 import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
@@ -226,20 +227,21 @@ const ContactCard = ({
               </Button>}
           </Form.Group>
           <Card.Header className="font-weight-bold">
-            <Form.Row key={0} className="align-items-center">
-              <Form.Group as={Col} className="flex-grow-1 pr-0 mb-0">
-                <h3>
+            <Row>
+              <Form.Group as={Col} className="flex-grow-1 mb-0">
+                <h3 className="mb-0 text-center">
                   {editable ?
                     <>
                       <Form.Control
                         style={{ fontSize: 'inherit' }}
-                        className="form-control editable cursor-pointer"
+                        className="editable cursor-pointer text-center"
                         ref={mainRef}
                         value={mainField}
                         tabIndex="1"
                         placeholder={fieldDefinitions.mainField.displayName}
                         onChange={(event) => handleChange(event, setMainField, fieldDefinitions.mainField.validation.maxLength)}
-                        pattern={fieldDefinitions.mainField.validation.regex} />
+                        isInvalid={mainField ? !new RegExp(fieldDefinitions.mainField.validation.regex).test(mainField) : false}
+                        required />
                       <Form.Control.Feedback className="text-center" type="invalid">
                         {fieldDefinitions.mainField.validation.errorMessage}
                       </Form.Control.Feedback>
@@ -247,47 +249,56 @@ const ContactCard = ({
                     <div>{mainField}</div>}
                 </h3>
               </Form.Group>
-              {editable && <Col className="col-auto pl-1">
+              {editable && <Col className="align-self-center col-auto pl-0">
                 <div className="cursor-pointer" onClick={() => focus(mainRef)}>
                   <Icon>edit</Icon>
                 </div>
               </Col>}
-            </Form.Row>
+            </Row>
           </Card.Header>
-          <Card.Body>
+          <Card.Body className="pt-2 pb-3">
             {
               fieldDefinitions.otherFields.map((field, idx) => {
+                const regex = field.validation.regex;
+                const value = otherFields[field.propName]?.substring(0, field.validation.maxLength);
                 return (
-                  <Form.Row key={idx + 1} className={"align-items-center" + ((idx < fieldDefinitions.otherFields.length - 1) ? " mb-2" : "")}>
-                    <Col className="col-auto">
-                      <span className="font-weight-bold">{field.displayName + ':'}</span>
-                    </Col>
-                    <Form.Group as={Col} className="flex-grow-1 pl-0 pr-0 mb-0">
-                      {
-                        editable ?
-                          <Form.Control
-                            className="form-control editable cursor-pointer"
-                            ref={element => otherRefs.current[field.propName] = element}
-                            value={otherFields[field.propName]?.substring(0, field.validation.maxLength)}
-                            tabIndex={idx + 2}
-                            onChange={(event) =>
-                              handleChange(
-                                event,
-                                (value) => setOtherFields(Object.assign({}, otherFields, { [field.propName]: value })),
-                                field.validation.maxLength)}
-                            pattern={field.validation.regex} /> :
-                          <div>{otherFields[field.propName]}</div>
-                      }
-                      <Form.Control.Feedback className="text-center" type="invalid">
-                        {field.validation.errorMessage}
-                      </Form.Control.Feedback>
-                    </Form.Group>
-                    {editable && <Col className="col-auto pl-1">
-                      <div className="cursor-pointer" onClick={() => focus(otherRefs, field.propName)}>
-                        <Icon>edit</Icon>
-                      </div>
-                    </Col>}
-                  </Form.Row>
+                  <Container key={"field- " + (idx + 1)} className="px-0" fluid>
+                    <Row>
+                      <Form.Group
+                        as={Col}
+                        className="d-flex align-items-center flex-grow-1 mb-2 pb-2"
+                        style={{ flexDirection: 'column' }}>
+                        <Row className="justify-content-center w-100">
+                          <span className="font-weight-bold">{field.displayName}</span>
+                        </Row>
+                        <Row className="justify-content-center w-100" style={{ backgroundColor: 'rgba(255, 255, 255, 0.02)' }}>
+                          {editable ?
+                            <Form.Control
+                              as={field.type === "Address" ? "textarea" : "input"}
+                              className="editable cursor-pointer text-center"
+                              ref={element => otherRefs.current[field.propName] = element}
+                              value={otherFields[field.propName]?.substring(0, field.validation.maxLength)}
+                              tabIndex={idx + 2}
+                              onChange={(event) =>
+                                handleChange(
+                                  event,
+                                  (value) => setOtherFields(Object.assign({}, otherFields, { [field.propName]: value })),
+                                  field.validation.maxLength)}
+                              isInvalid={value ? !new RegExp(regex).test(value) : false} /> :
+                            <div className="text-center" style={{ whiteSpace: 'pre-wrap' }}>
+                              {value ? value : '-'}</div>}
+                          <Form.Control.Feedback className="text-center" type="invalid">
+                            {field.validation.errorMessage}
+                          </Form.Control.Feedback>
+                        </Row>
+                      </Form.Group>
+                      {editable && <Col className="d-flex align-self-stretch col-auto mb-2 pl-0">
+                        <div className="align-self-center cursor-pointer" onClick={() => focus(otherRefs, field.propName)}>
+                          <Icon>edit</Icon>
+                        </div>
+                      </Col>}
+                    </Row>
+                  </Container>
                 );
               })
             }
