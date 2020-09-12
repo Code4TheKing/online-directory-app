@@ -53,7 +53,7 @@ const Directory = ({
     <KeywordSearcher
       keyword={keyword}
       fieldDefinitions={fieldDefinitions}
-      contacts={keyword === SEARCH_ALL_KEYWORD ? allContacts : searchContactList}
+      contacts={searchContactList}
       isGettingFieldDefinitions={isGettingFieldDefinitions}
       isSearchingContacts={isSearchingContacts}
       isInvitingContact={isInvitingContact}
