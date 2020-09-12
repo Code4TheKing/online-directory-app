@@ -23,10 +23,8 @@
     REACT_APP_API_URL=http://localhost:4000
     REACT_APP_API_BASE_PATH=.netlify/functions/server/_api/v1
     REACT_APP_API_SCOPES=create:profile_contact,read:profile_contact,update:profile_contact,create:contacts,read:contacts,update:contacts
-    REACT_APP_ORIGIN=http://localhost:3000
     REACT_APP_IMGUR_CLIENT_ID=<Imgur dev client ID>
     REACT_APP_IMGUR_UPLOAD_ENDPOINT=https://api.imgur.com/3/image
-    API_PORT=4000
     API_ALLOWED_ORIGINS=http://localhost;http:\/\/localhost:\d{1,5}
     API_AUTH0_AUDIENCE=<Auth0 dev backend audience>
     API_AUTH0_ISSUER=<Auth0 dev issuer>
@@ -40,6 +38,8 @@
 3. Install Docker
 4. Run `docker-compose down && docker-compose up --build -d`. All code changes should hot reload (except changes to `local.env` or `package.json` - rebuild to activate them).
 5. Access the app at `http://localhost:3000`. You will need a user in the dev Auth0 setup to login to the app.
+6. Access the backend at `http://localhost:4000`
+7. Access Mongo Express (MongoDB viewer) at `http://localhost:8081`
 
 ## Deploy
 - All pull requests automatically build a preview version to the dev Netlify app instance (`https://deploy-preview-*--tbl-directory.netlify.app`)
