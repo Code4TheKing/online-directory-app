@@ -201,7 +201,7 @@ const ContactCard = ({
 
   return (
     <Fragment>
-      <Card style={{ width: width || '100%', maxWidth: '25rem' }} bg="dark" text="light">
+      <Card className="m-auto" style={{ width: width, maxWidth: '25rem' }} bg="dark" text="light">
         <Form noValidate validated={saveValidated} onSubmit={saveContact}>
           <Form.Group className="profile-picture position-relative mb-0">
             <Form.Label className="w-100 mb-0" htmlFor={"profile-picture-upload-" + getIdValue(fieldDefinitions, contact)}>

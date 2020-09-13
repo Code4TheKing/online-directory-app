@@ -50,8 +50,8 @@ const NavigationBar = ({ fieldDefinitions, profileContact, isAdmin }) => {
           <Nav.Item className="flex-grow-1" />
           {isAuthenticated && fieldDefinitions && profileContact && <Nav.Item className="align-self-center">
             <LinkContainer to={PROFILE_PATH}>
-              <Nav.Link className="d-inline-flex" active={location.pathname === PROFILE_PATH}>
-                <Avatar className="mr-1">
+              <Nav.Link className="d-inline-flex border border-secondary rounded-pill mx-2 my-2" active={location.pathname === PROFILE_PATH}>
+                <Avatar className="mr-1" style={{ width: 35, height: 35 }}>
                   {generateAvatarText(fieldDefinitions, profileContact) ?
                     generateAvatarText(fieldDefinitions, profileContact) :
                     'XX'}
