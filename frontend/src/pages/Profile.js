@@ -24,12 +24,12 @@ const Profile = ({
           <Spinner animation="border" variant="primary" /> :
           profileContact &&
           <ContactCard
+            width={'25rem'}
             fieldDefinitions={fieldDefinitions}
             editable={true}
             contact={profileContact}
             isSaving={isUpdatingProfileContact}
-            saveFunc={updateProfileContact}
-            width={'25rem'} />}
+            saveFunc={updateProfileContact} />}
       </Row>
     </Fragment>
   );

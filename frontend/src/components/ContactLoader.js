@@ -40,6 +40,7 @@ const ContactLoader = ({
         </Row>
         <Row className="justify-content-center">
           <ContactCard
+            width={'25rem'}
             fieldDefinitions={fieldDefinitions}
             editable={editable}
             contact={contact}
@@ -47,8 +48,7 @@ const ContactLoader = ({
             isSaving={isUpdatingContact}
             isInviting={isInvitingContact}
             saveFunc={updateContact}
-            inviteFunc={inviteContact}
-            width={'25rem'} />
+            inviteFunc={inviteContact} />
         </Row>
       </Container>
     );
@@ -56,6 +56,7 @@ const ContactLoader = ({
 
   return (
     <ContactCard
+      width={'25rem'}
       fieldDefinitions={fieldDefinitions}
       editable={true}
       isSaving={isAddingContact}
@@ -64,8 +65,7 @@ const ContactLoader = ({
         getAccessTokenSilently()
           .then(token => listAllContacts(token))
           .then(() => history.push(`${ADMIN_VIEW_CONTACT_SEARCH_BY_NAME_PATH}?id=${savedContact[fieldDefinitions.idField.propName]}`));
-      }}
-      width={'25rem'} />
+      }} />
   );
 }
 
