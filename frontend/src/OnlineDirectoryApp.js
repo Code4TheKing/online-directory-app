@@ -1,5 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
 import Spinner from 'react-bootstrap/Spinner';
 import { connect } from 'react-redux';
@@ -30,6 +30,7 @@ export const PROFILE_PATH = '/profile';
 const OnlineDirectoryApp = ({
   fieldDefinitions,
   isGettingFieldDefinitions,
+  isGettingProfileContact,
   getProfileContactError,
   isAdmin,
   profileContact,
@@ -57,34 +58,40 @@ const OnlineDirectoryApp = ({
     }
   }, [getProfileContactError, isAuthenticated, getAccessTokenSilently, createProfileContact]);
 
-  if (isLoading || isGettingFieldDefinitions || (isAuthenticated && isAdmin === null)) {
+  if (isLoading || isGettingFieldDefinitions || isGettingProfileContact || (isAuthenticated && isAdmin === null)) {
     return (
-      <Container className="d-flex justify-content-center align-items-center vw-100 vh-100">
-        <Spinner animation="border" variant="primary" />
-      </Container>
+      <Fragment>
+        <NavigationBar />
+        <Container className="mt-3" fluid>
+          <Container className="d-flex justify-content-center align-items-center vw-100 vh-100">
+            <Spinner animation="border" variant="primary" />
+          </Container>
+        </Container>
+      </Fragment>
     );
   }
 
   return (
-    <>
+    <Fragment>
       <NavigationBar fieldDefinitions={fieldDefinitions} profileContact={profileContact} isAdmin={isAdmin} />
       <ToastContainer />
       <Container className="mt-3" fluid>
         <Switch>
           <Route path={HOME_PATH} component={Home} exact />
           <PrivateRoute path={DIRECTORY_PATH} component={Directory} />
-          {isAdmin && <PrivateRoute path={ADMIN_PATH} component={Admin} />}
+          <PrivateRoute path={ADMIN_PATH} component={Admin} />
           <PrivateRoute path={PROFILE_PATH} component={Profile} />
           <Route component={NotFound} />
         </Switch>
       </Container>
-    </>
+    </Fragment>
   );
 }
 
 const mapStateToProps = (state) => ({
   fieldDefinitions: state.contacts.fieldDefinitions,
   isGettingFieldDefinitions: state.contacts.isGettingFieldDefinitions,
+  isGettingProfileContact: state.profileContacts.isGettingProfileContact,
   getProfileContactError: state.profileContacts.getProfileContactError,
   isAdmin: state.profileContacts.isAdmin,
   profileContact: state.profileContacts.profileContact

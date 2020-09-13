@@ -77,7 +77,7 @@ const Directory = ({
               history.push(`${DIRECTORY_SEARCH_BY_KEYWORD_PATH}?text=${input}`) :
               history.push(`${DIRECTORY_PATH}`)} />
       </Row>
-      <Row className="justify-content-center mt-3">
+      <Row className="justify-content-center mt-3 pb-3">
         <Switch>
           <Route path={`${DIRECTORY_SEARCH_BY_NAME_PATH}`}>
             <ContactViewer
