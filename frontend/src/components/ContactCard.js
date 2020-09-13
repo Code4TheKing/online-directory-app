@@ -2,7 +2,7 @@ import { useAuth0 } from '@auth0/auth0-react';
 import { Icon, LinearProgress } from '@material-ui/core';
 import 'holderjs';
 import Holder from 'holderjs';
-import React, { useRef, useState } from 'react';
+import React, { Fragment, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
 import Card from 'react-bootstrap/Card';
 import Col from 'react-bootstrap/Col';
@@ -200,7 +200,7 @@ const ContactCard = ({
   };
 
   return (
-    <>
+    <Fragment>
       <Card className="mb-3" style={{ width: width || '100%', maxWidth: '25rem' }} bg="dark" text="light">
         <Form noValidate validated={saveValidated} onSubmit={saveContact}>
           <Form.Group className="profile-picture position-relative mb-0">
@@ -332,7 +332,7 @@ const ContactCard = ({
                 </OverlayTrigger>
               </div>}
               <div className="d-flex flex-grow-1" />
-              {!editable && contact._id && <div className="cursor-pointer d-flex align-items-center">
+              {!editable && contact[fieldDefinitions.idField.propName] && <div className="cursor-pointer d-flex align-items-center">
                 <OverlayTrigger placement="top" transition={false} overlay={<Tooltip>Edit contact</Tooltip>}>
                   {({ ref, ...triggerHandler }) => (
                     <LinkContainer to={`${ADMIN_EDIT_CONTACT_PATH}?id=${contact[fieldDefinitions.idField.propName]}`}>
@@ -376,7 +376,7 @@ const ContactCard = ({
           </Form>
         </Modal.Body>
       </Modal>
-    </>
+    </Fragment>
   );
 }
 
