@@ -189,14 +189,14 @@ export const updateContactAsync = (fieldDefinitions, contact, pictureFile, token
             token))
         .catch((err) => console.error(err));
     }
-    return updateContactTextFields(dispatch, maybeClearPicture(contact, pictureFile), token)
+    return updateContactTextFields(dispatch, fieldDefinitions, maybeClearPicture(contact, pictureFile), token)
       .catch((err) => console.error(err));
   };
 }
 
-const updateContactTextFields = (dispatch, contact, token) => {
+const updateContactTextFields = (dispatch, fieldDefinitions, contact, token) => {
   return fetch(
-    `${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_BASE_PATH}/contacts/${contact._id}`,
+    `${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_BASE_PATH}/contacts/${contact[fieldDefinitions.idField.propName]}`,
     {
       method: 'PATCH',
       headers: {
@@ -224,7 +224,7 @@ const updateContactTextFields = (dispatch, contact, token) => {
 export const inviteContactAsync = (fieldDefinitions, contact, email, token) => {
   return (dispatch) => {
     dispatch(inviteContact());
-    return fetch(`${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_BASE_PATH}/contacts/${contact._id}/invite`, {
+    return fetch(`${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_BASE_PATH}/contacts/${contact[fieldDefinitions.idField.propName]}/invite`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
