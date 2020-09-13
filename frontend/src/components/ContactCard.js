@@ -201,7 +201,7 @@ const ContactCard = ({
 
   return (
     <Fragment>
-      <Card className="mb-3" style={{ width: width || '100%', maxWidth: '25rem' }} bg="dark" text="light">
+      <Card style={{ width: width || '100%', maxWidth: '25rem' }} bg="dark" text="light">
         <Form noValidate validated={saveValidated} onSubmit={saveContact}>
           <Form.Group className="profile-picture position-relative mb-0">
             <Form.Label className="w-100 mb-0" htmlFor={"profile-picture-upload-" + getIdValue(fieldDefinitions, contact)}>
@@ -231,7 +231,7 @@ const ContactCard = ({
               <Form.Group as={Col} className="flex-grow-1 mb-0">
                 <h3 className="mb-0 text-center">
                   {editable ?
-                    <>
+                    <Fragment>
                       <Form.Control
                         style={{ fontSize: 'inherit' }}
                         className="editable cursor-pointer text-center"
@@ -245,7 +245,7 @@ const ContactCard = ({
                       <Form.Control.Feedback className="text-center" type="invalid">
                         {fieldDefinitions.mainField.validation.errorMessage}
                       </Form.Control.Feedback>
-                    </> :
+                    </Fragment> :
                     <div>{mainField}</div>}
                 </h3>
               </Form.Group>

@@ -14,7 +14,7 @@ const KeywordSearcher = ({
 }) => {
 
   return (
-    <Container>
+    <Container fluid>
       <ContactCardList
         fieldDefinitions={fieldDefinitions}
         searchText={keyword}
