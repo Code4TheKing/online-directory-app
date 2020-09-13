@@ -34,9 +34,9 @@
   },
   "scripts": {
     "prettify": "prettier -l --write \"**/*.js\"",
-    "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "start": "react-scripts start",
     "eject": "react-scripts eject"
   },
   "prettier": {
