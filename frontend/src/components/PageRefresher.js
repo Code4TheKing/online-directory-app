@@ -7,7 +7,6 @@ const PageRefresher = () => {
   const history = useHistory();
   const location = useLocation();
 
-  console.log(location);
   return (
     <Button
       className="d-flex align-items-center"
