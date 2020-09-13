@@ -3,7 +3,6 @@ import Col from 'react-bootstrap/Col';
 import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner';
 import { SEARCH_ALL_KEYWORD } from '../pages/Directory';
-import '../styles/contact-card-list.scss';
 import ContactCard from './ContactCard';
 import PageRefresher from './PageRefresher';
 
