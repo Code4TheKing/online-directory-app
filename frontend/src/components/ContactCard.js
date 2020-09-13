@@ -220,10 +220,10 @@ const ContactCard = ({
             {editable && !isPicturePlaceholder(pictureField) &&
               <Button
                 variant="outline-dark"
-                style={{ top: 0, right: 0, backgroundColor: 'white', width: 20, height: 20, fontSize: 20 }}
-                className="close position-absolute"
+                style={{ top: 0, right: 0, backgroundColor: 'white', width: 30, height: 30, fontSize: 30 }}
+                className="align-items-center close position-absolute"
                 onClick={handleClearPicture}>
-                <span>&times;</span>
+                <Icon>clear</Icon>
               </Button>}
           </Form.Group>
           <Card.Header className="font-weight-bold">
