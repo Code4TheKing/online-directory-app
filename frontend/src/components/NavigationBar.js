@@ -48,7 +48,7 @@ const NavigationBar = ({ fieldDefinitions, profileContact, isAdmin }) => {
               </LinkContainer>
             </Nav.Item>}
           <Nav.Item className="flex-grow-1" />
-          {isAuthenticated && <Nav.Item className="align-self-center">
+          {isAuthenticated && fieldDefinitions && profileContact && <Nav.Item className="align-self-center">
             <LinkContainer to={PROFILE_PATH}>
               <Nav.Link className="d-inline-flex" active={location.pathname === PROFILE_PATH}>
                 <Avatar className="mr-1">
