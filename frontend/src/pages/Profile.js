@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner';
 import { connect } from 'react-redux';
@@ -15,7 +15,7 @@ const Profile = ({
 }) => {
 
   return (
-    <>
+    <Fragment>
       <Row className="justify-content-center">
         <h2>Profile</h2>
       </Row>
@@ -31,7 +31,7 @@ const Profile = ({
             saveFunc={updateProfileContact}
             width={'25rem'} />}
       </Row>
-    </>
+    </Fragment>
   );
 }
 

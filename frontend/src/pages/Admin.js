@@ -1,5 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
@@ -20,6 +20,7 @@ import {
 import { resetContact, resetSearchContacts } from '../redux/actionCreators';
 import { addContactAsync, getContactAsync, inviteContactAsync, listAllContactsAsync, searchContactsAsync, updateContactAsync } from '../redux/actions';
 import '../styles/admin.css';
+import NotFound from './NotFound';
 
 const Admin = ({
   fieldDefinitions,
@@ -59,11 +60,7 @@ const Admin = ({
   useSearchContacts(keyword, getAccessTokenSilently, searchContacts, resetSearchContacts);
 
   if (!isAdmin) {
-    return (
-      <>
-        <h1 className="text-center text-danger">You are not authorized to view this page</h1>
-      </>
-    );
+    return <NotFound />;
   }
 
   const keywordSearcher =
@@ -78,7 +75,7 @@ const Admin = ({
       inviteContact={inviteContact} />;
 
   return (
-    <>
+    <Fragment>
       <Row className="justify-content-center">
         <Nav variant="pills" defaultActiveKey="name">
           <Nav.Item>
@@ -189,7 +186,7 @@ const Admin = ({
           <Redirect to={ADMIN_ADD_CONTACT_PATH} />
         </Route>
       </Switch>
-    </>
+    </Fragment>
   );
 }
 

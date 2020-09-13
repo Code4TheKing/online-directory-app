@@ -1,5 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import React from 'react';
+import React, { Fragment } from 'react';
 import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner';
 import { connect } from 'react-redux';
@@ -15,14 +15,14 @@ const Home = ({
 
   if (!isAuthenticated) {
     return (
-      <>
+      <Fragment>
         <Row className="justify-content-center text-center">
           <h1>Welcome to the {process.env.REACT_APP_WEBSITE_NAME}</h1>
         </Row>
         <Row className="justify-content-center mt-3">
           <LoginButton />
         </Row>
-      </>
+      </Fragment>
     );
   }
 

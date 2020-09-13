@@ -11,8 +11,8 @@ const PrivateRoute = ({ component, ...args }) => (
         component,
         {
           onRedirecting: () => (
-            <Container className="d-flex justify-content-center">
-              <Spinner className="w-25 h-auto" animation="border" variant="primary" />
+            <Container className="d-flex justify-content-center align-items-center vw-100 vh-100">
+              <Spinner animation="border" variant="primary" />
             </Container>
           )
         })}
