@@ -1,5 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react';
-import React, { useState } from 'react';
+import React, { Fragment, useState } from 'react';
 import Row from 'react-bootstrap/Row';
 import { connect } from 'react-redux';
 import { Route, Switch, useHistory } from 'react-router-dom';
@@ -61,7 +61,7 @@ const Directory = ({
       inviteContact={inviteContact} />;
 
   return (
-    <>
+    <Fragment>
       <Row className="justify-content-center">
         <h2>Directory</h2>
       </Row>
@@ -104,7 +104,7 @@ const Directory = ({
           </Route>
         </Switch>
       </Row>
-    </>
+    </Fragment>
   );
 }
 
