@@ -176,6 +176,7 @@ export const updateContactAsync = (fieldDefinitions, contact, pictureFile, token
         .then(responseJson =>
           updateContactTextFields(
             dispatch,
+            fieldDefinitions,
             Object.assign(
               {},
               contact,
