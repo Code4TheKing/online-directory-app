@@ -78,6 +78,7 @@ const fieldDefinitions = {
   },
   mainField: {
     propName: 'name',
+    type: 'Name',
     displayName: 'Name',
     validation: {
       regex: NAME_REGEX,

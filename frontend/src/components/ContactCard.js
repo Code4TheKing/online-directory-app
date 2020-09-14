@@ -28,37 +28,37 @@ const ContactCard = ({
   inviteFunc,
   redirectAfterSave
 }) => {
-  const getIdValue = (fieldDefinitions, contact) => {
-    return getFieldValue(contact, fieldDefinitions.idField.propName, 'no-id');
+  const _getIdValue = (fieldDefinitions, contact) => {
+    return _getFieldValue(contact, fieldDefinitions.idField.propName, 'no-id');
   }
 
-  const getPictureValue = (fieldDefinitions, contact, editable) => {
+  const _getPictureValue = (fieldDefinitions, contact, editable) => {
     const text = editable ? 'Select image' : 'No image';
-    return getFieldValue(
+    return _getFieldValue(
       contact,
       fieldDefinitions.pictureField.propName,
       { link: `holder.js/200x200?auto=yes&text=${text}` });
   }
 
-  const getMainValue = (fieldDefinitions, contact) => {
-    return getFieldValue(contact, fieldDefinitions.mainField.propName);
+  const _getMainValue = (fieldDefinitions, contact) => {
+    return _getFieldValue(contact, fieldDefinitions.mainField.propName);
   }
 
-  const getFieldValue = (contact, fieldName, defaultValue = '') => {
-    return emptyIfNull(contact, fieldName, defaultValue);
+  const _getFieldValue = (contact, fieldName, defaultValue = '') => {
+    return _emptyIfNull(contact, fieldName, defaultValue);
   }
 
-  const emptyIfNull = (contact, fieldName, defaultValue) => {
+  const _emptyIfNull = (contact, fieldName, defaultValue) => {
     return contact[fieldName] ? contact[fieldName] : defaultValue;
   }
 
   const { getAccessTokenSilently } = useAuth0();
-  const [pictureField, setPictureField] = useState(getPictureValue(fieldDefinitions, contact, editable));
-  const [mainField, setMainField] = useState(getMainValue(fieldDefinitions, contact));
+  const [pictureField, setPictureField] = useState(_getPictureValue(fieldDefinitions, contact, editable));
+  const [mainField, setMainField] = useState(_getMainValue(fieldDefinitions, contact));
   const [otherFields, setOtherFields] = useState(
     fieldDefinitions.otherFields
       .reduce((acc, curr) => {
-        acc[curr.propName] = getFieldValue(contact, curr.propName);
+        acc[curr.propName] = _getFieldValue(contact, curr.propName);
         return acc;
       }, {}));
   const [modified, setModified] = useState(false);
@@ -71,9 +71,9 @@ const ContactCard = ({
   const otherRefs = useRef({});
 
   const isModified = () => {
-    return getPictureValue(fieldDefinitions, contact, editable).link !== pictureField.link
-      || getMainValue(fieldDefinitions, contact) !== mainField
-      || fieldDefinitions.otherFields.some(field => getFieldValue(contact, field.propName) !== otherFields[field.propName]);
+    return _getPictureValue(fieldDefinitions, contact, editable).link !== pictureField.link
+      || _getMainValue(fieldDefinitions, contact) !== mainField
+      || fieldDefinitions.otherFields.some(field => _getFieldValue(contact, field.propName) !== otherFields[field.propName]);
   }
 
   const isPicturePlaceholder = (pictureField) => {
@@ -82,12 +82,13 @@ const ContactCard = ({
 
   useDeepCompareEffect(() => {
     reset();
+    setModified(isModified());
   }, [contact]);
 
   useDeepCompareEffect(() => {
     if (isPicturePlaceholder(pictureField)) {
       Holder.run({
-        images: '#img-' + getIdValue(fieldDefinitions, contact)
+        images: '#img-' + _getIdValue(fieldDefinitions, contact)
       });
     }
     setModified(isModified());
@@ -106,11 +107,40 @@ const ContactCard = ({
   const handleClearPicture = (event) => {
     event.preventDefault();
     event.stopPropagation();
-    setPictureField(getPictureValue(fieldDefinitions, {}, editable));
+    setPictureField(_getPictureValue(fieldDefinitions, {}, editable));
   }
 
-  const handleChange = (event, setFunc, maxLength) => {
-    setFunc(event.target.value?.substring(0, maxLength));
+  const getFieldValueForType = (value, type, maxLength) => {
+    if (!value) {
+      return value;
+    }
+    switch (type) {
+      case 'PhoneNumber':
+        const digits = value.replace(/\D/g, '');
+        const areaCode = digits.slice(0, 3);
+        const next3 = digits.slice(3, 6);
+        const last4 = digits.slice(6, 10);
+
+        let fieldValue = '';
+        if (digits.length >= 4) {
+          fieldValue += `(${areaCode})`;
+          if (next3.length > 0) {
+            fieldValue += ` ${next3}`;
+          }
+          if (last4.length > 0) {
+            fieldValue += `-${last4}`;
+          }
+          return fieldValue;
+        } else {
+          return value;
+        }
+      default:
+        return value.substring(0, maxLength);
+    }
+  }
+
+  const handleChange = (event, setFunc, type, maxLength) => {
+    setFunc(getFieldValueForType(event.target.value, type, maxLength));
   };
 
   const saveContact = (event) => {
@@ -161,12 +191,12 @@ const ContactCard = ({
   }
 
   const reset = () => {
-    setPictureField(getPictureValue(fieldDefinitions, contact, editable));
-    setMainField(getMainValue(fieldDefinitions, contact));
+    setPictureField(_getPictureValue(fieldDefinitions, contact, editable));
+    setMainField(_getMainValue(fieldDefinitions, contact));
     setOtherFields(
       fieldDefinitions.otherFields
         .reduce((acc, curr) => {
-          acc[curr.propName] = getFieldValue(contact, curr.propName);
+          acc[curr.propName] = _getFieldValue(contact, curr.propName);
           return acc;
         }, {}));
     setSaveValidated(false);
@@ -204,10 +234,10 @@ const ContactCard = ({
       <Card className="h-100 m-auto" style={{ width: width, maxWidth: '25rem' }} bg="dark" text="light">
         <Form className="d-flex h-100" style={{ flexDirection: 'column' }} noValidate validated={saveValidated} onSubmit={saveContact}>
           <Form.Group className="d-flex h-auto position-relative mb-0" style={{ flexDirection: 'column' }}>
-            <Form.Label className="w-100 mb-0" htmlFor={"profile-picture-upload-" + getIdValue(fieldDefinitions, contact)}>
+            <Form.Label className="w-100 mb-0" htmlFor={"profile-picture-upload-" + _getIdValue(fieldDefinitions, contact)}>
               <Card.Img
                 className={editable ? " cursor-pointer" : ""}
-                id={"img-" + getIdValue(fieldDefinitions, contact)}
+                id={"img-" + _getIdValue(fieldDefinitions, contact)}
                 variant="top"
                 src={pictureField.link}
                 data-src={pictureField.link}
@@ -215,7 +245,7 @@ const ContactCard = ({
             </Form.Label>
             <Form.Control
               className="d-none"
-              id={"profile-picture-upload-" + getIdValue(fieldDefinitions, contact)}
+              id={"profile-picture-upload-" + _getIdValue(fieldDefinitions, contact)}
               type="file"
               accept="image/png, image/jpeg"
               onChange={handlePictureChange}
@@ -242,7 +272,7 @@ const ContactCard = ({
                         value={mainField}
                         tabIndex="1"
                         placeholder={fieldDefinitions.mainField.displayName}
-                        onChange={(event) => handleChange(event, setMainField, fieldDefinitions.mainField.validation.maxLength)}
+                        onChange={(event) => handleChange(event, setMainField, fieldDefinitions.mainField.type, fieldDefinitions.mainField.validation.maxLength)}
                         isInvalid={mainField ? !new RegExp(fieldDefinitions.mainField.validation.regex).test(mainField) : false}
                         required />
                       <Form.Control.Feedback className="text-center" type="invalid">
@@ -263,7 +293,8 @@ const ContactCard = ({
             {
               fieldDefinitions.otherFields.map((field, idx) => {
                 const regex = field.validation.regex;
-                const value = otherFields[field.propName]?.substring(0, field.validation.maxLength);
+                const fieldType = field.type;
+                const fieldValue = getFieldValueForType(otherFields[field.propName], fieldType, field.validation.maxLength);
                 return (
                   <Container key={"field- " + (idx + 1)} className="px-0" fluid>
                     <Row>
@@ -277,19 +308,21 @@ const ContactCard = ({
                         <Row className="justify-content-center w-100" style={{ backgroundColor: 'rgba(255, 255, 255, 0.02)' }}>
                           {editable ?
                             <Form.Control
-                              as={field.type === "Address" ? "textarea" : "input"}
+                              as={field.type === 'Address' ? "textarea" : "input"}
                               className="editable cursor-pointer text-center"
                               ref={element => otherRefs.current[field.propName] = element}
-                              value={otherFields[field.propName]?.substring(0, field.validation.maxLength)}
+                              value={fieldValue}
                               tabIndex={idx + 2}
                               onChange={(event) =>
                                 handleChange(
                                   event,
                                   (value) => setOtherFields(Object.assign({}, otherFields, { [field.propName]: value })),
+                                  fieldType,
                                   field.validation.maxLength)}
-                              isInvalid={value ? !new RegExp(regex).test(value) : false} /> :
+                              pattern={regex}
+                              isInvalid={fieldType === 'Address' && fieldValue ? !new RegExp(regex).test(fieldValue) : false} /> :
                             <div className="text-center" style={{ whiteSpace: 'pre-wrap' }}>
-                              {value ? value : '-'}</div>}
+                              {fieldValue ? fieldValue : '-'}</div>}
                           <Form.Control.Feedback className="text-center" type="invalid">
                             {field.validation.errorMessage}
                           </Form.Control.Feedback>
