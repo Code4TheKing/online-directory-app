@@ -1,6 +1,5 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import { Icon, LinearProgress } from '@material-ui/core';
-import 'holderjs';
 import Holder from 'holderjs';
 import React, { Fragment, useRef, useState } from 'react';
 import Button from 'react-bootstrap/Button';
@@ -37,7 +36,7 @@ const ContactCard = ({
     return getFieldValue(
       contact,
       fieldDefinitions.pictureField.propName,
-      { link: 'holder.js/100px250/auto?text=No Image' });
+      { link: 'holder.js/200x200?auto=yes&text=No Image' });
   }
 
   const getMainValue = (fieldDefinitions, contact) => {
@@ -91,7 +90,7 @@ const ContactCard = ({
       });
     }
     setModified(isModified());
-  }, [pictureField, contact]);
+  }, [pictureField]);
 
   useDeepCompareEffect(() => {
     setModified(isModified());
@@ -203,15 +202,18 @@ const ContactCard = ({
     <Fragment>
       <Card className="m-auto" style={{ width: width, maxWidth: '25rem' }} bg="dark" text="light">
         <Form noValidate validated={saveValidated} onSubmit={saveContact}>
-          <Form.Group className="profile-picture position-relative mb-0">
+          <Form.Group className="position-relative mb-0">
             <Form.Label className="w-100 mb-0" htmlFor={"profile-picture-upload-" + getIdValue(fieldDefinitions, contact)}>
               <Card.Img
                 className={(isPicturePlaceholder(pictureField) ? "" : "h-auto") + (editable ? " cursor-pointer" : "")}
                 id={"img-" + getIdValue(fieldDefinitions, contact)}
                 variant="top"
-                src={pictureField.link} />
+                src={pictureField.link}
+                data-src={pictureField.link}
+                data-holder-rendered={isPicturePlaceholder(pictureField) ? "true" : "false"} />
             </Form.Label>
             <Form.Control
+              className="d-none"
               id={"profile-picture-upload-" + getIdValue(fieldDefinitions, contact)}
               type="file"
               accept="image/png, image/jpeg"
