@@ -38,8 +38,8 @@ const ContactCardList = ({
           <PageRefresher />
         </Row>
         <Row className="mx-3 px-2 pt-4" style={{ backgroundColor: '#eef1f5' }}>
-          {contacts.map(contact =>
-            <Col className="mb-4 px-2">
+          {contacts.map((contact, idx) =>
+            <Col key={"contact-" + idx} className="mb-4 px-2">
               <ContactCard
                 width='20rem'
                 fieldDefinitions={fieldDefinitions}
