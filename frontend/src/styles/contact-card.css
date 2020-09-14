@@ -16,7 +16,3 @@
 .cursor-pointer {
   cursor: pointer;
 }
-
-.profile-picture>input {
-  display: none;
-}
