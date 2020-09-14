@@ -39,7 +39,7 @@ const ContactCardList = ({
         </Row>
         <Row className="mx-3 px-2 pt-3" style={{ backgroundColor: '#eef1f5' }}>
           {contacts.map(contact =>
-            <Col className="mb-3 px-2">
+            <Col className="align-self-center mb-3 px-2">
               <ContactCard
                 width='20rem'
                 fieldDefinitions={fieldDefinitions}
