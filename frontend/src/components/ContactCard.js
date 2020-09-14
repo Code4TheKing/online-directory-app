@@ -206,7 +206,7 @@ const ContactCard = ({
           <Form.Group className="profile-picture position-relative mb-0">
             <Form.Label className="w-100 mb-0" htmlFor={"profile-picture-upload-" + getIdValue(fieldDefinitions, contact)}>
               <Card.Img
-                className={editable ? "cursor-pointer" : ""}
+                className={(isPicturePlaceholder(pictureField) ? "" : "h-auto") + (editable ? " cursor-pointer" : "")}
                 id={"img-" + getIdValue(fieldDefinitions, contact)}
                 variant="top"
                 src={pictureField.link} />
@@ -228,7 +228,7 @@ const ContactCard = ({
           </Form.Group>
           <Card.Header className="font-weight-bold">
             <Row>
-              <Form.Group as={Col} className="flex-grow-1 mb-0">
+              <Form.Group as={Col} className="mb-0">
                 <h3 className="mb-0 text-center">
                   {editable ?
                     <Fragment>
@@ -266,7 +266,7 @@ const ContactCard = ({
                     <Row>
                       <Form.Group
                         as={Col}
-                        className="d-flex align-items-center flex-grow-1 mb-2 pb-2"
+                        className="d-flex align-items-center mb-2 pb-2"
                         style={{ flexDirection: 'column' }}>
                         <Row className="justify-content-center w-100">
                           <span className="font-weight-bold">{field.displayName}</span>
