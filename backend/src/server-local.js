@@ -1,3 +1,5 @@
+/** @format */
+
 const app = require('./express/server');
 
 const port = process.env.API_PORT || 4000;

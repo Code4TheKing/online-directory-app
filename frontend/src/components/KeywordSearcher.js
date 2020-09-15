@@ -1,3 +1,5 @@
+/** @format */
+
 import React from 'react';
 import Container from 'react-bootstrap/Container';
 import ContactCardList from './ContactCardList';
@@ -12,7 +14,6 @@ const KeywordSearcher = ({
   isAdmin,
   inviteContact
 }) => {
-
   return (
     <Container fluid>
       <ContactCardList
@@ -23,9 +24,10 @@ const KeywordSearcher = ({
         isListing={isSearchingContacts}
         isInviting={isInvitingContact}
         isAdmin={isAdmin}
-        inviteFunc={inviteContact} />
+        inviteFunc={inviteContact}
+      />
     </Container>
-  )
-}
+  );
+};
 
 export default KeywordSearcher;

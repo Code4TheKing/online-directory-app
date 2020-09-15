@@ -1,6 +1,8 @@
+/** @format */
+
 const express = require('express');
 const path = require('path');
-const cors = require('cors')
+const cors = require('cors');
 const serverless = require('serverless-http');
 const app = express();
 try {
@@ -24,7 +26,10 @@ app.use((req, res, next) => {
 const corsHandler = cors({
   origin: (origin, callback) => {
     const originWhitelist = process.env.API_ALLOWED_ORIGINS.split(';');
-    if (originWhitelist.indexOf(origin) > -1 || originWhitelist.map(origin => new RegExp(origin)).some(regex => regex.test(origin))) {
+    if (
+      originWhitelist.indexOf(origin) > -1 ||
+      originWhitelist.map((origin) => new RegExp(origin)).some((regex) => regex.test(origin))
+    ) {
       callback(null, true);
     } else {
       const error = new Error(`Origin ${origin} not allowed by CORS`);
@@ -52,9 +57,9 @@ app.use(jwtCheck);
 // Mongoose healthcheck route
 app.get('/is-mongoose-ok', (req, res) => {
   if (mongoose) {
-    res.json({ isMongooseOk: !!mongoose.connection.readyState })
+    res.json({ isMongooseOk: !!mongoose.connection.readyState });
   } else {
-    res.json({ isMongooseOk: false })
+    res.json({ isMongooseOk: false });
   }
 });
 
@@ -73,11 +78,9 @@ app.use((err, req, res, next) => {
       message: err.message || err.error_description || 'Internal Server Error',
       statusCode: err.statusCode || 500,
       timestamp: new Date().toISOString()
-    }
+    };
     console.error(`[${new Date().toISOString()}]`, 'Error occurred', error);
-    res.status(error.statusCode)
-      .type('json')
-      .send(error);
+    res.status(error.statusCode).type('json').send(error);
   }
 });
 
@@ -90,12 +93,10 @@ app.use((req, res) => {
       message: 'Not Found',
       timestamp: new Date().toISOString(),
       statusCode: 404
-    }
-    res.status(error.statusCode)
-      .type('json')
-      .send(error);
+    };
+    res.status(error.statusCode).type('json').send(error);
   }
-})
+});
 
 const gracefulShutdown = () => {
   process.exit();

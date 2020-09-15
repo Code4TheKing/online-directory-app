@@ -1,3 +1,5 @@
+/** @format */
+
 import React from 'react';
 import ContactLoader from './ContactLoader';
 
@@ -12,7 +14,6 @@ const ContactEditor = ({
   updateContact,
   inviteContact
 }) => {
-
   return (
     <ContactLoader
       mode='Edit'
@@ -25,8 +26,9 @@ const ContactEditor = ({
       isInvitingContact={isInvitingContact}
       isAdmin={isAdmin}
       updateContact={updateContact}
-      inviteContact={inviteContact} />
+      inviteContact={inviteContact}
+    />
   );
-}
+};
 
 export default ContactEditor;

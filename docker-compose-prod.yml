@@ -1,60 +1,62 @@
-version: "3.8"
+# @format
+
+version: '3.8'
 
 services:
-    mongo:
-        container_name: online-directory-app-mongo
-        image: mongo:4.4
-        restart: always
-        volumes:
-            - /var/db/online-directory-app:/data/db
-        env_file:
-            - production.env
-        networks:
-            - backend
+  mongo:
+    container_name: online-directory-app-mongo
+    image: mongo:4.4
+    restart: always
+    volumes:
+      - /var/db/online-directory-app:/data/db
+    env_file:
+      - production.env
+    networks:
+      - backend
 
-    mongo-express:
-        container_name: online-directory-app-mongo-express
-        image: mongo-express:0.54
-        restart: always
-        ports:
-            - 8081:8081
-        env_file:
-            - production.env
-        networks:
-            - backend
+  mongo-express:
+    container_name: online-directory-app-mongo-express
+    image: mongo-express:0.54
+    restart: always
+    ports:
+      - 8081:8081
+    env_file:
+      - production.env
+    networks:
+      - backend
 
-    backend:
-        container_name: online-directory-app-backend
-        build:
-            context: ./backend
-            dockerfile: Dockerfile
-        working_dir: /backend
-        volumes:
-            - ./backend:/backend
-            - /backend/node_modules
-        ports:
-            - 4000:4000
-        env_file:
-            - production.env
-        networks:
-            - backend
+  backend:
+    container_name: online-directory-app-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    working_dir: /backend
+    volumes:
+      - ./backend:/backend
+      - /backend/node_modules
+    ports:
+      - 4000:4000
+    env_file:
+      - production.env
+    networks:
+      - backend
 
-    frontend:
-        container_name: online-directory-app-frontend
-        build:
-            context: ./frontend
-            dockerfile: Dockerfile
-        working_dir: /frontend
-        volumes:
-            - ./frontend:/frontend
-            - /frontend/node_modules
-        ports:
-            - 3000:80
-        env_file:
-            - production.env
-        networks:
-            - frontend
+  frontend:
+    container_name: online-directory-app-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    working_dir: /frontend
+    volumes:
+      - ./frontend:/frontend
+      - /frontend/node_modules
+    ports:
+      - 3000:80
+    env_file:
+      - production.env
+    networks:
+      - frontend
 
 networks:
-    backend: {}
-    frontend: {}
+  backend: {}
+  frontend: {}

@@ -1,3 +1,5 @@
+/** @format */
+
 import { useEffect, useRef } from 'react';
 
 const usePrevious = (value) => {
@@ -6,6 +8,6 @@ const usePrevious = (value) => {
     ref.current = value;
   });
   return ref.current;
-}
+};
 
 export default usePrevious;

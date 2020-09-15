@@ -1,3 +1,5 @@
+/** @format */
+
 import { Icon } from '@material-ui/core';
 import React from 'react';
 import { Button } from 'react-bootstrap';
@@ -9,8 +11,8 @@ const PageRefresher = () => {
 
   return (
     <Button
-      className="d-flex align-items-center"
-      variant="light"
+      className='d-flex align-items-center'
+      variant='light'
       onClick={() => history.replace(`${location.pathname}${location.search}`)}>
       <Icon>sync</Icon>
     </Button>
