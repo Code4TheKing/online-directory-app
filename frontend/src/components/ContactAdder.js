@@ -1,3 +1,5 @@
+/** @format */
+
 import React from 'react';
 import ContactLoader from './ContactLoader';
 
@@ -9,7 +11,6 @@ const ContactAdder = ({
   addContact,
   listAllContacts
 }) => {
-
   return (
     <ContactLoader
       mode='Add'
@@ -19,8 +20,9 @@ const ContactAdder = ({
       isAddingContact={isAddingContact}
       isAdmin={isAdmin}
       addContact={addContact}
-      listAllContacts={listAllContacts} />
+      listAllContacts={listAllContacts}
+    />
   );
-}
+};
 
 export default ContactAdder;

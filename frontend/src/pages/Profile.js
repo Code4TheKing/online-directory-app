@@ -1,3 +1,5 @@
+/** @format */
+
 import React, { Fragment } from 'react';
 import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner';
@@ -13,27 +15,30 @@ const Profile = ({
   isUpdatingProfileContact,
   updateProfileContact
 }) => {
-
   return (
     <Fragment>
-      <Row className="justify-content-center">
+      <Row className='justify-content-center'>
         <h2>Profile</h2>
       </Row>
-      <Row className="justify-content-center mt-3">
-        {isGettingFieldDefinitions || isGettingProfileContact ?
-          <Spinner animation="border" variant="primary" /> :
-          profileContact &&
-          <ContactCard
-            width={'25rem'}
-            fieldDefinitions={fieldDefinitions}
-            editable={true}
-            contact={profileContact}
-            isSaving={isUpdatingProfileContact}
-            saveFunc={updateProfileContact} />}
+      <Row className='justify-content-center mt-3'>
+        {isGettingFieldDefinitions || isGettingProfileContact ? (
+          <Spinner animation='border' variant='primary' />
+        ) : (
+          profileContact && (
+            <ContactCard
+              width={'25rem'}
+              fieldDefinitions={fieldDefinitions}
+              editable={true}
+              contact={profileContact}
+              isSaving={isUpdatingProfileContact}
+              saveFunc={updateProfileContact}
+            />
+          )
+        )}
       </Row>
     </Fragment>
   );
-}
+};
 
 const mapStateToProps = (state) => ({
   fieldDefinitions: state.contacts.fieldDefinitions,

@@ -1,3 +1,5 @@
+/** @format */
+
 import { useAuth0 } from '@auth0/auth0-react';
 import React, { Fragment, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
@@ -42,18 +44,15 @@ const OnlineDirectoryApp = ({
 
   useEffect(() => {
     if (isAuthenticated) {
-      getAccessTokenSilently()
-        .then(token => getFieldDefinitions(token));
-      getAccessTokenSilently()
-        .then(token => getProfileContact(token));
+      getAccessTokenSilently().then((token) => getFieldDefinitions(token));
+      getAccessTokenSilently().then((token) => getProfileContact(token));
     }
   }, [isAuthenticated, getAccessTokenSilently, getFieldDefinitions, getProfileContact]);
 
   useEffect(() => {
     if (getProfileContactError?.statusCode === 404) {
       if (isAuthenticated) {
-        getAccessTokenSilently()
-          .then(token => createProfileContact(token));
+        getAccessTokenSilently().then((token) => createProfileContact(token));
       }
     }
   }, [getProfileContactError, isAuthenticated, getAccessTokenSilently, createProfileContact]);
@@ -62,9 +61,9 @@ const OnlineDirectoryApp = ({
     return (
       <Fragment>
         <NavigationBar />
-        <Container className="mt-3" fluid>
-          <Container className="d-flex justify-content-center align-items-center vw-100 vh-100">
-            <Spinner animation="border" variant="primary" />
+        <Container className='mt-3' fluid>
+          <Container className='d-flex justify-content-center align-items-center vw-100 vh-100'>
+            <Spinner animation='border' variant='primary' />
           </Container>
         </Container>
       </Fragment>
@@ -75,7 +74,7 @@ const OnlineDirectoryApp = ({
     <Fragment>
       <NavigationBar fieldDefinitions={fieldDefinitions} profileContact={profileContact} isAdmin={isAdmin} />
       <ToastContainer />
-      <Container className="mt-3" fluid>
+      <Container className='mt-3' fluid>
         <Switch>
           <Route path={HOME_PATH} component={Home} exact />
           <PrivateRoute path={DIRECTORY_PATH} component={Directory} />
@@ -86,7 +85,7 @@ const OnlineDirectoryApp = ({
       </Container>
     </Fragment>
   );
-}
+};
 
 const mapStateToProps = (state) => ({
   fieldDefinitions: state.contacts.fieldDefinitions,

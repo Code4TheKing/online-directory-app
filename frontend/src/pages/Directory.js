@@ -1,3 +1,5 @@
+/** @format */
+
 import { useAuth0 } from '@auth0/auth0-react';
 import React, { Fragment, useState } from 'react';
 import Row from 'react-bootstrap/Row';
@@ -6,12 +8,24 @@ import { Route, Switch, useHistory } from 'react-router-dom';
 import AutoSuggester from '../components/AutoSuggester';
 import ContactViewer from '../components/ContactViewer';
 import KeywordSearcher from '../components/KeywordSearcher';
-import { useGetContactById, useListAllContacts, useListAllContactsNameChange, useSearchContacts, useUpdateSuggestInput } from '../hooks/useContacts';
+import {
+  useGetContactById,
+  useListAllContacts,
+  useListAllContactsNameChange,
+  useSearchContacts,
+  useUpdateSuggestInput
+} from '../hooks/useContacts';
 import usePrevious from '../hooks/usePrevious';
 import useQuery from '../hooks/useQuery';
 import { DIRECTORY_PATH, DIRECTORY_SEARCH_BY_KEYWORD_PATH, DIRECTORY_SEARCH_BY_NAME_PATH } from '../OnlineDirectoryApp';
 import { resetContact, resetSearchContacts } from '../redux/actionCreators';
-import { getContactAsync, inviteContactAsync, listAllContactsAsync, searchContactsAsync, updateContactAsync } from '../redux/actions';
+import {
+  getContactAsync,
+  inviteContactAsync,
+  listAllContactsAsync,
+  searchContactsAsync,
+  updateContactAsync
+} from '../redux/actions';
 
 export const SEARCH_ALL_KEYWORD = ':all:';
 
@@ -49,7 +63,7 @@ const Directory = ({
   useGetContactById(contactId, getAccessTokenSilently, getContact, resetContact);
   useSearchContacts(keyword, getAccessTokenSilently, searchContacts, resetSearchContacts);
 
-  const keywordSearcher =
+  const keywordSearcher = (
     <KeywordSearcher
       keyword={keyword}
       fieldDefinitions={fieldDefinitions}
@@ -58,14 +72,16 @@ const Directory = ({
       isSearchingContacts={isSearchingContacts}
       isInvitingContact={isInvitingContact}
       isAdmin={isAdmin}
-      inviteContact={inviteContact} />;
+      inviteContact={inviteContact}
+    />
+  );
 
   return (
     <Fragment>
-      <Row className="justify-content-center">
+      <Row className='justify-content-center'>
         <h2>Directory</h2>
       </Row>
-      <Row className="justify-content-center mt-3">
+      <Row className='justify-content-center mt-3'>
         <AutoSuggester
           input={suggestInput}
           fieldDefinitions={fieldDefinitions}
@@ -73,11 +89,13 @@ const Directory = ({
           isListingAllContacts={isListingAllContacts}
           suggestionRedirect={(contactId) => history.push(`${DIRECTORY_SEARCH_BY_NAME_PATH}?id=${contactId}`)}
           searchRedirect={(input) =>
-            input ?
-              history.push(`${DIRECTORY_SEARCH_BY_KEYWORD_PATH}?text=${input}`) :
-              history.push(`${DIRECTORY_PATH}`)} />
+            input
+              ? history.push(`${DIRECTORY_SEARCH_BY_KEYWORD_PATH}?text=${input}`)
+              : history.push(`${DIRECTORY_PATH}`)
+          }
+        />
       </Row>
-      <Row className="justify-content-center mt-3 pb-3">
+      <Row className='justify-content-center mt-3 pb-3'>
         <Switch>
           <Route path={`${DIRECTORY_SEARCH_BY_NAME_PATH}`}>
             <ContactViewer
@@ -94,19 +112,18 @@ const Directory = ({
               updateContact={updateContact}
               inviteContact={inviteContact}
               resetContact={resetContact}
-              listAllContacts={listAllContacts} />
+              listAllContacts={listAllContacts}
+            />
           </Route>
           <Route path={`${DIRECTORY_PATH}`} exact>
             {keywordSearcher}
           </Route>
-          <Route path={`${DIRECTORY_SEARCH_BY_KEYWORD_PATH}`}>
-            {keywordSearcher}
-          </Route>
+          <Route path={`${DIRECTORY_SEARCH_BY_KEYWORD_PATH}`}>{keywordSearcher}</Route>
         </Switch>
       </Row>
     </Fragment>
   );
-}
+};
 
 const mapStateToProps = (state) => ({
   fieldDefinitions: state.contacts.fieldDefinitions,

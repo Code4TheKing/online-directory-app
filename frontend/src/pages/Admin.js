@@ -1,3 +1,5 @@
+/** @format */
+
 import { useAuth0 } from '@auth0/auth0-react';
 import React, { Fragment, useState } from 'react';
 import Nav from 'react-bootstrap/Nav';
@@ -10,15 +12,31 @@ import ContactAdder from '../components/ContactAdder';
 import ContactEditor from '../components/ContactEditor';
 import ContactViewer from '../components/ContactViewer';
 import KeywordSearcher from '../components/KeywordSearcher';
-import { useGetContactById, useListAllContacts, useListAllContactsNameChange, useSearchContacts, useUpdateSuggestInput } from '../hooks/useContacts';
+import {
+  useGetContactById,
+  useListAllContacts,
+  useListAllContactsNameChange,
+  useSearchContacts,
+  useUpdateSuggestInput
+} from '../hooks/useContacts';
 import usePrevious from '../hooks/usePrevious';
 import useQuery from '../hooks/useQuery';
 import {
-  ADMIN_ADD_CONTACT_PATH, ADMIN_EDIT_CONTACT_PATH, ADMIN_VIEW_CONTACT_PATH,
-  ADMIN_VIEW_CONTACT_SEARCH_BY_KEYWORD_PATH, ADMIN_VIEW_CONTACT_SEARCH_BY_NAME_PATH
+  ADMIN_ADD_CONTACT_PATH,
+  ADMIN_EDIT_CONTACT_PATH,
+  ADMIN_VIEW_CONTACT_PATH,
+  ADMIN_VIEW_CONTACT_SEARCH_BY_KEYWORD_PATH,
+  ADMIN_VIEW_CONTACT_SEARCH_BY_NAME_PATH
 } from '../OnlineDirectoryApp';
 import { resetContact, resetSearchContacts } from '../redux/actionCreators';
-import { addContactAsync, getContactAsync, inviteContactAsync, listAllContactsAsync, searchContactsAsync, updateContactAsync } from '../redux/actions';
+import {
+  addContactAsync,
+  getContactAsync,
+  inviteContactAsync,
+  listAllContactsAsync,
+  searchContactsAsync,
+  updateContactAsync
+} from '../redux/actions';
 import '../styles/admin.css';
 import NotFound from './NotFound';
 
@@ -63,7 +81,7 @@ const Admin = ({
     return <NotFound />;
   }
 
-  const keywordSearcher =
+  const keywordSearcher = (
     <KeywordSearcher
       keyword={keyword}
       fieldDefinitions={fieldDefinitions}
@@ -72,25 +90,33 @@ const Admin = ({
       isSearchingContacts={isSearchingContacts}
       isInvitingContact={isInvitingContact}
       isAdmin={isAdmin}
-      inviteContact={inviteContact} />;
+      inviteContact={inviteContact}
+    />
+  );
 
   return (
     <Fragment>
-      <Row className="justify-content-center">
-        <Nav variant="pills" defaultActiveKey="name">
+      <Row className='justify-content-center'>
+        <Nav variant='pills' defaultActiveKey='name'>
           <Nav.Item>
             <LinkContainer to={`${ADMIN_ADD_CONTACT_PATH}`}>
-              <Nav.Link eventKey="name" active={path === ADMIN_ADD_CONTACT_PATH}>Add</Nav.Link>
+              <Nav.Link eventKey='name' active={path === ADMIN_ADD_CONTACT_PATH}>
+                Add
+              </Nav.Link>
             </LinkContainer>
           </Nav.Item>
           <Nav.Item>
             <LinkContainer to={`${ADMIN_EDIT_CONTACT_PATH}`}>
-              <Nav.Link eventKey="edit" active={path === ADMIN_EDIT_CONTACT_PATH}>Edit</Nav.Link>
+              <Nav.Link eventKey='edit' active={path === ADMIN_EDIT_CONTACT_PATH}>
+                Edit
+              </Nav.Link>
             </LinkContainer>
           </Nav.Item>
           <Nav.Item>
             <LinkContainer to={`${ADMIN_VIEW_CONTACT_PATH}`}>
-              <Nav.Link eventKey="view" active={path === ADMIN_VIEW_CONTACT_PATH}>View</Nav.Link>
+              <Nav.Link eventKey='view' active={path === ADMIN_VIEW_CONTACT_PATH}>
+                View
+              </Nav.Link>
             </LinkContainer>
           </Nav.Item>
         </Nav>
@@ -98,25 +124,26 @@ const Admin = ({
       <Switch>
         {/* Add Contact */}
         <Route path={`${ADMIN_ADD_CONTACT_PATH}`}>
-          <Row className="justify-content-center border-dark pt-3" style={{ borderTop: '1px solid var(--dark)' }}>
+          <Row className='justify-content-center border-dark pt-3' style={{ borderTop: '1px solid var(--dark)' }}>
             <h2>Add Contact</h2>
           </Row>
-          <Row className="justify-content-center mt-3">
+          <Row className='justify-content-center mt-3'>
             <ContactAdder
               fieldDefinitions={fieldDefinitions}
               isGettingFieldDefinitions={isGettingFieldDefinitions}
               isAddingContact={isAddingContact}
               isAdmin={isAddingContact}
               addContact={addContact}
-              listAllContacts={listAllContacts} />
+              listAllContacts={listAllContacts}
+            />
           </Row>
         </Route>
         {/* Edit Contact */}
         <Route path={`${ADMIN_EDIT_CONTACT_PATH}`}>
-          <Row className="justify-content-center border-dark pt-3" style={{ borderTop: '1px solid var(--dark)' }}>
+          <Row className='justify-content-center border-dark pt-3' style={{ borderTop: '1px solid var(--dark)' }}>
             <h2>Edit Contact</h2>
           </Row>
-          <Row className="justify-content-center mt-3">
+          <Row className='justify-content-center mt-3'>
             <AutoSuggester
               input={suggestInput}
               fieldDefinitions={fieldDefinitions}
@@ -124,11 +151,13 @@ const Admin = ({
               isListingAllContacts={isListingAllContacts}
               suggestionRedirect={(contactId) => history.push(`${ADMIN_EDIT_CONTACT_PATH}?id=${contactId}`)}
               searchRedirect={(input) =>
-                input ?
-                  history.push(`${ADMIN_VIEW_CONTACT_SEARCH_BY_KEYWORD_PATH}?text=${input}`) :
-                  history.push(`${ADMIN_VIEW_CONTACT_PATH}`)} />
+                input
+                  ? history.push(`${ADMIN_VIEW_CONTACT_SEARCH_BY_KEYWORD_PATH}?text=${input}`)
+                  : history.push(`${ADMIN_VIEW_CONTACT_PATH}`)
+              }
+            />
           </Row>
-          <Row className="justify-content-center mt-3">
+          <Row className='justify-content-center mt-3'>
             <ContactEditor
               fieldDefinitions={fieldDefinitions}
               contact={contact}
@@ -138,26 +167,30 @@ const Admin = ({
               isInvitingContact={isInvitingContact}
               isAdmin={isAdmin}
               updateContact={updateContact}
-              inviteContact={inviteContact} />
+              inviteContact={inviteContact}
+            />
           </Row>
         </Route>
         {/* View Contacts */}
         <Route path={`${ADMIN_VIEW_CONTACT_PATH}`}>
-          <Row className="justify-content-center border-dark pt-3" style={{ borderTop: '1px solid var(--dark)' }}>
+          <Row className='justify-content-center border-dark pt-3' style={{ borderTop: '1px solid var(--dark)' }}>
             <h2>View Contacts</h2>
           </Row>
-          <Row className="justify-content-center mt-3">
+          <Row className='justify-content-center mt-3'>
             <AutoSuggester
               input={suggestInput}
               fieldDefinitions={fieldDefinitions}
               allContacts={allContacts}
               isListingAllContacts={isListingAllContacts}
-              suggestionRedirect={(contactId) => history.push(`${ADMIN_VIEW_CONTACT_SEARCH_BY_NAME_PATH}?id=${contactId}`)}
-              searchRedirect={(input) => history.push(`${ADMIN_VIEW_CONTACT_SEARCH_BY_KEYWORD_PATH}?text=${input}`)} />
+              suggestionRedirect={(contactId) =>
+                history.push(`${ADMIN_VIEW_CONTACT_SEARCH_BY_NAME_PATH}?id=${contactId}`)
+              }
+              searchRedirect={(input) => history.push(`${ADMIN_VIEW_CONTACT_SEARCH_BY_KEYWORD_PATH}?text=${input}`)}
+            />
           </Row>
           <Switch>
             <Route path={`${ADMIN_VIEW_CONTACT_SEARCH_BY_NAME_PATH}`}>
-              <Row className="justify-content-center mt-3">
+              <Row className='justify-content-center mt-3'>
                 <ContactViewer
                   contactId={contactId}
                   fieldDefinitions={fieldDefinitions}
@@ -172,14 +205,14 @@ const Admin = ({
                   updateContact={updateContact}
                   inviteContact={inviteContact}
                   resetContact={resetContact}
-                  listAllContacts={listAllContacts} />
+                  listAllContacts={listAllContacts}
+                />
               </Row>
             </Route>
             <Route path={`${ADMIN_VIEW_CONTACT_SEARCH_BY_KEYWORD_PATH}`}>
-              <Row className="justify-content-center mt-3">
-                {keywordSearcher}
-              </Row>
-            </Route>=
+              <Row className='justify-content-center mt-3'>{keywordSearcher}</Row>
+            </Route>
+            =
           </Switch>
         </Route>
         <Route>
@@ -188,7 +221,7 @@ const Admin = ({
       </Switch>
     </Fragment>
   );
-}
+};
 
 const mapStateToProps = (state) => ({
   fieldDefinitions: state.contacts.fieldDefinitions,

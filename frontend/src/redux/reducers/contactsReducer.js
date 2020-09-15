@@ -1,12 +1,29 @@
+/** @format */
+
 import {
-  ADD_CONTACT, ADD_CONTACT_ERROR, ADD_CONTACT_SUCCESS,
-  GET_CONTACT, GET_CONTACT_ERROR, GET_CONTACT_SUCCESS,
-  GET_FIELD_DEFINITIONS, GET_FIELD_DEFINITIONS_ERROR, GET_FIELD_DEFINITIONS_SUCCESS,
-  INVITE_CONTACT, INVITE_CONTACT_ERROR, INVITE_CONTACT_SUCCESS,
-  LIST_ALL_CONTACTS, LIST_ALL_CONTACTS_ERROR, LIST_ALL_CONTACTS_SUCCESS,
-  RESET_CONTACT, RESET_SEARCH_CONTACTS,
-  SEARCH_CONTACTS, SEARCH_CONTACTS_ERROR, SEARCH_CONTACTS_SUCCESS,
-  UPDATE_CONTACT, UPDATE_CONTACT_ERROR, UPDATE_CONTACT_SUCCESS
+  ADD_CONTACT,
+  ADD_CONTACT_ERROR,
+  ADD_CONTACT_SUCCESS,
+  GET_CONTACT,
+  GET_CONTACT_ERROR,
+  GET_CONTACT_SUCCESS,
+  GET_FIELD_DEFINITIONS,
+  GET_FIELD_DEFINITIONS_ERROR,
+  GET_FIELD_DEFINITIONS_SUCCESS,
+  INVITE_CONTACT,
+  INVITE_CONTACT_ERROR,
+  INVITE_CONTACT_SUCCESS,
+  LIST_ALL_CONTACTS,
+  LIST_ALL_CONTACTS_ERROR,
+  LIST_ALL_CONTACTS_SUCCESS,
+  RESET_CONTACT,
+  RESET_SEARCH_CONTACTS,
+  SEARCH_CONTACTS,
+  SEARCH_CONTACTS_ERROR,
+  SEARCH_CONTACTS_SUCCESS,
+  UPDATE_CONTACT,
+  UPDATE_CONTACT_ERROR,
+  UPDATE_CONTACT_SUCCESS
 } from '../actionTypes';
 
 const contacts = (
@@ -31,7 +48,8 @@ const contacts = (
     updateContactError: null,
     inviteContactError: null
   },
-  action) => {
+  action
+) => {
   switch (action.type) {
     case ADD_CONTACT:
       return Object.assign({}, state, { isAddingContact: true, addContactError: null });
@@ -48,9 +66,18 @@ const contacts = (
     case RESET_CONTACT:
       return Object.assign({}, state, { contact: null });
     case SEARCH_CONTACTS:
-      return Object.assign({}, state, { isSearchingContacts: true, searchText: action.searchText, searchContactsError: null });
+      return Object.assign({}, state, {
+        isSearchingContacts: true,
+        searchText: action.searchText,
+        searchContactsError: null
+      });
     case SEARCH_CONTACTS_SUCCESS:
-      return Object.assign({}, state, { isSearchingContacts: false, searchText: action.searchText, searchContacts: action.contacts, searchContactsError: null });
+      return Object.assign({}, state, {
+        isSearchingContacts: false,
+        searchText: action.searchText,
+        searchContacts: action.contacts,
+        searchContactsError: null
+      });
     case SEARCH_CONTACTS_ERROR:
       return Object.assign({}, state, { isSearchingContacts: false, searchContactsError: action.error });
     case RESET_SEARCH_CONTACTS:
@@ -58,7 +85,11 @@ const contacts = (
     case LIST_ALL_CONTACTS:
       return Object.assign({}, state, { isListingAllContacts: true, listAllContactsError: null });
     case LIST_ALL_CONTACTS_SUCCESS:
-      return Object.assign({}, state, { isListingAllContacts: false, allContacts: action.contacts, listAllContactsError: null });
+      return Object.assign({}, state, {
+        isListingAllContacts: false,
+        allContacts: action.contacts,
+        listAllContactsError: null
+      });
     case LIST_ALL_CONTACTS_ERROR:
       return Object.assign({}, state, { isListingAllContacts: false, listAllContactsError: action.error });
     case UPDATE_CONTACT:
@@ -76,12 +107,16 @@ const contacts = (
     case GET_FIELD_DEFINITIONS:
       return Object.assign({}, state, { isGettingFieldDefinitions: true, getFieldDefinitionsError: null });
     case GET_FIELD_DEFINITIONS_SUCCESS:
-      return Object.assign({}, state, { isGettingFieldDefinitions: false, fieldDefinitions: action.fieldDefinitions, getFieldDefinitionsError: null });
+      return Object.assign({}, state, {
+        isGettingFieldDefinitions: false,
+        fieldDefinitions: action.fieldDefinitions,
+        getFieldDefinitionsError: null
+      });
     case GET_FIELD_DEFINITIONS_ERROR:
       return Object.assign({}, state, { isGettingFieldDefinitions: false, getFieldDefinitionsError: action.error });
     default:
       return state;
   }
-}
+};
 
 export default contacts;

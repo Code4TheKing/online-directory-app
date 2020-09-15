@@ -1,3 +1,5 @@
+/** @format */
+
 .nav-pills .nav-item .nav-link.active {
   color: #fff;
   background-color: var(--dark);
@@ -9,5 +11,5 @@
   border-width: 1px 1px 0 1px;
   border-style: solid;
   border-color: var(--dark);
-  border-radius: .25rem .25rem 0 0;
+  border-radius: 0.25rem 0.25rem 0 0;
 }

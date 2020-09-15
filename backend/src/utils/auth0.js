@@ -1,3 +1,5 @@
+/** @format */
+
 const axios = require('axios');
 const pwdGenerator = require('generate-password');
 
@@ -14,27 +16,25 @@ const getAccessToken = () => {
       audience: process.env.API_AUTH0_MANAGEMENT_API_AUDIENCE,
       grant_type: 'client_credentials'
     }
-  })
-    .then(tokenResponse => tokenResponse.data.access_token);
-}
+  }).then((tokenResponse) => tokenResponse.data.access_token);
+};
 
 const getUser = (accessToken, userId) => {
   return axios({
     method: 'GET',
     url: `${process.env.API_AUTH0_MANAGEMENT_API_AUDIENCE}users/${userId}`,
     headers: {
-      'Authorization': `Bearer ${accessToken}`
-    },
-  })
-    .then(getUserResponse => getUserResponse.data);
-}
+      Authorization: `Bearer ${accessToken}`
+    }
+  }).then((getUserResponse) => getUserResponse.data);
+};
 
 const createUser = (accessToken, email, name, contactId) => {
   return axios({
     method: 'POST',
     url: `${process.env.API_AUTH0_MANAGEMENT_API_AUDIENCE}users`,
     headers: {
-      'Authorization': `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/json'
     },
     data: {
@@ -55,66 +55,63 @@ const createUser = (accessToken, email, name, contactId) => {
         contact_id: contactId
       }
     }
-  })
-    .then(createUserResponse => createUserResponse.data);
-}
+  }).then((createUserResponse) => createUserResponse.data);
+};
 
 const getUserByEmail = (accessToken, email) => {
   return axios({
     method: 'GET',
     url: `${process.env.API_AUTH0_MANAGEMENT_API_AUDIENCE}users-by-email`,
     headers: {
-      'Authorization': `Bearer ${accessToken}`
+      Authorization: `Bearer ${accessToken}`
     },
     params: {
       fields: 'user_id',
       email: email
     }
-  })
-    .then(usersResponse => {
-      if (usersResponse?.data?.length === 1) {
-        return usersResponse.data[0];
-      } else if (usersResponse?.data?.length > 1) {
-        throw new Error(`Unexpected: More than 1 user found for email ${email}`);
-      }
-      throw new Error(`Unexpected: No user found for email ${email}`);
-    });
-}
+  }).then((usersResponse) => {
+    if (usersResponse?.data?.length === 1) {
+      return usersResponse.data[0];
+    } else if (usersResponse?.data?.length > 1) {
+      throw new Error(`Unexpected: More than 1 user found for email ${email}`);
+    }
+    throw new Error(`Unexpected: No user found for email ${email}`);
+  });
+};
 
 const getParticipantRoleId = (accessToken) => {
   return axios({
     method: 'GET',
     url: `${process.env.API_AUTH0_MANAGEMENT_API_AUDIENCE}roles`,
     headers: {
-      'Authorization': `Bearer ${accessToken}`
+      Authorization: `Bearer ${accessToken}`
     },
     params: {
       name_filter: 'participant'
     }
-  })
-    .then(rolesResponse => {
-      if (rolesResponse?.data?.length === 1) {
-        return rolesResponse.data[0].id;
-      } else if (rolesResponse?.data?.length > 1) {
-        throw new Error('Unexpected: More than one participant role found');
-      }
-      throw new Error('Unexpected: No participant role found');
-    });
-}
+  }).then((rolesResponse) => {
+    if (rolesResponse?.data?.length === 1) {
+      return rolesResponse.data[0].id;
+    } else if (rolesResponse?.data?.length > 1) {
+      throw new Error('Unexpected: More than one participant role found');
+    }
+    throw new Error('Unexpected: No participant role found');
+  });
+};
 
 const assignParticipantRoleToUser = (accessToken, userId, participantRoleId) => {
   return axios({
     method: 'POST',
     url: `${process.env.API_AUTH0_MANAGEMENT_API_AUDIENCE}users/${userId}/roles`,
     headers: {
-      'Authorization': `Bearer ${accessToken}`,
+      Authorization: `Bearer ${accessToken}`,
       'Content-Type': 'application/json'
     },
     data: {
       roles: [participantRoleId]
     }
   });
-}
+};
 
 const triggerChangePassword = (email) => {
   return axios({
@@ -129,7 +126,7 @@ const triggerChangePassword = (email) => {
       connection: process.env.API_AUTH0_DB_CONNECTION_NAME
     }
   });
-}
+};
 
 exports.getAccessToken = getAccessToken;
 exports.getUser = getUser;

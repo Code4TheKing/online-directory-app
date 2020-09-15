@@ -1,3 +1,5 @@
+/** @format */
+
 import React from 'react';
 import ContactLoader from './ContactLoader';
 
@@ -12,7 +14,6 @@ const ContactViewer = ({
   updateContact,
   inviteContact
 }) => {
-
   return (
     <ContactLoader
       mode='View'
@@ -25,8 +26,9 @@ const ContactViewer = ({
       isInvitingContact={isInvitingContact}
       isAdmin={isAdmin}
       updateContact={updateContact}
-      inviteContact={inviteContact} />
+      inviteContact={inviteContact}
+    />
   );
-}
+};
 
 export default ContactViewer;
