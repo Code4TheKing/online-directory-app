@@ -65,11 +65,11 @@ app.get('/is-mongoose-ok', (req, res) => {
 
 // Contacts route
 const contactsRoute = require('../routes/contactsRoute');
-app.use(`/${process.env.REACT_APP_API_BASE_PATH}/contacts`, contactsRoute);
+app.use(`/${process.env.API_BASE_PATH}/contacts`, contactsRoute);
 
 // Profile Contacts route
 const profileContactsRoute = require('../routes/profileContactsRoute');
-app.use(`/${process.env.REACT_APP_API_BASE_PATH}/profile-contacts`, profileContactsRoute);
+app.use(`/${process.env.API_BASE_PATH}/profile-contacts`, profileContactsRoute);
 
 // Error handler
 app.use((err, req, res, next) => {
