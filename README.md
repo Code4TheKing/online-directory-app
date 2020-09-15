@@ -4,7 +4,13 @@
 
 ## Deploy Status
 
+### Frontend
+
 [![Netlify Status](https://api.netlify.com/api/v1/badges/9c0b7fdf-f88b-417a-97b2-8ae3a3b75ae9/deploy-status)](https://tbl-directory.netlify.app/)
+
+### Backend
+
+[![Netlify Status](https://api.netlify.com/api/v1/badges/2e55bd3a-5a29-47e9-871e-99493a059a8c/deploy-status)](https://tbl-directory-backend.netlify.app/)
 
 ## Local development
 
