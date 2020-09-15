@@ -2,7 +2,7 @@
 
 const mongoose = require('mongoose');
 mongoose
-  .connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.API_MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
   .then((result) =>
     console.log(
       `Established connection to MongoDB on host ${result.connection.host}:${result.connection.port} with user ${result.connection.user}`

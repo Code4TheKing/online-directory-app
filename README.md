@@ -25,17 +25,9 @@
    ME_CONFIG_MONGODB_ADMINUSERNAME=${MONGO_INITDB_ROOT_USERNAME}
    ME_CONFIG_MONGODB_ADMINPASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
    ME_CONFIG_MONGODB_ENABLE_ADMIN=true
-   MONGO_URI=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@${MONGO_ALIAS}:27017/${MONGO_INITDB_DATABASE}?authSource=admin&retryWrites=true
-   REACT_APP_WEBSITE_NAME=Directory App
-   REACT_APP_AUTH0_DOMAIN=<Auth0 dev domain>
-   REACT_APP_AUTH0_CLIENT_ID=<Auth0 dev frontend client ID>
-   REACT_APP_AUDIENCE=<Auth0 dev backend audience>
-   REACT_APP_API_URL=http://localhost:4000
-   REACT_APP_API_BASE_PATH=.netlify/functions/server/_api/v1
-   REACT_APP_API_SCOPES=create:profile_contact,read:profile_contact,update:profile_contact,create:contacts,read:contacts,update:contacts
-   REACT_APP_IMGUR_CLIENT_ID=<Imgur dev client ID>
-   REACT_APP_IMGUR_UPLOAD_ENDPOINT=https://api.imgur.com/3/image
+   API_MONGO_URI=mongodb://${MONGO_INITDB_ROOT_USERNAME}:${MONGO_INITDB_ROOT_PASSWORD}@${MONGO_ALIAS}:27017/${MONGO_INITDB_DATABASE}?authSource=admin&retryWrites=true
    API_ALLOWED_ORIGINS=http://localhost;http:\/\/localhost:\d{1,5}
+   API_BASE_PATH=.netlify/functions/server/_api/v1
    API_AUTH0_AUDIENCE=<Auth0 dev backend audience>
    API_AUTH0_ISSUER=<Auth0 dev issuer>
    API_AUTH0_JWKS_URI=${API_AUTH0_ISSUER}.well-known/jwks.json
@@ -44,6 +36,15 @@
    API_AUTH0_DB_CONNECTION_NAME=<Auth0 dev DB connection name>
    API_AUTH0_CLIENT_ID=<Auth0 dev backend client ID>
    API_AUTH0_CLIENT_SECRET=<Auth0 dev backend client secret>
+   REACT_APP_WEBSITE_NAME=Directory App
+   REACT_APP_AUTH0_DOMAIN=<Auth0 dev domain>
+   REACT_APP_AUTH0_CLIENT_ID=<Auth0 dev frontend client ID>
+   REACT_APP_AUDIENCE=${API_AUTH0_AUDIENCE}
+   REACT_APP_API_URL=http://localhost:4000
+   REACT_APP_API_BASE_PATH=${API_BASE_PATH}
+   REACT_APP_API_SCOPES=create:profile_contact,read:profile_contact,update:profile_contact,create:contacts,read:contacts,update:contacts
+   REACT_APP_IMGUR_CLIENT_ID=<Imgur dev client ID>
+   REACT_APP_IMGUR_UPLOAD_ENDPOINT=https://api.imgur.com/3/image
    ```
 3. Install Docker
 4. Run `docker-compose down && docker-compose up --build -d`. All code changes should hot reload (except changes to
