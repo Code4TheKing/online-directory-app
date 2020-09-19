@@ -12,6 +12,7 @@ try {
 }
 const jwt = require('express-jwt');
 const jwks = require('jwks-rsa');
+const errors = require('../utils/errors');
 
 app.use(require('body-parser').json());
 app.use(express.static(path.join(__dirname, '../static')));
@@ -32,9 +33,7 @@ const corsHandler = cors({
     ) {
       callback(null, true);
     } else {
-      const error = new Error(`Origin ${origin} not allowed by CORS`);
-      error.statusCode = 401;
-      callback(error);
+      callback(errors.generateError(`Origin ${origin} not allowed by CORS`, 401));
     }
   }
 });
@@ -74,9 +73,10 @@ app.use(`/${process.env.API_BASE_PATH}/profile-contacts`, profileContactsRoute);
 // Error handler
 app.use((err, req, res, next) => {
   if (err) {
+    const statusCode = err.name === 'ValidationError' ? 400 : err.statusCode;
     const error = {
       message: err.message || err.error_description || 'Internal Server Error',
-      statusCode: err.statusCode || 500,
+      statusCode: statusCode || 500,
       timestamp: new Date().toISOString()
     };
     console.error(`[${new Date().toISOString()}]`, 'Error occurred', error);
