@@ -27,17 +27,13 @@ const AutoSuggester = ({
 
     if (allContacts) {
       setContactSuggestions(
-        allContacts
-          .filter(
-            (contact) =>
-              contact[fieldDefinitions.mainField.propName].toLowerCase().includes(sanitizedInput) ||
-              fieldDefinitions.otherFields.some((otherField) =>
-                contact[otherField.propName]?.toLowerCase().includes(sanitizedInput)
-              )
-          )
-          .sort((c1, c2) =>
-            c1[fieldDefinitions.mainField.propName] > c2[fieldDefinitions.mainField.propName] ? 1 : -1
-          )
+        allContacts.filter(
+          (contact) =>
+            contact[fieldDefinitions.mainField.propName].toLowerCase().includes(sanitizedInput) ||
+            fieldDefinitions.otherFields.some((otherField) =>
+              contact[otherField.propName]?.toLowerCase().includes(sanitizedInput)
+            )
+        )
       );
     }
   };

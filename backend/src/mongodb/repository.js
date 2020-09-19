@@ -74,7 +74,7 @@ const listContactsByKeyword = (keyword) => {
             { phoneNumber: new RegExp(escapedKeyword, 'i') }
           ]
         }
-  );
+  ).sort('name');
 };
 
 const escapeRegexCharacters = (str) => {
