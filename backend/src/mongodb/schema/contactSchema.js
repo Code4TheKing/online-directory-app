@@ -3,9 +3,9 @@
 const mongoose = require('mongoose');
 const { v4: uuidv4 } = require('uuid');
 
-const NAME_REGEX = '^[\\w ()]+$';
+const NAME_REGEX = '^[\\w !@#\\$%\\^&\\*\\(\\)]+$';
 const NAME_MAX_LENGTH = 32;
-const NAME_VALIDATION_ERROR_MESSAGE = 'Alphabets (A-Z) or spaces';
+const NAME_VALIDATION_ERROR_MESSAGE = 'Alphanumerics (A-Z, 0-9), special characters (!@#$%^&*()_), or spaces';
 const ADDRESS_REGEX = '^[A-Za-z0-9\\s,#-]*$';
 const ADDRESS_MAX_LENGTH = 128;
 const ADDRESS_VALIDATION_ERROR_MESSAGE = 'Alphabets (A-Z), numbers (0-9), spaces, or special characters (,#-)';
