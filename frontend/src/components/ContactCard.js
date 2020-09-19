@@ -37,7 +37,7 @@ const ContactCard = ({
   const _getPictureValue = (fieldDefinitions, contact, editable) => {
     const text = editable ? 'Select image' : 'No image';
     return _getFieldValue(contact, fieldDefinitions.pictureField.propName, {
-      link: `holder.js/200x200?auto=yes&text=${text}`
+      link: `holder.js/200x150?auto=yes&text=${text}`
     });
   };
 
@@ -186,7 +186,7 @@ const ContactCard = ({
           return savedContact;
         })
         .then((savedContact) => {
-          if (redirectAfterSave) {
+          if (savedContact && redirectAfterSave) {
             redirectAfterSave(savedContact);
           }
         })
