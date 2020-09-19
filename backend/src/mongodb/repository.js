@@ -63,17 +63,22 @@ const updateContact = (contactId, contact, lean = false) => {
 
 // List contacts by keyword
 const listContactsByKeyword = (keyword) => {
+  const escapedKeyword = escapeRegexCharacters(keyword);
   return Contact.find(
-    keyword === ':all:'
+    escapedKeyword === ':all:'
       ? {}
       : {
           $or: [
-            { name: new RegExp(keyword, 'i') },
-            { address: new RegExp(keyword, 'i') },
-            { phoneNumber: new RegExp(keyword, 'i') }
+            { name: new RegExp(escapedKeyword, 'i') },
+            { address: new RegExp(escapedKeyword, 'i') },
+            { phoneNumber: new RegExp(escapedKeyword, 'i') }
           ]
         }
   );
+};
+
+const escapeRegexCharacters = (str) => {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 };
 
 exports.addContact = addContact;
