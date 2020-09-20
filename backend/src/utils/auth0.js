@@ -121,7 +121,7 @@ const triggerChangePassword = (email) => {
       'Content-Type': 'application/json'
     },
     data: {
-      client_id: process.env.REACT_APP_AUTH0_CLIENT_ID,
+      client_id: process.env.API_AUTH0_FRONTEND_CLIENT_ID,
       email: email,
       connection: process.env.API_AUTH0_DB_CONNECTION_NAME
     }

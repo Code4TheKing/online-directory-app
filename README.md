@@ -34,11 +34,12 @@
    API_AUTH0_TOKEN_ENDPOINT=${API_AUTH0_ISSUER}oauth/token
    API_AUTH0_MANAGEMENT_API_AUDIENCE=<Auth0 dev management API audience>
    API_AUTH0_DB_CONNECTION_NAME=<Auth0 dev DB connection name>
+   API_AUTH0_FRONTEND_CLIENT_ID=<Auth0 dev frontend client ID>
    API_AUTH0_CLIENT_ID=<Auth0 dev backend client ID>
    API_AUTH0_CLIENT_SECRET=<Auth0 dev backend client secret>
    REACT_APP_WEBSITE_NAME=Directory App
    REACT_APP_AUTH0_DOMAIN=<Auth0 dev domain>
-   REACT_APP_AUTH0_CLIENT_ID=<Auth0 dev frontend client ID>
+   REACT_APP_AUTH0_CLIENT_ID=${API_AUTH0_FRONTEND_CLIENT_ID}
    REACT_APP_AUDIENCE=${API_AUTH0_AUDIENCE}
    REACT_APP_API_URL=http://localhost:4000
    REACT_APP_API_BASE_PATH=${API_BASE_PATH}
