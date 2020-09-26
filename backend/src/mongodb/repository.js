@@ -9,6 +9,7 @@ mongoose
     )
   )
   .catch((err) => console.error(err));
+const errors = require('../utils/errors');
 
 const contactSchema = require('./schema/contactSchema');
 const Contact = mongoose.model('Contact', contactSchema.schema);
@@ -27,9 +28,7 @@ const addContact = (contact) => {
 const getContactById = (contactId) => {
   return Contact.findById(contactId).then((existingContact) => {
     if (!existingContact) {
-      const notFoundError = new Error(`No contact found for ID ${contactId}`);
-      notFoundError.statusCode = 404;
-      throw notFoundError;
+      throw errors.generateError(`No contact found for ID ${contactId}`, 404);
     }
     return existingContact;
   });
@@ -41,9 +40,7 @@ const getContactByIdpSubject = (idpSub, lean = false) => {
     .lean(lean)
     .then((contact) => {
       if (!contact) {
-        const notFoundError = new Error(`There is no profile contact for IDP sub ${idpSub}. Create one first.`);
-        notFoundError.statusCode = 404;
-        throw notFoundError;
+        throw errors.generateError(`There is no profile contact for IDP sub ${idpSub}. Create one first.`, 404);
       }
       return contact;
     });

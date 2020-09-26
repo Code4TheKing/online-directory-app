@@ -5,6 +5,7 @@ const router = express.Router();
 const repository = require('../mongodb/repository');
 const auth0 = require('../utils/auth0');
 const authz = require('../utils/authz');
+const errors = require('../utils/errors');
 
 // Create profile contact
 router.post('/', (req, res, next) => {
@@ -19,9 +20,7 @@ router.post('/', (req, res, next) => {
       })
       .then((existingProfileContact) => {
         if (existingProfileContact) {
-          const conflictError = new Error(`Profile contact already exists for IDP sub ${idpSub}`);
-          conflictError.statusCode = 409;
-          throw conflictError;
+          throw errors.generateError(`Profile contact already exists for IDP sub ${idpSub}`, 409);
         }
       })
       .then(() =>
