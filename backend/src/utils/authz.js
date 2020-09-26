@@ -1,14 +1,16 @@
 /** @format */
 
 const axios = require('axios');
+const errors = require('../utils/errors');
 
 const enforceAuthorization = (user, allowedPermissions, req, res, next, cb) => {
   if (!isAuthorized(user, allowedPermissions)) {
-    const error = new Error(
-      `User must have one of the permissions in [${allowedPermissions.map((perm) => `'${perm}'`).join(', ')}]`
+    next(
+      errors.generateError(
+        `User must have one of the permissions in [${allowedPermissions.map((perm) => `'${perm}'`).join(', ')}]`,
+        401
+      )
     );
-    error.statusCode = 401;
-    next(error);
   } else {
     cb(req, res, next);
   }

@@ -30,9 +30,14 @@ const AutoSuggester = ({
         allContacts.filter(
           (contact) =>
             contact[fieldDefinitions.mainField.propName].toLowerCase().includes(sanitizedInput) ||
-            fieldDefinitions.otherFields.some((otherField) =>
-              contact[otherField.propName]?.toLowerCase().includes(sanitizedInput)
-            )
+            fieldDefinitions.otherFields.some((otherField) => {
+              if (otherField.type === 'ObjectList') {
+                return contact[otherField.propName]?.some((objectListItem) =>
+                  Object.values(objectListItem).some((itemValue) => itemValue?.toLowerCase().includes(sanitizedInput))
+                );
+              }
+              return contact[otherField.propName]?.toLowerCase().includes(sanitizedInput);
+            })
         )
       );
     }
