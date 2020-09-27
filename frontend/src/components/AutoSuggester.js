@@ -31,12 +31,18 @@ const AutoSuggester = ({
           (contact) =>
             contact[fieldDefinitions.mainField.propName].toLowerCase().includes(sanitizedInput) ||
             fieldDefinitions.otherFields.some((otherField) => {
-              if (otherField.type === 'ObjectList') {
-                return contact[otherField.propName]?.some((objectListItem) =>
-                  Object.values(objectListItem).some((itemValue) => itemValue?.toLowerCase().includes(sanitizedInput))
-                );
+              switch (otherField.type) {
+                case 'ObjectList':
+                  return contact[otherField.propName]?.some((objectListItem) =>
+                    Object.values(objectListItem).some((itemValue) => itemValue?.toLowerCase().includes(sanitizedInput))
+                  );
+                case 'StringList':
+                  return contact[otherField.propName]?.some((stringListItem) =>
+                    stringListItem?.toLowerCase().includes(sanitizedInput)
+                  );
+                default:
+                  return contact[otherField.propName]?.toLowerCase().includes(sanitizedInput);
               }
-              return contact[otherField.propName]?.toLowerCase().includes(sanitizedInput);
             })
         )
       );

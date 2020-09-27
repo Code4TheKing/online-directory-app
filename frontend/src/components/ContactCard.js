@@ -53,11 +53,18 @@ const ContactCard = ({
     const othersModified = fieldDefinitions.otherFields.some((otherField) => {
       const otherFieldValue = otherFields[otherField.propName];
       const fieldValue = _getFieldValue(contact, otherField.propName);
-      if (otherFieldValue && otherField.type === 'ObjectList') {
-        return (
-          otherFieldValue.length !== fieldValue.length ||
-          otherFieldValue.some((item, idx) => !equals(item, fieldValue[idx]))
-        );
+      if (otherFieldValue) {
+        switch (otherField.type) {
+          case 'ObjectList':
+            return (
+              otherFieldValue.length !== fieldValue.length ||
+              otherFieldValue.some((item, idx) => !equals(item, fieldValue[idx]))
+            );
+          case 'StringList':
+            return otherFieldValue.some((item, idx) => !equals(item, fieldValue[idx]));
+          default:
+            return !equals(fieldValue, otherFieldValue);
+        }
       }
       return !equals(fieldValue, otherFieldValue);
     });
@@ -210,6 +217,7 @@ const ContactCard = ({
     setInviteValidated(!inviteForm.checkValidity());
   };
 
+  let tabIndex = 1;
   return (
     <Fragment>
       <Card className='h-100 m-auto' style={{ width: width, maxWidth: '25rem' }} bg='dark' text='light'>
@@ -255,7 +263,7 @@ const ContactCard = ({
           <Card.Header className='d-flex h-auto font-weight-bold' style={{ flexDirection: 'column' }}>
             <Row>
               <Form.Group as={Col} className='mb-0'>
-                <h3 className='mb-0 text-center'>
+                <h3 className='text-center mb-0'>
                   {editable ? (
                     <Fragment>
                       <Form.Control
@@ -263,7 +271,7 @@ const ContactCard = ({
                         className='editable cursor-pointer text-center px-2'
                         ref={mainRef}
                         value={mainField}
-                        tabIndex='1'
+                        tabIndex={tabIndex}
                         placeholder={fieldDefinitions.mainField.displayName}
                         onChange={(event) =>
                           handleChange(
@@ -276,7 +284,7 @@ const ContactCard = ({
                         isInvalid={
                           mainField ? !new RegExp(fieldDefinitions.mainField.validation.regex).test(mainField) : false
                         }
-                        required
+                        required={!!fieldDefinitions.mainField.validation.required}
                       />
                       <Form.Control.Feedback className='text-center' type='invalid'>
                         {fieldDefinitions.mainField.validation.errorMessage}
@@ -292,7 +300,6 @@ const ContactCard = ({
           {/* Other fields */}
           <Card.Body className='d-flex flex-grow-1 pt-2 pb-3' style={{ flexDirection: 'column' }}>
             {fieldDefinitions.otherFields.map((otherFieldDef, idx) => {
-              let tabIndex = 1;
               const renderField = (otherFieldDef) => {
                 const fieldType = otherFieldDef.type;
                 if (fieldType === 'ObjectList') {
@@ -336,22 +343,13 @@ const ContactCard = ({
                                   );
                                   return renderInput(
                                     editable,
-                                    true,
+                                    true, // renderNonEditable
+                                    true, // renderHeader
                                     innerFieldType,
                                     innerFieldKey,
                                     innerFieldValue,
                                     innerFieldDef,
-                                    (element) => {
-                                      if (!otherRefs.current[otherFieldDef.propName]) {
-                                        otherRefs.current[otherFieldDef.propName] = [];
-                                      }
-                                      const objectListRefs = otherRefs.current[otherFieldDef.propName];
-                                      if (!objectListRefs[objectListIdx]) {
-                                        objectListRefs.push(element);
-                                      } else {
-                                        objectListRefs[objectListIdx] = element;
-                                      }
-                                    },
+                                    _getListRefFunc(otherRefs, otherFieldDef, objectListIdx),
                                     (value) => {
                                       const modifiedObjectList = JSON.parse(JSON.stringify(objectList));
                                       modifiedObjectList[objectListIdx][innerFieldKey] = value;
@@ -376,7 +374,7 @@ const ContactCard = ({
                       )}
                       {editable && (
                         <Button
-                          className='w-100'
+                          className='w-100 mt-2'
                           variant='secondary'
                           onClick={() => {
                             const modifiedObjectList = JSON.parse(JSON.stringify(objectList));
@@ -384,6 +382,67 @@ const ContactCard = ({
                             setOtherFields(
                               Object.assign({}, otherFields, {
                                 [otherFieldDef.propName]: modifiedObjectList
+                              })
+                            );
+                          }}>
+                          Add
+                        </Button>
+                      )}
+                    </Fragment>
+                  );
+                } else if (fieldType === 'StringList') {
+                  const stringList = otherFields[otherFieldDef.propName];
+                  return (
+                    <Fragment>
+                      {stringList.map((stringListItem, stringListIdx) => {
+                        const fieldValue = getFieldValueForType(
+                          stringListItem,
+                          fieldType,
+                          otherFieldDef.validation.maxLength
+                        );
+                        return renderInput(
+                          editable,
+                          false, // renderNonEditable
+                          false, // renderHeader
+                          fieldType,
+                          otherFieldDef.propName,
+                          fieldValue,
+                          otherFieldDef,
+                          _getListRefFunc(otherRefs, otherFieldDef, stringListIdx),
+                          (value) => {
+                            const modifiedStringList = JSON.parse(JSON.stringify(stringList));
+                            modifiedStringList[stringListIdx] = value;
+                            setOtherFields(
+                              Object.assign({}, otherFields, {
+                                [otherFieldDef.propName]: modifiedStringList
+                              })
+                            );
+                          }
+                        );
+                      })}
+                      {!editable && stringList.length === 0 && (
+                        <div className='text-center' style={{ whiteSpace: 'pre-wrap' }}>
+                          {'-'}
+                        </div>
+                      )}
+                      {!editable && stringList.length > 0 && (
+                        <div className='text-center' style={{ whiteSpace: 'pre-wrap' }}>
+                          {stringList.length === 1 && `${stringList[0]}`}
+                          {stringList.length === 2 && `${stringList[0]} and ${stringList[1]}`}
+                          {stringList.length > 2 &&
+                            stringList.slice(0, -1).join(', ') + ', and ' + stringList.slice(-1)}
+                        </div>
+                      )}
+                      {editable && (
+                        <Button
+                          className='w-100 mt-2'
+                          variant='secondary'
+                          onClick={() => {
+                            const modifiedStringList = JSON.parse(JSON.stringify(stringList));
+                            modifiedStringList.push('');
+                            setOtherFields(
+                              Object.assign({}, otherFields, {
+                                [otherFieldDef.propName]: modifiedStringList
                               })
                             );
                           }}>
@@ -400,7 +459,8 @@ const ContactCard = ({
                   );
                   return renderInput(
                     editable,
-                    false,
+                    true, // renderNonEditable
+                    false, // renderHeader
                     fieldType,
                     otherFieldDef.propName,
                     fieldValue,
@@ -412,6 +472,7 @@ const ContactCard = ({
               };
               const renderInput = (
                 editable,
+                renderNonEditable,
                 renderHeader,
                 fieldType,
                 fieldKey,
@@ -424,11 +485,12 @@ const ContactCard = ({
                 const key = ++tabIndex;
                 if (editable) {
                   return (
-                    <Form.Group className='w-100' key={'input-' + key}>
+                    <Form.Group className='w-100 mb-0' key={'input-' + key}>
                       {renderHeader && <div className='text-center w-100'>{fieldDef.displayName}</div>}
                       <Form.Control
                         as={fieldType === 'TextArea' ? 'textarea' : 'input'}
-                        className='editable cursor-pointer text-center px-2'
+                        className='editable cursor-pointer text-center m-auto px-2'
+                        style={{ maxWidth: '95%' }}
                         ref={refFunc}
                         value={fieldValue}
                         tabIndex={key}
@@ -439,14 +501,14 @@ const ContactCard = ({
                             ? !new RegExp(fieldDef.validation.regex).test(fieldValue)
                             : false
                         }
-                        required={skipKey && skipKey === fieldKey}
+                        required={!!fieldDef.validation.required}
                       />
                       <Form.Control.Feedback className='text-center' type='invalid'>
                         {fieldDef.validation.errorMessage}
                       </Form.Control.Feedback>
                     </Form.Group>
                   );
-                } else {
+                } else if (renderNonEditable) {
                   return (
                     <Fragment key={'value-' + key}>
                       {(!skipKey || (skipKey !== fieldKey && fieldValue)) && (
@@ -471,7 +533,10 @@ const ContactCard = ({
                       </Row>
                       <Row
                         className='align-items-center w-100'
-                        style={{ backgroundColor: 'rgba(255, 255, 255, 0.02)', flexDirection: 'column' }}>
+                        style={{
+                          backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                          flexDirection: 'column'
+                        }}>
                         {renderField(otherFieldDef)}
                       </Row>
                     </Form.Group>
@@ -624,14 +689,30 @@ const _emptyIfNull = (contact, fieldName, defaultValue) => {
 const _computeOtherFields = (fieldDefinitions, contact) => {
   return fieldDefinitions.otherFields.reduce((acc, currField) => {
     const fieldValue = _getFieldValue(contact, currField.propName);
-    if (currField.type === 'ObjectList') {
-      const fieldValueCopy = fieldValue ? JSON.parse(JSON.stringify(fieldValue)) : [];
-      acc[currField.propName] = fieldValueCopy;
-    } else {
-      acc[currField.propName] = fieldValue;
+    switch (currField.type) {
+      case 'ObjectList':
+      case 'StringList':
+        acc[currField.propName] = fieldValue ? fieldValue : [];
+        break;
+      default:
+        acc[currField.propName] = fieldValue;
     }
     return acc;
   }, {});
+};
+
+const _getListRefFunc = (otherRefs, otherFieldDef, listIdx) => {
+  return (element) => {
+    if (!otherRefs.current[otherFieldDef.propName]) {
+      otherRefs.current[otherFieldDef.propName] = [];
+    }
+    const listRefs = otherRefs.current[otherFieldDef.propName];
+    if (!listRefs[listIdx]) {
+      listRefs.push(element);
+    } else {
+      listRefs[listIdx] = element;
+    }
+  };
 };
 
 const _generateEmptyObjectListItem = (innerFields) => {
