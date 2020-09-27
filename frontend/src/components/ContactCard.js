@@ -220,7 +220,7 @@ const ContactCard = ({
   let tabIndex = 1;
   return (
     <Fragment>
-      <Card className='h-100 m-auto' style={{ width: width, maxWidth: '25rem' }} bg='dark' text='light'>
+      <Card className='h-100 m-auto' style={{ width: width, maxWidth: '25rem' }} bg='info' text='light' border='dark'>
         <Form
           className='d-flex h-100'
           style={{ flexDirection: 'column' }}
@@ -286,7 +286,7 @@ const ContactCard = ({
                         }
                         required={!!fieldDefinitions.mainField.validation.required}
                       />
-                      <Form.Control.Feedback className='text-center' type='invalid'>
+                      <Form.Control.Feedback className='text-center font-weight-bold' type='invalid'>
                         {fieldDefinitions.mainField.validation.errorMessage}
                       </Form.Control.Feedback>
                     </Fragment>
@@ -331,9 +331,7 @@ const ContactCard = ({
                               </span>
                             </ContextAwareToggle>
                             <Accordion.Collapse eventKey={tabIndex}>
-                              <Row
-                                className='mb-3 mx-0 w-100 border border-secondary'
-                                style={{ flexDirection: 'column' }}>
+                              <Row className='mb-3 mx-0 w-100 border border-light' style={{ flexDirection: 'column' }}>
                                 {Object.entries(objectListInnerFields).map(([innerFieldKey, innerFieldDef]) => {
                                   const innerFieldType = innerFieldDef.type;
                                   const innerFieldValue = getFieldValueForType(
@@ -375,7 +373,7 @@ const ContactCard = ({
                       {editable && (
                         <Button
                           className='w-100 mt-2'
-                          variant='secondary'
+                          variant='primary'
                           onClick={() => {
                             const modifiedObjectList = JSON.parse(JSON.stringify(objectList));
                             modifiedObjectList.push(_generateEmptyObjectListItem(objectListInnerFields));
@@ -436,7 +434,7 @@ const ContactCard = ({
                       {editable && (
                         <Button
                           className='w-100 mt-2'
-                          variant='secondary'
+                          variant='primary'
                           onClick={() => {
                             const modifiedStringList = JSON.parse(JSON.stringify(stringList));
                             modifiedStringList.push('');
@@ -503,7 +501,7 @@ const ContactCard = ({
                         }
                         required={!!fieldDef.validation.required}
                       />
-                      <Form.Control.Feedback className='text-center' type='invalid'>
+                      <Form.Control.Feedback className='text-center font-weight-bold' type='invalid'>
                         {fieldDef.validation.errorMessage}
                       </Form.Control.Feedback>
                     </Form.Group>
@@ -534,7 +532,7 @@ const ContactCard = ({
                       <Row
                         className='align-items-center w-100'
                         style={{
-                          backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                          backgroundColor: editable ? 'transparent' : 'rgba(255, 255, 255, 0.1)',
                           flexDirection: 'column'
                         }}>
                         {renderField(otherFieldDef)}
@@ -555,7 +553,7 @@ const ContactCard = ({
                       Cancel
                     </Button>
                   ) : (
-                    <Button className='w-100' variant='outline-danger' disabled>
+                    <Button className='w-100' variant='danger' disabled>
                       Cancel
                     </Button>
                   )}
@@ -566,7 +564,7 @@ const ContactCard = ({
                       Save
                     </Button>
                   ) : (
-                    <Button className='w-100' variant='outline-success' disabled>
+                    <Button className='w-100' variant='success' disabled>
                       Save
                     </Button>
                   )}
@@ -635,7 +633,7 @@ const ContactCard = ({
                   onChange={handleInviteEmailAddressChange}
                   required
                 />
-                <Form.Control.Feedback className='text-center' type='invalid'>
+                <Form.Control.Feedback className='text-center font-weight-bold' type='invalid'>
                   Please enter a valid email address
                 </Form.Control.Feedback>
               </Form.Group>
@@ -731,7 +729,7 @@ function ContextAwareToggle({ children, eventKey, deletable, deleteCallback, cal
 
   return (
     <Card.Header
-      className={'d-flex justify-content-center w-100 text-center btn btn-secondary'}
+      className={'d-flex justify-content-center w-100 text-center btn btn-info btn-outline-light'}
       onClick={decoratedOnClick}>
       {children}
       {isCurrentEventKey ? (

@@ -2,14 +2,14 @@
 
 .nav-pills .nav-item .nav-link.active {
   color: #fff;
-  background-color: var(--dark);
+  background-color: var(--info);
 }
 
 .nav-pills .nav-item .nav-link {
-  color: var(--dark);
+  color: var(--info);
   background-color: transparent;
   border-width: 1px 1px 0 1px;
   border-style: solid;
-  border-color: var(--dark);
+  border-color: var(--info);
   border-radius: 0.25rem 0.25rem 0 0;
 }

@@ -79,7 +79,7 @@ const Directory = ({
   return (
     <Fragment>
       <Row className='justify-content-center'>
-        <h2>Directory</h2>
+        <h2 className='text-secondary'>Directory</h2>
       </Row>
       <Row className='justify-content-center mt-3'>
         <AutoSuggester

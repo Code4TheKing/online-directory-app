@@ -18,7 +18,7 @@ const Profile = ({
   return (
     <Fragment>
       <Row className='justify-content-center'>
-        <h2>Profile</h2>
+        <h2 className='text-secondary'>Profile</h2>
       </Row>
       <Row className='justify-content-center mt-3'>
         {isGettingFieldDefinitions || isGettingProfileContact ? (

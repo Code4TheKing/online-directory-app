@@ -24,7 +24,7 @@ const NavigationBar = ({ fieldDefinitions, profileContact, isAdmin }) => {
       .slice(0, 2);
 
   return (
-    <Navbar bg='dark' variant='dark' sticky='top' expand='md' collapseOnSelect>
+    <Navbar bg='info' variant='dark' sticky='top' expand='md' collapseOnSelect>
       <Navbar.Brand className='align-self-center' href={HOME_PATH}>
         {process.env.REACT_APP_WEBSITE_NAME}
       </Navbar.Brand>
@@ -55,7 +55,7 @@ const NavigationBar = ({ fieldDefinitions, profileContact, isAdmin }) => {
             <Nav.Item className='align-self-center'>
               <LinkContainer to={PROFILE_PATH}>
                 <Nav.Link
-                  className='d-inline-flex border border-secondary rounded-pill mx-2 my-2'
+                  className='d-inline-flex border border-light rounded-pill mx-2 my-2'
                   active={location.pathname === PROFILE_PATH}>
                   <Avatar className='mr-1' style={{ width: 35, height: 35 }}>
                     {generateAvatarText(fieldDefinitions, profileContact)

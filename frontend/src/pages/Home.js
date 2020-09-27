@@ -28,7 +28,7 @@ const Home = ({ fieldDefinitions, profileContact, isGettingFieldDefinitions, isG
       {isGettingFieldDefinitions || isGettingProfileContact ? (
         <Spinner animation='border' variant='primary' />
       ) : (
-        <h2>Hello, {profileContact[fieldDefinitions.mainField.propName]}!</h2>
+        <h2 className='text-secondary'>Hello, {profileContact[fieldDefinitions.mainField.propName]}!</h2>
       )}
     </Row>
   );

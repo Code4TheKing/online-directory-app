@@ -124,8 +124,8 @@ const Admin = ({
       <Switch>
         {/* Add Contact */}
         <Route path={`${ADMIN_ADD_CONTACT_PATH}`}>
-          <Row className='justify-content-center border-dark pt-3' style={{ borderTop: '1px solid var(--dark)' }}>
-            <h2>Add Contact</h2>
+          <Row className='justify-content-center border-info pt-3' style={{ borderTop: '1px solid var(--info)' }}>
+            <h2 className='text-secondary'>Add Contact</h2>
           </Row>
           <Row className='justify-content-center mt-3'>
             <ContactAdder
@@ -140,8 +140,8 @@ const Admin = ({
         </Route>
         {/* Edit Contact */}
         <Route path={`${ADMIN_EDIT_CONTACT_PATH}`}>
-          <Row className='justify-content-center border-dark pt-3' style={{ borderTop: '1px solid var(--dark)' }}>
-            <h2>Edit Contact</h2>
+          <Row className='justify-content-center border-info pt-3' style={{ borderTop: '1px solid var(--info)' }}>
+            <h2 className='text-secondary'>Edit Contact</h2>
           </Row>
           <Row className='justify-content-center mt-3'>
             <AutoSuggester
@@ -173,8 +173,8 @@ const Admin = ({
         </Route>
         {/* View Contacts */}
         <Route path={`${ADMIN_VIEW_CONTACT_PATH}`}>
-          <Row className='justify-content-center border-dark pt-3' style={{ borderTop: '1px solid var(--dark)' }}>
-            <h2>View Contacts</h2>
+          <Row className='justify-content-center border-info pt-3' style={{ borderTop: '1px solid var(--info)' }}>
+            <h2 className='text-secondary'>View Contacts</h2>
           </Row>
           <Row className='justify-content-center mt-3'>
             <AutoSuggester

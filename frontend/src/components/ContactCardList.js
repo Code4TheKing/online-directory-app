@@ -33,7 +33,7 @@ const ContactCardList = ({
         <Row className='mt-3 mx-3'>
           <h2 className='flex-grow-1'>
             {searchText !== SEARCH_ALL_KEYWORD ? (
-              <span>
+              <span className='text-secondary'>
                 Results for <span className='text-primary'>{searchText}</span>
               </span>
             ) : (

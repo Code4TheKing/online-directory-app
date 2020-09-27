@@ -11,10 +11,24 @@
 }
 
 .editable {
-  background: var(--dark) !important;
+  background: var(--info) !important;
   color: #ffffff !important;
 }
 
 .cursor-pointer {
   cursor: pointer;
+}
+
+.invalid-feedback {
+  color: #5f030c;
+}
+
+.form-control.is-invalid,
+.was-validated .form-control:invalid {
+  border-color: #5f030c;
+}
+
+.form-control.is-valid,
+.was-validated .form-control:valid {
+  border-color: #66e683;
 }
