@@ -19,6 +19,19 @@ const EMAIL_VALIDATION_ERROR_MESSAGE = 'Must be an email address';
 
 const Schema = mongoose.Schema;
 
+const nameSchemaDef = {
+  type: String,
+  required: true,
+  minlength: [1, 'Too short'],
+  maxlength: [NAME_MAX_LENGTH, 'Too long'],
+  validate: {
+    validator: (value) => {
+      return new RegExp(NAME_REGEX).test(value);
+    },
+    message: NAME_VALIDATION_ERROR_MESSAGE
+  }
+};
+
 const contactSchema = new Schema(
   {
     _id: {
@@ -42,17 +55,9 @@ const contactSchema = new Schema(
         }
       }
     },
-    name: {
-      type: String,
-      required: true,
-      minlength: [1, 'Too short'],
-      maxlength: [NAME_MAX_LENGTH, 'Too long'],
-      validate: {
-        validator: (value) => {
-          return new RegExp(NAME_REGEX).test(value);
-        },
-        message: NAME_VALIDATION_ERROR_MESSAGE
-      }
+    name: nameSchemaDef,
+    familyMembers: {
+      type: [nameSchemaDef]
     },
     address: {
       type: String,
@@ -67,18 +72,7 @@ const contactSchema = new Schema(
     contact: {
       type: [
         {
-          name: {
-            type: String,
-            required: true,
-            minlength: [1, 'Too short'],
-            maxlength: [NAME_MAX_LENGTH, 'Too long'],
-            validate: {
-              validator: (value) => {
-                return new RegExp(NAME_REGEX).test(value);
-              },
-              message: NAME_VALIDATION_ERROR_MESSAGE
-            }
-          },
+          name: nameSchemaDef,
           phoneNumber: {
             type: String,
             maxlength: [PHONE_NUMBER_MAX_LENGTH, 'Too long'],
@@ -135,6 +129,18 @@ const contactSchema = new Schema(
   { typePojoToMixed: false }
 );
 
+const nameDef = {
+  propName: 'name',
+  type: 'String',
+  displayName: 'Name',
+  validation: {
+    required: true,
+    regex: NAME_REGEX,
+    maxLength: NAME_MAX_LENGTH,
+    errorMessage: NAME_VALIDATION_ERROR_MESSAGE
+  }
+};
+
 const fieldDefinitions = {
   idField: {
     propName: '_id'
@@ -142,17 +148,14 @@ const fieldDefinitions = {
   pictureField: {
     propName: 'picture'
   },
-  mainField: {
-    propName: 'name',
-    type: 'String',
-    displayName: 'Name',
-    validation: {
-      regex: NAME_REGEX,
-      maxLength: NAME_MAX_LENGTH,
-      errorMessage: NAME_VALIDATION_ERROR_MESSAGE
-    }
-  },
+  mainField: nameDef,
   otherFields: [
+    {
+      propName: 'familyMembers',
+      type: 'StringList',
+      displayName: 'Family Members',
+      validation: nameDef.validation
+    },
     {
       propName: 'address',
       type: 'TextArea',
@@ -169,15 +172,7 @@ const fieldDefinitions = {
       type: 'ObjectList',
       mainInnerField: 'name',
       innerFields: {
-        name: {
-          type: 'Name',
-          displayName: 'Name',
-          validation: {
-            regex: NAME_REGEX,
-            maxLength: NAME_MAX_LENGTH,
-            errorMessage: NAME_VALIDATION_ERROR_MESSAGE
-          }
-        },
+        name: nameDef,
         phoneNumber: {
           propName: 'phoneNumber',
           displayName: 'Phone Number',
