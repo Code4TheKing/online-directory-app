@@ -298,7 +298,7 @@ const ContactCard = ({
             </Row>
           </Card.Header>
           {/* Other fields */}
-          <Card.Body className='d-flex flex-grow-1 pt-2 pb-3' style={{ flexDirection: 'column' }}>
+          <Card.Body className='d-flex flex-grow-1 pt-2 pb-2' style={{ flexDirection: 'column' }}>
             {fieldDefinitions.otherFields.map((otherFieldDef, idx) => {
               const renderField = (otherFieldDef) => {
                 const fieldType = otherFieldDef.type;
@@ -312,18 +312,13 @@ const ContactCard = ({
                           <Accordion className='w-100' key={`${otherFieldDef.propName}-${tabIndex}`}>
                             <ContextAwareToggle
                               eventKey={tabIndex}
-                              deletable={editable}
-                              deleteCallback={(event) => {
-                                event.preventDefault();
-                                event.stopPropagation();
-                                const modifiedObjectList = JSON.parse(JSON.stringify(objectList));
-                                modifiedObjectList.splice(objectListIdx, 1);
-                                setOtherFields(
-                                  Object.assign({}, otherFields, {
-                                    [otherFieldDef.propName]: modifiedObjectList
-                                  })
-                                );
-                              }}>
+                              deleteCallback={_getListDeleteFunc(
+                                otherFieldDef,
+                                otherFields,
+                                objectList,
+                                objectListIdx,
+                                setOtherFields
+                              )}>
                               <span>
                                 {objectListItem[otherFieldDef.mainInnerField]
                                   ? objectListItem[otherFieldDef.mainInnerField]
@@ -332,7 +327,7 @@ const ContactCard = ({
                             </ContextAwareToggle>
                             <Accordion.Collapse eventKey={tabIndex}>
                               <Row
-                                className='mb-3 mx-0 w-100 border border-secondary'
+                                className='mb-3 mx-0 pb-3 w-100 border border-secondary'
                                 style={{ flexDirection: 'column' }}>
                                 {Object.entries(objectListInnerFields).map(([innerFieldKey, innerFieldDef]) => {
                                   const innerFieldType = innerFieldDef.type;
@@ -372,22 +367,6 @@ const ContactCard = ({
                           {'-'}
                         </div>
                       )}
-                      {editable && (
-                        <Button
-                          className='w-100 mt-2'
-                          variant='secondary'
-                          onClick={() => {
-                            const modifiedObjectList = JSON.parse(JSON.stringify(objectList));
-                            modifiedObjectList.push(_generateEmptyObjectListItem(objectListInnerFields));
-                            setOtherFields(
-                              Object.assign({}, otherFields, {
-                                [otherFieldDef.propName]: modifiedObjectList
-                              })
-                            );
-                          }}>
-                          Add
-                        </Button>
-                      )}
                     </Fragment>
                   );
                 } else if (fieldType === 'StringList') {
@@ -417,7 +396,9 @@ const ContactCard = ({
                                 [otherFieldDef.propName]: modifiedStringList
                               })
                             );
-                          }
+                          },
+                          null, //skipKey,
+                          _getListDeleteFunc(otherFieldDef, otherFields, stringList, stringListIdx, setOtherFields)
                         );
                       })}
                       {!editable && stringList.length === 0 && (
@@ -432,22 +413,6 @@ const ContactCard = ({
                           {stringList.length > 2 &&
                             stringList.slice(0, -1).join(', ') + ', and ' + stringList.slice(-1)}
                         </div>
-                      )}
-                      {editable && (
-                        <Button
-                          className='w-100 mt-2'
-                          variant='secondary'
-                          onClick={() => {
-                            const modifiedStringList = JSON.parse(JSON.stringify(stringList));
-                            modifiedStringList.push('');
-                            setOtherFields(
-                              Object.assign({}, otherFields, {
-                                [otherFieldDef.propName]: modifiedStringList
-                              })
-                            );
-                          }}>
-                          Add
-                        </Button>
                       )}
                     </Fragment>
                   );
@@ -480,32 +445,39 @@ const ContactCard = ({
                 fieldDef,
                 refFunc,
                 setFunc,
-                skipKey
+                skipKey,
+                deleteCallback
               ) => {
                 const key = ++tabIndex;
                 if (editable) {
                   return (
-                    <Form.Group className='w-100 mb-0' key={'input-' + key}>
-                      {renderHeader && <div className='text-center w-100'>{fieldDef.displayName}</div>}
-                      <Form.Control
-                        as={fieldType === 'TextArea' ? 'textarea' : 'input'}
-                        className='editable cursor-pointer text-center m-auto px-2'
-                        style={{ maxWidth: '95%' }}
-                        ref={refFunc}
-                        value={fieldValue}
-                        tabIndex={key}
-                        onChange={(event) => handleChange(event, setFunc, fieldType, fieldDef.validation.maxLength)}
-                        pattern={fieldDef.validation.regex}
-                        isInvalid={
-                          fieldType === 'TextArea' && fieldValue
-                            ? !new RegExp(fieldDef.validation.regex).test(fieldValue)
-                            : false
-                        }
-                        required={!!fieldDef.validation.required}
-                      />
-                      <Form.Control.Feedback className='text-center' type='invalid'>
-                        {fieldDef.validation.errorMessage}
-                      </Form.Control.Feedback>
+                    <Form.Group className='d-flex w-100 mb-0' style={{ flexDirection: 'row' }} key={'input-' + key}>
+                      <Col className='mb-2'>
+                        {renderHeader && <div className='text-center w-100'>{fieldDef.displayName}</div>}
+                        <Form.Control
+                          as={fieldType === 'TextArea' ? 'textarea' : 'input'}
+                          className='editable cursor-pointer text-center m-auto px-2'
+                          ref={refFunc}
+                          value={fieldValue}
+                          tabIndex={key}
+                          onChange={(event) => handleChange(event, setFunc, fieldType, fieldDef.validation.maxLength)}
+                          pattern={fieldDef.validation.regex}
+                          isInvalid={
+                            fieldType === 'TextArea' && fieldValue
+                              ? !new RegExp(fieldDef.validation.regex).test(fieldValue)
+                              : false
+                          }
+                          required={!!fieldDef.validation.required}
+                        />
+                        <Form.Control.Feedback className='text-center' type='invalid'>
+                          {fieldDef.validation.errorMessage}
+                        </Form.Control.Feedback>
+                      </Col>
+                      {deleteCallback && (
+                        <Col className='align-self-center col-auto cursor-pointer mb-2 px-0'>
+                          <Icon onClick={deleteCallback}>delete</Icon>
+                        </Col>
+                      )}
                     </Form.Group>
                   );
                 } else if (renderNonEditable) {
@@ -521,6 +493,44 @@ const ContactCard = ({
                 }
               };
 
+              const renderAddObjectListButton = (objectList, objectListInnerFields, otherFields, setOtherFields) => {
+                return (
+                  <Button
+                    className='w-100 mt-2'
+                    variant='secondary'
+                    onClick={() => {
+                      const modifiedObjectList = JSON.parse(JSON.stringify(objectList));
+                      modifiedObjectList.push(_generateEmptyObjectListItem(objectListInnerFields));
+                      setOtherFields(
+                        Object.assign({}, otherFields, {
+                          [otherFieldDef.propName]: modifiedObjectList
+                        })
+                      );
+                    }}>
+                    Add
+                  </Button>
+                );
+              };
+
+              const renderAddStringListButton = (stringList, otherFields, setOtherFields) => {
+                return (
+                  <Button
+                    className='w-100 mt-2'
+                    variant='secondary'
+                    onClick={() => {
+                      const modifiedStringList = JSON.parse(JSON.stringify(stringList));
+                      modifiedStringList.push('');
+                      setOtherFields(
+                        Object.assign({}, otherFields, {
+                          [otherFieldDef.propName]: modifiedStringList
+                        })
+                      );
+                    }}>
+                    Add
+                  </Button>
+                );
+              };
+
               return (
                 <Container key={'field- ' + (idx + 1)} className='px-0' fluid>
                   <Row>
@@ -528,17 +538,32 @@ const ContactCard = ({
                       as={Col}
                       className='d-flex align-items-center mb-2 pb-2'
                       style={{ flexDirection: 'column' }}>
-                      <Row className='justify-content-center w-100'>
+                      <Row className='justify-content-center w-100 mb-2'>
                         <span className='font-weight-bold'>{otherFieldDef.displayName}</span>
                       </Row>
                       <Row
                         className='align-items-center w-100'
                         style={{
-                          backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                          backgroundColor: editable ? 'transparent' : 'rgba(255, 255, 255, 0.02)',
                           flexDirection: 'column'
                         }}>
                         {renderField(otherFieldDef)}
                       </Row>
+                      {editable && otherFieldDef.type === 'ObjectList' && (
+                        <Row className='w-100'>
+                          {renderAddObjectListButton(
+                            otherFields[otherFieldDef.propName],
+                            otherFieldDef.innerFields,
+                            otherFields,
+                            setOtherFields
+                          )}
+                        </Row>
+                      )}
+                      {editable && otherFieldDef.type === 'StringList' && (
+                        <Row className='w-100 px-3'>
+                          {renderAddStringListButton(otherFields[otherFieldDef.propName], otherFields, setOtherFields)}
+                        </Row>
+                      )}
                     </Form.Group>
                   </Row>
                 </Container>
@@ -715,6 +740,20 @@ const _getListRefFunc = (otherRefs, otherFieldDef, listIdx) => {
   };
 };
 
+const _getListDeleteFunc = (otherFieldDef, otherFields, list, listIdx, setOtherFields) => {
+  return (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    const modifiedList = JSON.parse(JSON.stringify(list));
+    modifiedList.splice(listIdx, 1);
+    setOtherFields(
+      Object.assign({}, otherFields, {
+        [otherFieldDef.propName]: modifiedList
+      })
+    );
+  };
+};
+
 const _generateEmptyObjectListItem = (innerFields) => {
   return Object.keys(innerFields).reduce((acc, currKey) => {
     acc[currKey] = '';
@@ -722,7 +761,7 @@ const _generateEmptyObjectListItem = (innerFields) => {
   }, {});
 };
 
-function ContextAwareToggle({ children, eventKey, deletable, deleteCallback, callback }) {
+function ContextAwareToggle({ children, eventKey, deleteCallback, callback }) {
   const currentEventKey = useContext(AccordionContext);
 
   const decoratedOnClick = useAccordionToggle(eventKey, () => callback && callback(eventKey));
@@ -743,7 +782,7 @@ function ContextAwareToggle({ children, eventKey, deletable, deleteCallback, cal
           keyboard_arrow_down
         </Icon>
       )}
-      {deletable && (
+      {deleteCallback && (
         <Icon className='position-absolute' style={{ right: 30 }} onClick={deleteCallback}>
           delete
         </Icon>
