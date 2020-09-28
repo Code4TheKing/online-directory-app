@@ -362,11 +362,6 @@ const ContactCard = ({
                           </Accordion>
                         );
                       })}
-                      {!editable && objectList.length === 0 && (
-                        <div className='text-center' style={{ whiteSpace: 'pre-wrap' }}>
-                          {'-'}
-                        </div>
-                      )}
                     </Fragment>
                   );
                 } else if (fieldType === 'StringList') {
@@ -401,11 +396,6 @@ const ContactCard = ({
                           _getListDeleteFunc(otherFieldDef, otherFields, stringList, stringListIdx, setOtherFields)
                         );
                       })}
-                      {!editable && stringList.length === 0 && (
-                        <div className='text-center' style={{ whiteSpace: 'pre-wrap' }}>
-                          {'-'}
-                        </div>
-                      )}
                       {!editable && stringList.length > 0 && (
                         <div className='text-center' style={{ whiteSpace: 'pre-wrap' }}>
                           {stringList.length === 1 && `${stringList[0]}`}
@@ -483,9 +473,9 @@ const ContactCard = ({
                 } else if (renderNonEditable) {
                   return (
                     <Fragment key={'value-' + key}>
-                      {(!skipKey || (skipKey !== fieldKey && fieldValue)) && (
+                      {fieldValue && (!skipKey || skipKey !== fieldKey) && (
                         <div className='text-center' style={{ whiteSpace: 'pre-wrap' }}>
-                          {fieldValue ? fieldValue : '-'}
+                          {fieldValue}
                         </div>
                       )}
                     </Fragment>
@@ -533,39 +523,47 @@ const ContactCard = ({
 
               return (
                 <Container key={'field- ' + (idx + 1)} className='px-0' fluid>
-                  <Row>
-                    <Form.Group
-                      as={Col}
-                      className='d-flex align-items-center mb-2 pb-2'
-                      style={{ flexDirection: 'column' }}>
-                      <Row className='justify-content-center w-100 mb-2'>
-                        <span className='font-weight-bold'>{otherFieldDef.displayName}</span>
-                      </Row>
-                      <Row
-                        className='align-items-center w-100'
-                        style={{
-                          backgroundColor: editable ? 'transparent' : 'rgba(255, 255, 255, 0.02)',
-                          flexDirection: 'column'
-                        }}>
-                        {renderField(otherFieldDef)}
-                      </Row>
-                      {editable && otherFieldDef.type === 'ObjectList' && (
-                        <Row className='w-100'>
-                          {renderAddObjectListButton(
-                            otherFields[otherFieldDef.propName],
-                            otherFieldDef.innerFields,
-                            otherFields,
-                            setOtherFields
+                  {otherFields[otherFieldDef.propName] &&
+                    (otherFieldDef.type !== 'ObjectList' || otherFields[otherFieldDef.propName].length > 0) &&
+                    (otherFieldDef.type !== 'StringList' || otherFields[otherFieldDef.propName].length > 0) && (
+                      <Row>
+                        <Form.Group
+                          as={Col}
+                          className='d-flex align-items-center mb-2 pb-2'
+                          style={{ flexDirection: 'column' }}>
+                          <Row className='justify-content-center w-100 mb-2'>
+                            <span className='font-weight-bold'>{otherFieldDef.displayName}</span>
+                          </Row>
+                          <Row
+                            className='align-items-center w-100'
+                            style={{
+                              backgroundColor: editable ? 'transparent' : 'rgba(255, 255, 255, 0.02)',
+                              flexDirection: 'column'
+                            }}>
+                            {renderField(otherFieldDef)}
+                          </Row>
+                          {editable && otherFieldDef.type === 'ObjectList' && (
+                            <Row className='w-100'>
+                              {renderAddObjectListButton(
+                                otherFields[otherFieldDef.propName],
+                                otherFieldDef.innerFields,
+                                otherFields,
+                                setOtherFields
+                              )}
+                            </Row>
                           )}
-                        </Row>
-                      )}
-                      {editable && otherFieldDef.type === 'StringList' && (
-                        <Row className='w-100 px-3'>
-                          {renderAddStringListButton(otherFields[otherFieldDef.propName], otherFields, setOtherFields)}
-                        </Row>
-                      )}
-                    </Form.Group>
-                  </Row>
+                          {editable && otherFieldDef.type === 'StringList' && (
+                            <Row className='w-100 px-3'>
+                              {renderAddStringListButton(
+                                otherFields[otherFieldDef.propName],
+                                otherFields,
+                                setOtherFields
+                              )}
+                            </Row>
+                          )}
+                        </Form.Group>
+                      </Row>
+                    )}
                 </Container>
               );
             })}
