@@ -67,8 +67,11 @@ const listContactsByKeyword = (keyword) => {
       : {
           $or: [
             { name: new RegExp(escapedKeyword, 'i') },
+            { familyMembers: new RegExp(escapedKeyword, 'i') },
             { address: new RegExp(escapedKeyword, 'i') },
-            { phoneNumber: new RegExp(escapedKeyword, 'i') }
+            { 'contact.name': new RegExp(escapedKeyword, 'i') },
+            { 'contact.phoneNumber': new RegExp(escapedKeyword, 'i') },
+            { 'contact.emailAddress': new RegExp(escapedKeyword, 'i') }
           ]
         }
   ).sort('name');
