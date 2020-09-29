@@ -443,7 +443,7 @@ const ContactCard = ({
                 if (editable) {
                   return (
                     <Form.Group className='d-flex w-100 mb-0' style={{ flexDirection: 'row' }} key={'input-' + key}>
-                      <Col className='mb-2'>
+                      <Col className='mb-2 pr-2'>
                         {renderHeader && <div className='text-center w-100'>{fieldDef.displayName}</div>}
                         <Form.Control
                           as={fieldType === 'TextArea' ? 'textarea' : 'input'}
@@ -465,7 +465,7 @@ const ContactCard = ({
                         </Form.Control.Feedback>
                       </Col>
                       {deleteCallback && (
-                        <Col className='align-self-center col-auto cursor-pointer mb-2 px-0'>
+                        <Col className='align-self-center col-auto cursor-pointer mb-2 pl-0'>
                           <Icon onClick={deleteCallback}>delete</Icon>
                         </Col>
                       )}
