@@ -312,6 +312,7 @@ const ContactCard = ({
                           <Accordion className='w-100' key={`${otherFieldDef.propName}-${tabIndex}`}>
                             <ContextAwareToggle
                               eventKey={tabIndex}
+                              editable={editable}
                               deleteCallback={_getListDeleteFunc(
                                 otherFieldDef,
                                 otherFields,
@@ -759,7 +760,7 @@ const _generateEmptyObjectListItem = (innerFields) => {
   }, {});
 };
 
-function ContextAwareToggle({ children, eventKey, deleteCallback, callback }) {
+function ContextAwareToggle({ children, eventKey, editable, deleteCallback, callback }) {
   const currentEventKey = useContext(AccordionContext);
 
   const decoratedOnClick = useAccordionToggle(eventKey, () => callback && callback(eventKey));
@@ -780,7 +781,7 @@ function ContextAwareToggle({ children, eventKey, deleteCallback, callback }) {
           keyboard_arrow_down
         </Icon>
       )}
-      {deleteCallback && (
+      {editable && deleteCallback && (
         <Icon className='position-absolute' style={{ right: 30 }} onClick={deleteCallback}>
           delete
         </Icon>
