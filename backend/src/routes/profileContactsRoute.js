@@ -26,15 +26,21 @@ router.post('/', (req, res, next) => {
       .then(() =>
         auth0.getAccessToken().then((accessToken) =>
           auth0
-            .getUser(accessToken, idpSub)
+            .getUser(accessToken, idpSub, 'name,user_metadata')
             .then((user) =>
               Promise.all([
                 user.user_metadata?.contact_id
                   ? repository
                       .getContactById(user.user_metadata.contact_id)
-                      .then((contact) => repository.updateContact(contact._id, { idpSubject: idpSub }, true))
-                      .catch(() => repository.addContact({ name: user.name, idpSubject: idpSub }))
-                  : repository.addContact({ name: user.name, idpSubject: idpSub }),
+                      .then((contact) =>
+                        repository.updateContact(
+                          contact._id,
+                          { idpSubjects: contact.idpSubjects ? [...contact.idpSubjects, idpSub] : [idpSub] },
+                          true
+                        )
+                      )
+                      .catch(() => repository.addContact({ name: user.name, idpSubjects: [idpSub] }))
+                  : repository.addContact({ name: user.name, idpSubjects: [idpSub] }),
                 authz.isAdmin(accessToken, req.user)
               ])
             )
@@ -80,10 +86,7 @@ router.patch('/', (req, res, next) => {
 
 const handleError = (err, next) => {
   console.log(err);
-  if (err?.response?.data) {
-    return next(err.response.data);
-  }
-  return next(err);
+  return err?.response?.data ? next(err.response.data) : next(err);
 };
 
 module.exports = router;

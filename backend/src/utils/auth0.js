@@ -19,12 +19,15 @@ const getAccessToken = () => {
   }).then((tokenResponse) => tokenResponse.data.access_token);
 };
 
-const getUser = (accessToken, userId) => {
+const getUser = (accessToken, userId, fields) => {
   return axios({
     method: 'GET',
     url: `${process.env.API_AUTH0_MANAGEMENT_API_AUDIENCE}users/${userId}`,
     headers: {
       Authorization: `Bearer ${accessToken}`
+    },
+    params: {
+      fields: fields
     }
   }).then((getUserResponse) => getUserResponse.data);
 };
@@ -40,7 +43,7 @@ const createUser = (accessToken, email, name, contactId) => {
     data: {
       email: email,
       password: pwdGenerator.generate({
-        length: 10,
+        length: 16,
         numbers: true,
         symbols: true,
         lowercase: true,
@@ -58,7 +61,7 @@ const createUser = (accessToken, email, name, contactId) => {
   }).then((createUserResponse) => createUserResponse.data);
 };
 
-const getUserByEmail = (accessToken, email) => {
+const getUserByEmail = (accessToken, email, fields) => {
   return axios({
     method: 'GET',
     url: `${process.env.API_AUTH0_MANAGEMENT_API_AUDIENCE}users-by-email`,
@@ -66,7 +69,7 @@ const getUserByEmail = (accessToken, email) => {
       Authorization: `Bearer ${accessToken}`
     },
     params: {
-      fields: 'user_id',
+      fields: fields,
       email: email
     }
   }).then((usersResponse) => {

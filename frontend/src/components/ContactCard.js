@@ -16,6 +16,7 @@ import Form from 'react-bootstrap/Form';
 import Modal from 'react-bootstrap/Modal';
 import OverlayTrigger from 'react-bootstrap/OverlayTrigger';
 import Row from 'react-bootstrap/Row';
+import Spinner from 'react-bootstrap/Spinner';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { LinkContainer } from 'react-router-bootstrap';
 import useDeepCompareEffect from 'use-deep-compare-effect';
@@ -27,11 +28,14 @@ const ContactCard = ({
   editable = false,
   fieldDefinitions,
   contact = {},
+  linkedUsers = [],
   isSaving = false,
   isInviting = false,
+  isListingLinkedUsers = false,
   isAdmin = false,
   saveFunc,
   inviteFunc,
+  listLinkedUsersFunc,
   redirectAfterSave
 }) => {
   const { getAccessTokenSilently } = useAuth0();
@@ -56,12 +60,11 @@ const ContactCard = ({
       if (otherFieldValue) {
         switch (otherField.type) {
           case 'ObjectList':
+          case 'StringList':
             return (
               otherFieldValue.length !== fieldValue.length ||
               otherFieldValue.some((item, idx) => !equals(item, fieldValue[idx]))
             );
-          case 'StringList':
-            return otherFieldValue.some((item, idx) => !equals(item, fieldValue[idx]));
           default:
             return !equals(fieldValue, otherFieldValue);
         }
@@ -196,7 +199,12 @@ const ContactCard = ({
     setInviteValidated(false);
   };
 
-  const handleShowInviteModal = () => setShowInviteModal(true);
+  const handleShowInviteModal = () => {
+    if (listLinkedUsersFunc) {
+      getAccessTokenSilently().then((token) => listLinkedUsersFunc(contact[fieldDefinitions.idField.propName], token));
+    }
+    setShowInviteModal(true);
+  };
 
   const handleInviteEmailAddressChange = (event) => {
     setInviteEmailAddress(event.target.value);
@@ -612,9 +620,9 @@ const ContactCard = ({
               className='d-flex justify-content-end align-items-center h-auto px-2 py-0'
               style={{ flexDirection: 'column' }}>
               <Row className='justify-content-between w-100'>
-                {!contact.idpSubject && (
+                {
                   <div className='cursor-pointer'>
-                    <OverlayTrigger placement='top' transition={false} overlay={<Tooltip>Invite contact</Tooltip>}>
+                    <OverlayTrigger placement='top' transition={false} overlay={<Tooltip>Invite user</Tooltip>}>
                       {({ ref, ...triggerHandler }) => (
                         <Icon ref={ref} onClick={handleShowInviteModal} {...triggerHandler}>
                           person_add
@@ -622,7 +630,7 @@ const ContactCard = ({
                       )}
                     </OverlayTrigger>
                   </div>
-                )}
+                }
                 <div className='flex-grow-1' />
                 {!editable && contact[fieldDefinitions.idField.propName] && (
                   <div className='cursor-pointer'>
@@ -647,7 +655,10 @@ const ContactCard = ({
       {/* Invite modal */}
       <Modal show={showInviteModal} onHide={handleCloseInviteModal} centered animation={false}>
         <Modal.Header closeButton>
-          <Modal.Title className='w-100'>{'Invite ' + mainField}</Modal.Title>
+          <Modal.Title className='w-100'>
+            {'Invite '}
+            <span className='text-primary'>{mainField}</span>
+          </Modal.Title>
         </Modal.Header>
         <Modal.Body>
           <Form noValidate validated={inviteValidated} onSubmit={handleInviteSubmit}>
@@ -661,7 +672,7 @@ const ContactCard = ({
                   required
                 />
                 <Form.Control.Feedback className='text-center' type='invalid'>
-                  Please enter a valid email address
+                  Must be a valid email address
                 </Form.Control.Feedback>
               </Form.Group>
               <Form.Group>
@@ -682,6 +693,18 @@ const ContactCard = ({
               </Form.Row>
             )}
           </Form>
+        </Modal.Body>
+        <Modal.Body className='pt-0'>
+          <Row className='justify-content-center'>
+            <h5>Linked Users</h5>
+          </Row>
+          <Row className='justify-content-center'>
+            {isListingLinkedUsers && <Spinner animation='border' variant='primary' />}
+            {!isListingLinkedUsers && linkedUsers.length === 0 && (
+              <p className='text-info'>No linked users for this contact</p>
+            )}
+            {!isListingLinkedUsers && linkedUsers.map((user) => <p>{user.email}</p>)}
+          </Row>
         </Modal.Body>
       </Modal>
     </Fragment>

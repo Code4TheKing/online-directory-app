@@ -73,7 +73,22 @@ app.use(`/${process.env.API_BASE_PATH}/profile-contacts`, profileContactsRoute);
 // Error handler
 app.use((err, req, res, next) => {
   if (err) {
-    const statusCode = err.name === 'ValidationError' ? 400 : err.statusCode;
+    let statusCode;
+    if (!err.name) {
+      statusCode = err.statusCode;
+    } else {
+      switch (err.name) {
+        case 'ValidationError':
+          statusCode = 400;
+          break;
+        case 'UnauthorizedError':
+          statusCode = 401;
+          break;
+        default:
+          statusCode = err.statusCode;
+          break;
+      }
+    }
     const error = {
       message: err.message || err.error_description || 'Internal Server Error',
       statusCode: statusCode || 500,

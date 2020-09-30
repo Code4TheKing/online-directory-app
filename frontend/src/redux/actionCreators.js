@@ -22,6 +22,9 @@ import {
   LIST_ALL_CONTACTS,
   LIST_ALL_CONTACTS_ERROR,
   LIST_ALL_CONTACTS_SUCCESS,
+  LIST_USERS_FOR_CONTACT,
+  LIST_USERS_FOR_CONTACT_ERROR,
+  LIST_USERS_FOR_CONTACT_SUCCESS,
   RESET_CONTACT,
   RESET_SEARCH_CONTACTS,
   SEARCH_CONTACTS,
@@ -147,6 +150,26 @@ export const listAllContactsSuccess = (json) => {
 export const listAllContactsError = (err) => {
   return {
     type: LIST_ALL_CONTACTS_ERROR,
+    error: err
+  };
+};
+
+export const listUsersForContact = () => {
+  return {
+    type: LIST_USERS_FOR_CONTACT
+  };
+};
+
+export const listUsersForContactSuccess = (json) => {
+  return {
+    type: LIST_USERS_FOR_CONTACT_SUCCESS,
+    users: json.users
+  };
+};
+
+export const listUsersForContactError = (err) => {
+  return {
+    type: LIST_USERS_FOR_CONTACT_ERROR,
     error: err
   };
 };

@@ -36,7 +36,7 @@ const getContactById = (contactId) => {
 
 // Get contact by IDP subject
 const getContactByIdpSubject = (idpSub, lean = false) => {
-  return Contact.findOne({ idpSubject: idpSub })
+  return Contact.findOne({ idpSubjects: idpSub })
     .lean(lean)
     .then((contact) => {
       if (!contact) {

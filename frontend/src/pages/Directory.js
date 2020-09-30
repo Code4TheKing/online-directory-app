@@ -23,6 +23,7 @@ import {
   getContactAsync,
   inviteContactAsync,
   listAllContactsAsync,
+  listUsersForContactAsync,
   searchContactsAsync,
   updateContactAsync
 } from '../redux/actions';
@@ -34,12 +35,14 @@ const Directory = ({
   contact,
   searchContactList,
   allContacts,
+  linkedUsers,
   isGettingFieldDefinitions,
   isGettingContact,
   isUpdatingContact,
   isListingAllContacts,
   isInvitingContact,
   isSearchingContacts,
+  isListingLinkedUsers,
   isAdmin,
   getContact,
   updateContact,
@@ -47,7 +50,8 @@ const Directory = ({
   resetContact,
   listAllContacts,
   searchContacts,
-  resetSearchContacts
+  resetSearchContacts,
+  listLinkedUsers
 }) => {
   const { getAccessTokenSilently } = useAuth0();
   const query = useQuery();
@@ -68,11 +72,14 @@ const Directory = ({
       keyword={keyword}
       fieldDefinitions={fieldDefinitions}
       contacts={searchContactList}
+      linkedUsers={linkedUsers}
       isGettingFieldDefinitions={isGettingFieldDefinitions}
       isSearchingContacts={isSearchingContacts}
       isInvitingContact={isInvitingContact}
+      isListingLinkedUsers={isListingLinkedUsers}
       isAdmin={isAdmin}
       inviteContact={inviteContact}
+      listLinkedUsers={listLinkedUsers}
     />
   );
 
@@ -102,17 +109,20 @@ const Directory = ({
               contactId={contactId}
               fieldDefinitions={fieldDefinitions}
               contact={contact}
+              linkedUsers={linkedUsers}
               isGettingFieldDefinitions={isGettingFieldDefinitions}
               isGettingContact={isGettingContact}
               isUpdatingContact={isUpdatingContact}
               isListingAllContacts={isListingAllContacts}
               isInvitingContact={isInvitingContact}
+              isListingLinkedUsers={isListingLinkedUsers}
               isAdmin={isAdmin}
               getContact={getContact}
               updateContact={updateContact}
               inviteContact={inviteContact}
               resetContact={resetContact}
               listAllContacts={listAllContacts}
+              listLinkedUsers={listLinkedUsers}
             />
           </Route>
           <Route path={`${DIRECTORY_PATH}`} exact>
@@ -130,12 +140,14 @@ const mapStateToProps = (state) => ({
   contact: state.contacts.contact,
   searchContactList: state.contacts.searchContacts,
   allContacts: state.contacts.allContacts,
+  linkedUsers: state.contacts.linkedUsers,
   isGettingFieldDefinitions: state.contacts.isGettingFieldDefinitions,
   isGettingContact: state.contacts.isGettingContact,
   isUpdatingContact: state.contacts.isUpdatingContact,
   isListingAllContacts: state.contacts.isListingAllContacts,
   isInvitingContact: state.contacts.isInvitingContact,
   isSearchingContacts: state.contacts.isSearchingContacts,
+  isListingLinkedUsers: state.contacts.isListingUsersForContact,
   isAdmin: state.profileContacts.isAdmin
 });
 
@@ -148,7 +160,8 @@ const mapDispatchToProps = (dispatch) => ({
   resetContact: () => dispatch(resetContact()),
   listAllContacts: (token) => dispatch(listAllContactsAsync(token)),
   searchContacts: (searchText, token) => dispatch(searchContactsAsync(searchText, token)),
-  resetSearchContacts: () => dispatch(resetSearchContacts())
+  resetSearchContacts: () => dispatch(resetSearchContacts()),
+  listLinkedUsers: (contactId, token) => dispatch(listUsersForContactAsync(contactId, token))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Directory);

@@ -16,6 +16,9 @@ import {
   LIST_ALL_CONTACTS,
   LIST_ALL_CONTACTS_ERROR,
   LIST_ALL_CONTACTS_SUCCESS,
+  LIST_USERS_FOR_CONTACT,
+  LIST_USERS_FOR_CONTACT_ERROR,
+  LIST_USERS_FOR_CONTACT_SUCCESS,
   RESET_CONTACT,
   RESET_SEARCH_CONTACTS,
   SEARCH_CONTACTS,
@@ -33,6 +36,7 @@ const contacts = (
     isGettingContact: false,
     isSearchingContacts: false,
     isListingAllContacts: false,
+    isListingUsersForContact: false,
     isUpdatingContact: false,
     isInvitingContact: false,
     fieldDefinitions: {},
@@ -40,11 +44,13 @@ const contacts = (
     searchText: '',
     searchContacts: [],
     allContacts: null,
+    linkedUsers: [],
     getFieldDefinitionsError: null,
     addContactError: null,
     getContactError: null,
     searchContactsError: null,
     listAllContactsError: null,
+    listUsersForContactError: null,
     updateContactError: null,
     inviteContactError: null
   },
@@ -92,6 +98,17 @@ const contacts = (
       });
     case LIST_ALL_CONTACTS_ERROR:
       return Object.assign({}, state, { isListingAllContacts: false, listAllContactsError: action.error });
+    case LIST_USERS_FOR_CONTACT:
+      return Object.assign({}, state, { isListingUsersForContact: true, listUsersForContactError: null });
+    case LIST_USERS_FOR_CONTACT_SUCCESS:
+      console.log(action.users);
+      return Object.assign({}, state, {
+        isListingUsersForContact: false,
+        linkedUsers: action.users,
+        listUsersForContactError: null
+      });
+    case LIST_USERS_FOR_CONTACT_ERROR:
+      return Object.assign({}, state, { isListingUsersForContact: false, listUsersForContactError: action.error });
     case UPDATE_CONTACT:
       return Object.assign({}, state, { isUpdatingContact: true, updateContactError: null });
     case UPDATE_CONTACT_SUCCESS:

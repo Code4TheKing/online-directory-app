@@ -8,11 +8,14 @@ const KeywordSearcher = ({
   keyword,
   fieldDefinitions,
   contacts,
+  linkedUsers,
   isGettingFieldDefinitions,
   isSearchingContacts,
   isInvitingContact,
+  isListingLinkedUsers,
   isAdmin,
-  inviteContact
+  inviteContact,
+  listLinkedUsers
 }) => {
   return (
     <Container fluid>
@@ -20,11 +23,14 @@ const KeywordSearcher = ({
         fieldDefinitions={fieldDefinitions}
         searchText={keyword}
         contacts={contacts}
+        linkedUsers={linkedUsers}
         isGettingFieldDefinitions={isGettingFieldDefinitions}
         isListing={isSearchingContacts}
         isInviting={isInvitingContact}
+        isListingLinkedUsers={isListingLinkedUsers}
         isAdmin={isAdmin}
         inviteFunc={inviteContact}
+        listLinkedUsersFunc={listLinkedUsers}
       />
     </Container>
   );
