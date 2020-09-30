@@ -185,11 +185,15 @@ export const listAllContactsAsync = (token) => {
 };
 
 const listContacts = (keyword, token) => {
-  return fetch(`${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_BASE_PATH}/contacts?keyword=${keyword}`, {
-    headers: {
-      Authorization: `Bearer ${token}`
+  return fetch(
+    `${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_BASE_PATH}/contacts` +
+      `?keyword=${encodeURIComponent(keyword)}`,
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
     }
-  }).then((response) => response.json().then((responseJson) => ({ responseJson, response })));
+  ).then((response) => response.json().then((responseJson) => ({ responseJson, response })));
 };
 
 export const listUsersForContactAsync = (contactId, token) => {
