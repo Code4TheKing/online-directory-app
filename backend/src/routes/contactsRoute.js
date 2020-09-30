@@ -64,6 +64,28 @@ router.get('/', (req, res, next) => {
   );
 });
 
+// List linked users for contact
+router.get('/:id/users', (req, res, next) => {
+  authz.enforceAuthorization(req.user, ['read:contacts', 'read:users'], req, res, next, (req, res, next) =>
+    repository
+      .getContactById(req.params.id)
+      .then((existingContact) => {
+        if (!existingContact.idpSubjects || existingContact.idpSubjects.length === 0) {
+          res.json({ users: [] });
+          return;
+        }
+        auth0.getAccessToken().then((accessToken) =>
+          Promise.all(
+            [...existingContact.idpSubjects].map((idpSub) => auth0.getUser(accessToken, idpSub, 'user_id,email'))
+          ).then((users) => {
+            res.json({ users: users });
+          })
+        );
+      })
+      .catch((err) => handleError(err, next))
+  );
+});
+
 // Invite contact to register
 router.post('/:id/invite', (req, res, next) => {
   authz.enforceAuthorization(req.user, ['invite:contacts'], req, res, next, (req, res, next) =>
@@ -75,7 +97,7 @@ router.post('/:id/invite', (req, res, next) => {
             .createUser(accessToken, req.body.email, existingContact.name, req.params.id)
             .catch((createUserErr) => {
               if (createUserErr.response.status === 409) {
-                return auth0.getUserByEmail(accessToken, req.body.email);
+                return auth0.getUserByEmail(accessToken, req.body.email, 'user_id');
               }
               throw createUserErr;
             })

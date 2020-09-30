@@ -14,17 +14,20 @@ const ContactLoader = ({
   mode, // View, Edit, or Add
   fieldDefinitions,
   contact,
+  linkedUsers,
   editable,
   isGettingFieldDefinitions,
   isGettingContact,
   isUpdatingContact,
   isInvitingContact,
   isAddingContact,
+  isListingLinkedUsers,
   isAdmin,
   updateContact,
   inviteContact,
   addContact,
-  listAllContacts
+  listAllContacts,
+  listLinkedUsers
 }) => {
   const { getAccessTokenSilently } = useAuth0();
   const history = useHistory();
@@ -46,11 +49,14 @@ const ContactLoader = ({
               fieldDefinitions={fieldDefinitions}
               editable={editable}
               contact={contact}
+              linkedUsers={linkedUsers}
               isAdmin={isAdmin}
               isSaving={isUpdatingContact}
               isInviting={isInvitingContact}
+              isListingLinkedUsers={isListingLinkedUsers}
               saveFunc={updateContact}
               inviteFunc={inviteContact}
+              listLinkedUsersFunc={listLinkedUsers}
             />
           </Row>
         </Container>

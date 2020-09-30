@@ -15,7 +15,7 @@ const PHONE_NUMBER_VALIDATION_ERROR_MESSAGE = 'Must be of the format (XXX) XXX-X
 const EMAIL_REGEX =
   "^((([!#$%&'*+\\-/=?^_`{|}~\\w])|([!#$%&'*+\\-/=?^_`{|}~\\w][!#$%&'*+\\-/=?^_`{|}~\\.\\w]{0,}[!#$%&'*+\\-/=?^_`{|}~\\w]))[@]\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*)$";
 const EMAIL_MAX_LENGTH = 32;
-const EMAIL_VALIDATION_ERROR_MESSAGE = 'Must be an email address';
+const EMAIL_VALIDATION_ERROR_MESSAGE = 'Must be a valid email address';
 
 const Schema = mongoose.Schema;
 
@@ -39,9 +39,13 @@ const contactSchema = new Schema(
       required: true,
       default: uuidv4
     },
-    idpSubject: {
-      type: String,
-      maxlength: [64, 'Too long']
+    idpSubjects: {
+      type: [
+        {
+          type: String,
+          maxlength: [64, 'Too long']
+        }
+      ]
     },
     picture: {
       type: {

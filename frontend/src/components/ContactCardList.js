@@ -12,12 +12,15 @@ const ContactCardList = ({
   fieldDefinitions,
   searchText,
   contacts,
+  linkedUsers,
   isGettingFieldDefinitions,
   isListing,
   isInviting,
+  isListingLinkedUsers,
   isAdmin = false,
   saveFunc,
-  inviteFunc
+  inviteFunc,
+  listLinkedUsersFunc
 }) => {
   if (isGettingFieldDefinitions || isListing) {
     return (
@@ -50,10 +53,13 @@ const ContactCardList = ({
                 fieldDefinitions={fieldDefinitions}
                 key={contact[fieldDefinitions.idField.propName]}
                 contact={contact}
+                linkedUsers={linkedUsers}
                 isInviting={isInviting}
+                isListingLinkedUsers={isListingLinkedUsers}
                 isAdmin={isAdmin}
                 saveFunc={saveFunc}
                 inviteFunc={inviteFunc}
+                listLinkedUsersFunc={listLinkedUsersFunc}
               />
             </Col>
           ))}

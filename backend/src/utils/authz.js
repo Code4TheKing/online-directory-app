@@ -7,7 +7,7 @@ const enforceAuthorization = (user, allowedPermissions, req, res, next, cb) => {
   if (!isAuthorized(user, allowedPermissions)) {
     next(
       errors.generateError(
-        `User must have one of the permissions in [${allowedPermissions.map((perm) => `'${perm}'`).join(', ')}]`,
+        `User must have all of the permissions in [${allowedPermissions.map((perm) => `'${perm}'`).join(', ')}]`,
         401
       )
     );
@@ -17,7 +17,7 @@ const enforceAuthorization = (user, allowedPermissions, req, res, next, cb) => {
 };
 
 const isAuthorized = (user, allowedPermissions) => {
-  return allowedPermissions.some((permission) => user.permissions.indexOf(permission) !== -1);
+  return allowedPermissions.every((permission) => user.permissions.indexOf(permission) !== -1);
 };
 
 const isAdmin = (accessToken, user) => {

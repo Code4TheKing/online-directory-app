@@ -24,6 +24,9 @@ import {
   listAllContacts,
   listAllContactsError,
   listAllContactsSuccess,
+  listUsersForContact,
+  listUsersForContactError,
+  listUsersForContactSuccess,
   searchContacts,
   searchContactsError,
   searchContactsSuccess,
@@ -49,12 +52,6 @@ export const getFieldDefinitionsAsync = (token) => {
         response
           .json()
           .then((responseJson) => ({ responseJson, response }))
-          .then(
-            ({ responseJson, response }) =>
-              new Promise((resolve) => {
-                setTimeout(() => resolve({ responseJson, response }), 500);
-              })
-          )
           .then(({ responseJson, response }) => {
             if (!response.ok) {
               dispatch(getFieldDefinitionsError(responseJson));
@@ -110,12 +107,6 @@ const addContactTextFields = (dispatch, fieldDefinitions, contact, token) => {
     response
       .json()
       .then((responseJson) => ({ responseJson, response }))
-      .then(
-        ({ responseJson, response }) =>
-          new Promise((resolve) => {
-            setTimeout(() => resolve({ responseJson, response }), 500);
-          })
-      )
       .then(({ responseJson, response }) => {
         if (!response.ok) {
           dispatch(addContactError(responseJson));
@@ -142,12 +133,6 @@ export const getContactAsync = (contactId, token) => {
         response
           .json()
           .then((responseJson) => ({ responseJson, response }))
-          .then(
-            ({ responseJson, response }) =>
-              new Promise((resolve) => {
-                setTimeout(() => resolve({ responseJson, response }), 500);
-              })
-          )
           .then(({ responseJson, response }) => {
             if (!response.ok) {
               dispatch(getContactError(responseJson));
@@ -204,17 +189,37 @@ const listContacts = (keyword, token) => {
     headers: {
       Authorization: `Bearer ${token}`
     }
-  }).then((response) =>
-    response
-      .json()
-      .then((responseJson) => ({ responseJson, response }))
-      .then(
-        ({ responseJson, response }) =>
-          new Promise((resolve) => {
-            setTimeout(() => resolve({ responseJson, response }), 500);
+  }).then((response) => response.json().then((responseJson) => ({ responseJson, response })));
+};
+
+export const listUsersForContactAsync = (contactId, token) => {
+  return (dispatch) => {
+    dispatch(listUsersForContact());
+    return fetch(
+      `${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_BASE_PATH}/contacts/${contactId}/users`,
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    )
+      .then((response) =>
+        response
+          .json()
+          .then((responseJson) => ({ responseJson, response }))
+          .then(({ responseJson, response }) => {
+            if (!response.ok) {
+              dispatch(listUsersForContactError(responseJson));
+              toast.error(`Error getting linked users for contact ID "${contactId}" - ${responseJson.message}`);
+              return Promise.reject(responseJson);
+            } else {
+              dispatch(listUsersForContactSuccess(responseJson));
+              return responseJson;
+            }
           })
       )
-  );
+      .catch((err) => console.error(err));
+  };
 };
 
 export const updateContactAsync = (fieldDefinitions, contact, pictureFile, token) => {
@@ -263,12 +268,6 @@ const updateContactTextFields = (dispatch, fieldDefinitions, contact, token) => 
     response
       .json()
       .then((responseJson) => ({ responseJson, response }))
-      .then(
-        ({ responseJson, response }) =>
-          new Promise((resolve) => {
-            setTimeout(() => resolve({ responseJson, response }), 500);
-          })
-      )
       .then(({ responseJson, response }) => {
         if (!response.ok) {
           dispatch(updateContactError(responseJson));
@@ -303,12 +302,6 @@ export const inviteContactAsync = (fieldDefinitions, contact, email, token) => {
         response
           .json()
           .then((responseJson) => ({ responseJson, response }))
-          .then(
-            ({ responseJson, response }) =>
-              new Promise((resolve) => {
-                setTimeout(() => resolve({ responseJson, response }), 500);
-              })
-          )
           .then(({ responseJson, response }) => {
             if (!response.ok) {
               dispatch(inviteContactError(responseJson));
@@ -341,12 +334,6 @@ export const createProfileContactAsync = (token) => {
         response
           .json()
           .then((responseJson) => ({ responseJson, response }))
-          .then(
-            ({ responseJson, response }) =>
-              new Promise((resolve) => {
-                setTimeout(() => resolve({ responseJson, response }), 500);
-              })
-          )
           .then(({ responseJson, response }) => {
             if (!response.ok) {
               dispatch(createProfileContactError(responseJson));
@@ -373,12 +360,6 @@ export const getProfileContactAsync = (token) => {
         response
           .json()
           .then((responseJson) => ({ responseJson, response }))
-          .then(
-            ({ responseJson, response }) =>
-              new Promise((resolve) => {
-                setTimeout(() => resolve({ responseJson, response }), 500);
-              })
-          )
           .then(({ responseJson, response }) => {
             if (!response.ok) {
               dispatch(getProfileContactError(responseJson));
@@ -456,12 +437,6 @@ const updateProfileContactTextFields = (dispatch, localProfileContact, token) =>
     response
       .json()
       .then((responseJson) => ({ responseJson, response }))
-      .then(
-        ({ responseJson, response }) =>
-          new Promise((resolve) => {
-            setTimeout(() => resolve({ responseJson, response }), 500);
-          })
-      )
       .then(({ responseJson, response }) => {
         if (!response.ok) {
           dispatch(updateProfileContactError(responseJson));

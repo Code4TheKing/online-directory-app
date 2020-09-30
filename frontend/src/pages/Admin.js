@@ -34,6 +34,7 @@ import {
   getContactAsync,
   inviteContactAsync,
   listAllContactsAsync,
+  listUsersForContactAsync,
   searchContactsAsync,
   updateContactAsync
 } from '../redux/actions';
@@ -45,6 +46,7 @@ const Admin = ({
   contact,
   searchContactList,
   allContacts,
+  linkedUsers,
   isGettingFieldDefinitions,
   isGettingContact,
   isUpdatingContact,
@@ -52,6 +54,7 @@ const Admin = ({
   isInvitingContact,
   isSearchingContacts,
   isAddingContact,
+  isListingLinkedUsers,
   isAdmin,
   getContact,
   updateContact,
@@ -60,7 +63,8 @@ const Admin = ({
   resetContact,
   listAllContacts,
   searchContacts,
-  resetSearchContacts
+  resetSearchContacts,
+  listLinkedUsers
 }) => {
   const { getAccessTokenSilently } = useAuth0();
   const { path } = useRouteMatch();
@@ -86,11 +90,14 @@ const Admin = ({
       keyword={keyword}
       fieldDefinitions={fieldDefinitions}
       contacts={searchContactList}
+      linkedUsers={linkedUsers}
       isGettingFieldDefinitions={isGettingFieldDefinitions}
       isSearchingContacts={isSearchingContacts}
       isInvitingContact={isInvitingContact}
+      isListingLinkedUsers={isListingLinkedUsers}
       isAdmin={isAdmin}
       inviteContact={inviteContact}
+      listLinkedUsers={listLinkedUsers}
     />
   );
 
@@ -161,13 +168,16 @@ const Admin = ({
             <ContactEditor
               fieldDefinitions={fieldDefinitions}
               contact={contact}
+              linkedUsers={linkedUsers}
               isGettingFieldDefinitions={isGettingFieldDefinitions}
               isGettingContact={isGettingContact}
               isUpdatingContact={isUpdatingContact}
               isInvitingContact={isInvitingContact}
+              isListingLinkedUsers={isListingLinkedUsers}
               isAdmin={isAdmin}
               updateContact={updateContact}
               inviteContact={inviteContact}
+              listLinkedUsers={listLinkedUsers}
             />
           </Row>
         </Route>
@@ -195,17 +205,20 @@ const Admin = ({
                   contactId={contactId}
                   fieldDefinitions={fieldDefinitions}
                   contact={contact}
+                  linkedUsers={linkedUsers}
                   isGettingFieldDefinitions={isGettingFieldDefinitions}
                   isGettingContact={isGettingContact}
                   isUpdatingContact={isUpdatingContact}
                   isListingAllContacts={isListingAllContacts}
                   isInvitingContact={isInvitingContact}
+                  isListingLinkedUsers={isListingLinkedUsers}
                   isAdmin={isAdmin}
                   getContact={getContact}
                   updateContact={updateContact}
                   inviteContact={inviteContact}
                   resetContact={resetContact}
                   listAllContacts={listAllContacts}
+                  listLinkedUsers={listLinkedUsers}
                 />
               </Row>
             </Route>
@@ -228,6 +241,7 @@ const mapStateToProps = (state) => ({
   contact: state.contacts.contact,
   searchContactList: state.contacts.searchContacts,
   allContacts: state.contacts.allContacts,
+  linkedUsers: state.contacts.linkedUsers,
   isGettingFieldDefinitions: state.contacts.isGettingFieldDefinitions,
   isGettingContact: state.contacts.isGettingContact,
   isUpdatingContact: state.contacts.isUpdatingContact,
@@ -235,6 +249,7 @@ const mapStateToProps = (state) => ({
   isInvitingContact: state.contacts.isInvitingContact,
   isSearchingContacts: state.contacts.isSearchingContacts,
   isAddingContact: state.contacts.isAddingContact,
+  isListingLinkedUsers: state.contacts.isListingUsersForContact,
   isAdmin: state.profileContacts.isAdmin
 });
 
@@ -249,7 +264,8 @@ const mapDispatchToProps = (dispatch) => ({
   resetContact: () => dispatch(resetContact()),
   listAllContacts: (token) => dispatch(listAllContactsAsync(token)),
   searchContacts: (searchText, token) => dispatch(searchContactsAsync(searchText, token)),
-  resetSearchContacts: () => dispatch(resetSearchContacts())
+  resetSearchContacts: () => dispatch(resetSearchContacts()),
+  listLinkedUsers: (contactId, token) => dispatch(listUsersForContactAsync(contactId, token))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Admin);
