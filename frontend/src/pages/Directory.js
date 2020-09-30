@@ -97,7 +97,7 @@ const Directory = ({
           suggestionRedirect={(contactId) => history.push(`${DIRECTORY_SEARCH_BY_NAME_PATH}?id=${contactId}`)}
           searchRedirect={(input) =>
             input
-              ? history.push(`${DIRECTORY_SEARCH_BY_KEYWORD_PATH}?text=${input}`)
+              ? history.push(`${DIRECTORY_SEARCH_BY_KEYWORD_PATH}?text=${encodeURIComponent(input)}`)
               : history.push(`${DIRECTORY_PATH}`)
           }
         />

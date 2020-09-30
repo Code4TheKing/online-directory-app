@@ -159,7 +159,7 @@ const Admin = ({
               suggestionRedirect={(contactId) => history.push(`${ADMIN_EDIT_CONTACT_PATH}?id=${contactId}`)}
               searchRedirect={(input) =>
                 input
-                  ? history.push(`${ADMIN_VIEW_CONTACT_SEARCH_BY_KEYWORD_PATH}?text=${input}`)
+                  ? history.push(`${ADMIN_VIEW_CONTACT_SEARCH_BY_KEYWORD_PATH}?text=${encodeURIComponent(input)}`)
                   : history.push(`${ADMIN_VIEW_CONTACT_PATH}`)
               }
             />
@@ -195,7 +195,9 @@ const Admin = ({
               suggestionRedirect={(contactId) =>
                 history.push(`${ADMIN_VIEW_CONTACT_SEARCH_BY_NAME_PATH}?id=${contactId}`)
               }
-              searchRedirect={(input) => history.push(`${ADMIN_VIEW_CONTACT_SEARCH_BY_KEYWORD_PATH}?text=${input}`)}
+              searchRedirect={(input) =>
+                history.push(`${ADMIN_VIEW_CONTACT_SEARCH_BY_KEYWORD_PATH}?text=${encodeURIComponent(input)}`)
+              }
             />
           </Row>
           <Switch>
