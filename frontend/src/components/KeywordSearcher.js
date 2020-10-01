@@ -9,6 +9,7 @@ const KeywordSearcher = ({
   fieldDefinitions,
   contacts,
   linkedUsers,
+  profileContact,
   isGettingFieldDefinitions,
   isSearchingContacts,
   isInvitingContact,
@@ -23,6 +24,7 @@ const KeywordSearcher = ({
         fieldDefinitions={fieldDefinitions}
         searchText={keyword}
         contacts={contacts}
+        profileContact={profileContact}
         linkedUsers={linkedUsers}
         isGettingFieldDefinitions={isGettingFieldDefinitions}
         isListing={isSearchingContacts}

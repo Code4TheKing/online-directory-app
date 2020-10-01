@@ -7,6 +7,7 @@ const ContactViewer = ({
   fieldDefinitions,
   contact,
   linkedUsers,
+  profileContact,
   isGettingFieldDefinitions,
   isGettingContact,
   isUpdatingContact,
@@ -23,6 +24,7 @@ const ContactViewer = ({
       fieldDefinitions={fieldDefinitions}
       contact={contact}
       linkedUsers={linkedUsers}
+      profileContact={profileContact}
       editable={false}
       isGettingFieldDefinitions={isGettingFieldDefinitions}
       isGettingContact={isGettingContact}

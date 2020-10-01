@@ -47,6 +47,7 @@ const Admin = ({
   searchContactList,
   allContacts,
   linkedUsers,
+  profileContact,
   isGettingFieldDefinitions,
   isGettingContact,
   isUpdatingContact,
@@ -91,6 +92,7 @@ const Admin = ({
       fieldDefinitions={fieldDefinitions}
       contacts={searchContactList}
       linkedUsers={linkedUsers}
+      profileContact={profileContact}
       isGettingFieldDefinitions={isGettingFieldDefinitions}
       isSearchingContacts={isSearchingContacts}
       isInvitingContact={isInvitingContact}
@@ -169,6 +171,7 @@ const Admin = ({
               fieldDefinitions={fieldDefinitions}
               contact={contact}
               linkedUsers={linkedUsers}
+              profileContact={profileContact}
               isGettingFieldDefinitions={isGettingFieldDefinitions}
               isGettingContact={isGettingContact}
               isUpdatingContact={isUpdatingContact}
@@ -208,6 +211,7 @@ const Admin = ({
                   fieldDefinitions={fieldDefinitions}
                   contact={contact}
                   linkedUsers={linkedUsers}
+                  profileContact={profileContact}
                   isGettingFieldDefinitions={isGettingFieldDefinitions}
                   isGettingContact={isGettingContact}
                   isUpdatingContact={isUpdatingContact}
@@ -244,6 +248,7 @@ const mapStateToProps = (state) => ({
   searchContactList: state.contacts.searchContacts,
   allContacts: state.contacts.allContacts,
   linkedUsers: state.contacts.linkedUsers,
+  profileContact: state.profileContacts.profileContact,
   isGettingFieldDefinitions: state.contacts.isGettingFieldDefinitions,
   isGettingContact: state.contacts.isGettingContact,
   isUpdatingContact: state.contacts.isUpdatingContact,

@@ -5,7 +5,7 @@ import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner';
 import { connect } from 'react-redux';
 import ContactCard from '../components/ContactCard';
-import { updateProfileContactAsync } from '../redux/actions';
+import { inviteContactAsync, updateProfileContactAsync } from '../redux/actions';
 
 const Profile = ({
   fieldDefinitions,
@@ -13,7 +13,9 @@ const Profile = ({
   isGettingFieldDefinitions,
   isGettingProfileContact,
   isUpdatingProfileContact,
-  updateProfileContact
+  isAdmin,
+  updateProfileContact,
+  inviteContact
 }) => {
   return (
     <Fragment>
@@ -30,8 +32,11 @@ const Profile = ({
               fieldDefinitions={fieldDefinitions}
               editable={true}
               contact={profileContact}
+              isSelf={true}
               isSaving={isUpdatingProfileContact}
+              isAdmin={isAdmin}
               saveFunc={updateProfileContact}
+              inviteFunc={inviteContact}
             />
           )
         )}
@@ -45,12 +50,15 @@ const mapStateToProps = (state) => ({
   profileContact: state.profileContacts.profileContact,
   isGettingFieldDefinitions: state.contacts.isGettingFieldDefinitions,
   isGettingProfileContact: state.profileContacts.isGettingProfileContact,
-  isUpdatingProfileContact: state.profileContacts.isUpdatingProfileContact
+  isUpdatingProfileContact: state.profileContacts.isUpdatingProfileContact,
+  isAdmin: state.profileContacts.isAdmin
 });
 
 const mapDispatchToProps = (dispatch) => ({
   updateProfileContact: (fieldDefinitions, profileContact, pictureFile, token) =>
-    dispatch(updateProfileContactAsync(fieldDefinitions, profileContact, pictureFile, token))
+    dispatch(updateProfileContactAsync(fieldDefinitions, profileContact, pictureFile, token)),
+  inviteContact: (fieldDefinitions, contact, email, token) =>
+    dispatch(inviteContactAsync(fieldDefinitions, contact, email, token))
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(Profile);
