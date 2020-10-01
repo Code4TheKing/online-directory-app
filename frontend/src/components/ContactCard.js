@@ -231,10 +231,10 @@ const ContactCard = ({
     <Fragment>
       <Card
         className='h-100 m-auto'
-        style={{ width: width, maxWidth: '25rem' }}
+        style={{ width: width, maxWidth: '25rem', boxShadow: isSelf ? '0px 0px 5px 2px var(--info)' : '' }}
         bg='dark'
         text='light'
-        border={isSelf ? 'primary' : ''}>
+        border={isSelf ? 'info' : ''}>
         <Form
           className='d-flex h-100'
           style={{ flexDirection: 'column' }}
