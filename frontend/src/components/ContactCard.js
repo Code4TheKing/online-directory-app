@@ -655,7 +655,7 @@ const ContactCard = ({
       {/* Invite modal */}
       <Modal show={showInviteModal} onHide={handleCloseInviteModal} centered animation={false}>
         <Modal.Header closeButton>
-          <Modal.Title className='w-100'>
+          <Modal.Title className='text-center w-100'>
             {'Invite '}
             <span className='text-primary'>{mainField}</span>
           </Modal.Title>
@@ -698,12 +698,12 @@ const ContactCard = ({
           <Row className='justify-content-center'>
             <h5>Linked Users</h5>
           </Row>
-          <Row className='justify-content-center'>
+          <Row className='align-items-center border-top pt-2' style={{ flexDirection: 'column' }}>
             {isListingLinkedUsers && <Spinner animation='border' variant='primary' />}
             {!isListingLinkedUsers && linkedUsers.length === 0 && (
-              <p className='text-info'>No linked users for this contact</p>
+              <p className='text-info mb-0'>No linked users for this contact</p>
             )}
-            {!isListingLinkedUsers && linkedUsers.map((user) => <p>{user.email}</p>)}
+            {!isListingLinkedUsers && linkedUsers.map((user) => <p className='text-secondary mb-0'>{user.email}</p>)}
           </Row>
         </Modal.Body>
       </Modal>
