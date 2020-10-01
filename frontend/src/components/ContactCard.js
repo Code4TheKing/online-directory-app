@@ -20,7 +20,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { LinkContainer } from 'react-router-bootstrap';
 import useDeepCompareEffect from 'use-deep-compare-effect';
-import { ADMIN_EDIT_CONTACT_PATH } from '../OnlineDirectoryApp';
+import { ADMIN_EDIT_CONTACT_PATH, PROFILE_PATH } from '../OnlineDirectoryApp';
 import '../styles/contact-card.css';
 
 const ContactCard = ({
@@ -29,6 +29,7 @@ const ContactCard = ({
   fieldDefinitions,
   contact = {},
   linkedUsers = [],
+  isSelf = false,
   isSaving = false,
   isInviting = false,
   isListingLinkedUsers = false,
@@ -228,7 +229,12 @@ const ContactCard = ({
   let tabIndex = 1;
   return (
     <Fragment>
-      <Card className='h-100 m-auto' style={{ width: width, maxWidth: '25rem' }} bg='dark' text='light'>
+      <Card
+        className='h-100 m-auto'
+        style={{ width: width, maxWidth: '25rem' }}
+        bg='dark'
+        text='light'
+        border={isSelf ? 'primary' : ''}>
         <Form
           className='d-flex h-100'
           style={{ flexDirection: 'column' }}
@@ -615,12 +621,12 @@ const ContactCard = ({
             </Card.Body>
           )}
           {/* Invite/Edit icons */}
-          {isAdmin && (
+          {(isAdmin || isSelf) && (
             <Card.Body
               className='d-flex justify-content-end align-items-center h-auto px-2 py-0'
               style={{ flexDirection: 'column' }}>
               <Row className='justify-content-between w-100'>
-                {
+                {isAdmin && (
                   <div className='cursor-pointer'>
                     <OverlayTrigger placement='top' transition={false} overlay={<Tooltip>Invite user</Tooltip>}>
                       {({ ref, ...triggerHandler }) => (
@@ -630,14 +636,18 @@ const ContactCard = ({
                       )}
                     </OverlayTrigger>
                   </div>
-                }
+                )}
                 <div className='flex-grow-1' />
                 {!editable && contact[fieldDefinitions.idField.propName] && (
                   <div className='cursor-pointer'>
                     <OverlayTrigger placement='top' transition={false} overlay={<Tooltip>Edit contact</Tooltip>}>
                       {({ ref, ...triggerHandler }) => (
                         <LinkContainer
-                          to={`${ADMIN_EDIT_CONTACT_PATH}?id=${contact[fieldDefinitions.idField.propName]}`}>
+                          to={
+                            isSelf
+                              ? `${PROFILE_PATH}`
+                              : `${ADMIN_EDIT_CONTACT_PATH}?id=${contact[fieldDefinitions.idField.propName]}`
+                          }>
                           <Icon ref={ref} {...triggerHandler}>
                             edit
                           </Icon>

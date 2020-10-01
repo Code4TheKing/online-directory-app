@@ -7,6 +7,7 @@ const ContactEditor = ({
   fieldDefinitions,
   contact,
   linkedUsers,
+  profileContact,
   isGettingFieldDefinitions,
   isGettingContact,
   isUpdatingContact,
@@ -23,6 +24,7 @@ const ContactEditor = ({
       fieldDefinitions={fieldDefinitions}
       contact={contact}
       linkedUsers={linkedUsers}
+      profileContact={profileContact}
       editable={true}
       isGettingFieldDefinitions={isGettingFieldDefinitions}
       isGettingContact={isGettingContact}

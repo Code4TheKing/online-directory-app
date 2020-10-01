@@ -15,6 +15,7 @@ const ContactLoader = ({
   fieldDefinitions,
   contact,
   linkedUsers,
+  profileContact,
   editable,
   isGettingFieldDefinitions,
   isGettingContact,
@@ -50,6 +51,11 @@ const ContactLoader = ({
               editable={editable}
               contact={contact}
               linkedUsers={linkedUsers}
+              isSelf={
+                contact &&
+                profileContact &&
+                contact[fieldDefinitions.idField.propName] === profileContact[fieldDefinitions.idField.propName]
+              }
               isAdmin={isAdmin}
               isSaving={isUpdatingContact}
               isInviting={isInvitingContact}

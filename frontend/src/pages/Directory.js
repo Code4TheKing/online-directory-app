@@ -36,6 +36,7 @@ const Directory = ({
   searchContactList,
   allContacts,
   linkedUsers,
+  profileContact,
   isGettingFieldDefinitions,
   isGettingContact,
   isUpdatingContact,
@@ -73,6 +74,7 @@ const Directory = ({
       fieldDefinitions={fieldDefinitions}
       contacts={searchContactList}
       linkedUsers={linkedUsers}
+      profileContact={profileContact}
       isGettingFieldDefinitions={isGettingFieldDefinitions}
       isSearchingContacts={isSearchingContacts}
       isInvitingContact={isInvitingContact}
@@ -102,7 +104,7 @@ const Directory = ({
           }
         />
       </Row>
-      <Row className='justify-content-center mt-3 pb-3'>
+      <Row className='justify-content-center mt-3'>
         <Switch>
           <Route path={`${DIRECTORY_SEARCH_BY_NAME_PATH}`}>
             <ContactViewer
@@ -110,6 +112,7 @@ const Directory = ({
               fieldDefinitions={fieldDefinitions}
               contact={contact}
               linkedUsers={linkedUsers}
+              profileContact={profileContact}
               isGettingFieldDefinitions={isGettingFieldDefinitions}
               isGettingContact={isGettingContact}
               isUpdatingContact={isUpdatingContact}
@@ -141,6 +144,7 @@ const mapStateToProps = (state) => ({
   searchContactList: state.contacts.searchContacts,
   allContacts: state.contacts.allContacts,
   linkedUsers: state.contacts.linkedUsers,
+  profileContact: state.profileContacts.profileContact,
   isGettingFieldDefinitions: state.contacts.isGettingFieldDefinitions,
   isGettingContact: state.contacts.isGettingContact,
   isUpdatingContact: state.contacts.isUpdatingContact,

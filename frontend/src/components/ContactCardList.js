@@ -13,6 +13,7 @@ const ContactCardList = ({
   searchText,
   contacts,
   linkedUsers,
+  profileContact,
   isGettingFieldDefinitions,
   isListing,
   isInviting,
@@ -54,6 +55,11 @@ const ContactCardList = ({
                 key={contact[fieldDefinitions.idField.propName]}
                 contact={contact}
                 linkedUsers={linkedUsers}
+                isSelf={
+                  contact &&
+                  profileContact &&
+                  contact[fieldDefinitions.idField.propName] === profileContact[fieldDefinitions.idField.propName]
+                }
                 isInviting={isInviting}
                 isListingLinkedUsers={isListingLinkedUsers}
                 isAdmin={isAdmin}

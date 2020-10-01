@@ -74,7 +74,7 @@ const OnlineDirectoryApp = ({
     <Fragment>
       <NavigationBar fieldDefinitions={fieldDefinitions} profileContact={profileContact} isAdmin={isAdmin} />
       <ToastContainer />
-      <Container className='mt-3' fluid>
+      <Container className='mt-3 mb-5' fluid>
         <Switch>
           <Route path={HOME_PATH} component={Home} exact />
           <PrivateRoute path={DIRECTORY_PATH} component={Directory} />
