@@ -3,6 +3,7 @@
 import { useAuth0 } from '@auth0/auth0-react';
 import React, { Fragment, useEffect } from 'react';
 import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
 import Spinner from 'react-bootstrap/Spinner';
 import { connect } from 'react-redux';
 import { Route, Switch } from 'react-router-dom';
@@ -62,9 +63,9 @@ const OnlineDirectoryApp = ({
       <Fragment>
         <NavigationBar />
         <Container className='mt-3' fluid>
-          <Container className='d-flex justify-content-center align-items-center vw-100 vh-100'>
+          <Row className='justify-content-center'>
             <Spinner animation='border' variant='primary' />
-          </Container>
+          </Row>
         </Container>
       </Fragment>
     );
