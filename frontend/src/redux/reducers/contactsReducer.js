@@ -101,7 +101,6 @@ const contacts = (
     case LIST_USERS_FOR_CONTACT:
       return Object.assign({}, state, { isListingUsersForContact: true, listUsersForContactError: null });
     case LIST_USERS_FOR_CONTACT_SUCCESS:
-      console.log(action.users);
       return Object.assign({}, state, {
         isListingUsersForContact: false,
         linkedUsers: action.users,
