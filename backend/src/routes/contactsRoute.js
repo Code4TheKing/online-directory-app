@@ -19,9 +19,7 @@ router.post('/', (req, res, next) => {
   authz.enforceAuthorization(req.user, ['create:contacts'], req, res, next, (req, res, next) =>
     repository
       .addContact(req.body)
-      .then((savedContact) => {
-        res.json(savedContact);
-      })
+      .then((savedContact) => res.json(savedContact))
       .catch((err) => handleError(err, next))
   );
 });
@@ -31,9 +29,7 @@ router.get('/:id', (req, res, next) => {
   authz.enforceAuthorization(req.user, ['read:contacts'], req, res, next, (req, res, next) =>
     repository
       .getContactById(req.params.id)
-      .then((contact) => {
-        res.json(contact);
-      })
+      .then((contact) => res.json(contact))
       .catch((err) => handleError(err, next))
   );
 });
@@ -45,9 +41,7 @@ router.patch('/:id', (req, res, next) => {
     repository
       .getContactById(req.params.id)
       .then((existingContact) => repository.updateContact(existingContact._id, req.body))
-      .then((updatedContact) => {
-        res.json(updatedContact);
-      })
+      .then((updatedContact) => res.json(updatedContact))
       .catch((err) => handleError(err, next))
   );
 });
@@ -57,9 +51,7 @@ router.get('/', (req, res, next) => {
   authz.enforceAuthorization(req.user, ['read:contacts'], req, res, next, (req, res, next) =>
     repository
       .listContactsByKeyword(req.query.keyword)
-      .then((contactsList) => {
-        res.json({ contacts: contactsList });
-      })
+      .then((contactsList) => res.json({ contacts: contactsList }))
       .catch((err) => handleError(err, next))
   );
 });
@@ -74,13 +66,13 @@ router.get('/:id/users', (req, res, next) => {
           res.json({ users: [] });
           return;
         }
-        auth0.getAccessToken().then((accessToken) =>
-          Promise.all(
-            [...existingContact.idpSubjects].map((idpSub) => auth0.getUser(accessToken, idpSub, 'user_id,email'))
-          ).then((users) => {
-            res.json({ users: users });
-          })
-        );
+        auth0
+          .getAccessToken()
+          .then((accessToken) =>
+            Promise.all(
+              [...existingContact.idpSubjects].map((idpSub) => auth0.getUser(accessToken, idpSub, 'user_id,email'))
+            ).then((users) => res.json({ users: users }))
+          );
       })
       .catch((err) => handleError(err, next))
   );
