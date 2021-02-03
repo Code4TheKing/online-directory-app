@@ -44,9 +44,7 @@ router.post('/', (req, res, next) => {
                 authz.isAdmin(accessToken, req.user)
               ])
             )
-            .then(([profileContact, isAdmin]) => {
-              res.json(Object.assign(profileContact, { admin: isAdmin }));
-            })
+            .then(([profileContact, isAdmin]) => res.json(Object.assign(profileContact, { admin: isAdmin })))
         )
       )
       .catch((err) => handleError(err, next));
@@ -77,9 +75,7 @@ router.patch('/', (req, res, next) => {
     repository
       .getContactByIdpSubject(req.user.sub)
       .then((existingProfileContact) => repository.updateContact(existingProfileContact._id, req.body))
-      .then((updatedProfileContact) => {
-        res.json(updatedProfileContact);
-      })
+      .then((updatedProfileContact) => res.json(updatedProfileContact))
       .catch((err) => handleError(err, next))
   );
 });
