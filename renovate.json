@@ -1,0 +1,6 @@
+{
+  "extends": [
+    "config:js-app",
+    "group:allNonMajor"
+  ]
+}
