@@ -15,7 +15,7 @@
     "bootstrap": "4.6.0",
     "deep-equal": "2.0.5",
     "holderjs": "2.9.9",
-    "node-sass": "6.0.0",
+    "node-sass": "6.0.1",
     "react": "17.0.2",
     "react-autosuggest": "10.1.0",
     "react-bootstrap": "1.6.1",
