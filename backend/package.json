@@ -12,17 +12,17 @@
     "cors": "2.8.5",
     "express": "4.17.1",
     "express-jwt": "6.0.0",
-    "generate-password": "1.6.0",
-    "jwks-rsa": "2.0.3",
-    "mongodb-client-encryption": "1.2.5",
-    "mongoose": "5.13.0",
-    "netlify-lambda": "2.0.10",
+    "generate-password": "1.6.1",
+    "jwks-rsa": "2.0.4",
+    "mongodb-client-encryption": "1.2.6",
+    "mongoose": "5.13.5",
+    "netlify-lambda": "2.0.13",
     "serverless-http": "2.7.0",
     "uuid": "8.3.2"
   },
   "devDependencies": {
     "jest": "27.0.6",
-    "nodemon": "2.0.9"
+    "nodemon": "2.0.12"
   },
   "scripts": {
     "prettify": "prettier -l --write \"**/*.js\"",
