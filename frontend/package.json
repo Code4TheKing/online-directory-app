@@ -34,7 +34,7 @@
     "prettify": "prettier -l --write \"**/*.js\"",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "start": "react-scripts start",
+    "start": "react-scripts --openssl-legacy-provider start",
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
