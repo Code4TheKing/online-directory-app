@@ -1,4 +1,4 @@
-FROM node:16-alpine
+FROM node:17-alpine
 WORKDIR /backend
 COPY package.json .
 RUN apk --no-cache --virtual build-dependencies add \
