@@ -66,7 +66,8 @@ const listContactsByKeyword = (keyword) => {
       ? {}
       : {
           $or: [
-            { name: new RegExp(escapedKeyword, 'i') },
+            { firstName: new RegExp(escapedKeyword, 'i') },
+            { lastName: new RegExp(escapedKeyword, 'i') },
             { familyMembers: new RegExp(escapedKeyword, 'i') },
             { address: new RegExp(escapedKeyword, 'i') },
             { 'contact.name': new RegExp(escapedKeyword, 'i') },
@@ -74,7 +75,7 @@ const listContactsByKeyword = (keyword) => {
             { 'contact.emailAddress': new RegExp(escapedKeyword, 'i') }
           ]
         }
-  ).sort('name');
+  ).sort('lastName');
 };
 
 const escapeRegexCharacters = (str) => {

@@ -24,7 +24,9 @@ export const useListAllContactsNameChange = (
       contact &&
       previousContact &&
       contact[fieldDefinitions.idField.propName] === previousContact[fieldDefinitions.idField.propName] &&
-      contact[fieldDefinitions.mainField.propName] !== previousContact[fieldDefinitions.mainField.propName]
+      fieldDefinitions.mainFields.some(
+        (mainField) => contact[mainField.propName] !== previousContact[mainField.propName]
+      )
     ) {
       getAccessTokenSilently().then((token) => listAllContacts(token));
     }
@@ -34,7 +36,9 @@ export const useListAllContactsNameChange = (
 export const useUpdateSuggestInput = (contact, keyword, fieldDefinitions, setSuggestInput, renderAllText = false) => {
   useDeepCompareEffect(() => {
     if (contact) {
-      setSuggestInput(contact[fieldDefinitions.mainField.propName]);
+      setSuggestInput(
+        fieldDefinitions.mainFields.reduce((acc, curr) => `${contact[curr.propName]}, ${contact[acc.propName]}`)
+      );
     } else if (keyword && (renderAllText || keyword !== SEARCH_ALL_KEYWORD)) {
       setSuggestInput(keyword);
     } else {

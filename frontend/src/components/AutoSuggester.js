@@ -29,7 +29,9 @@ const AutoSuggester = ({
       setContactSuggestions(
         allContacts.filter(
           (contact) =>
-            contact[fieldDefinitions.mainField.propName].toLowerCase().includes(sanitizedInput) ||
+            fieldDefinitions.mainFields.some((mainField) =>
+              contact[mainField.propName]?.toLowerCase().includes(sanitizedInput)
+            ) ||
             fieldDefinitions.otherFields.some((otherField) => {
               switch (otherField.type) {
                 case 'ObjectList':
@@ -49,7 +51,8 @@ const AutoSuggester = ({
     }
   };
 
-  const getContactSuggestionValue = (suggestion) => suggestion[fieldDefinitions.mainField.propName];
+  const getContactSuggestionValue = (suggestion) =>
+    fieldDefinitions.mainFields.reduce((acc, curr) => `${suggestion[curr.propName]}, ${suggestion[acc.propName]}`);
 
   const onChange = (event, { newValue }) => {
     setAutoSuggestInput(newValue);
@@ -68,7 +71,11 @@ const AutoSuggester = ({
   };
 
   const renderSuggestion = (suggestion) => {
-    return <div>{suggestion[fieldDefinitions.mainField.propName]}</div>;
+    return (
+      <div>
+        {fieldDefinitions.mainFields.reduce((acc, curr) => `${suggestion[curr.propName]}, ${suggestion[acc.propName]}`)}
+      </div>
+    );
   };
 
   const renderInputComponent = (inputProps) => {

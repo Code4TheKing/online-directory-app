@@ -41,7 +41,7 @@ const ContactCard = ({
 }) => {
   const { getAccessTokenSilently } = useAuth0();
   const [pictureField, setPictureField] = useState(_getPictureValue(fieldDefinitions, contact, editable));
-  const [mainField, setMainField] = useState(_getMainValue(fieldDefinitions, contact));
+  const [mainFields, setMainFields] = useState(_getMainFields(fieldDefinitions, contact));
   const [otherFields, setOtherFields] = useState(_computeOtherFields(fieldDefinitions, contact));
   const [modified, setModified] = useState(false);
   const [saveValidated, setSaveValidated] = useState(false);
@@ -49,12 +49,12 @@ const ContactCard = ({
   const [inviteEmailAddress, setInviteEmailAddress] = useState('');
   const [inviteValidated, setInviteValidated] = useState(false);
 
-  const mainRef = useRef();
+  const mainRef = useRef({});
   const otherRefs = useRef({});
 
   const isModified = () => {
     const pictureModified = _getPictureValue(fieldDefinitions, contact, editable).link !== pictureField.link;
-    const mainModified = _getMainValue(fieldDefinitions, contact) !== mainField;
+    const mainModified = !equals(_getMainFields(fieldDefinitions, contact), mainFields);
     const othersModified = fieldDefinitions.otherFields.some((otherField) => {
       const otherFieldValue = otherFields[otherField.propName];
       const fieldValue = _getFieldValue(contact, otherField.propName);
@@ -95,7 +95,7 @@ const ContactCard = ({
 
   useDeepCompareEffect(() => {
     setModified(isModified());
-  }, [pictureField, mainField, otherFields]);
+  }, [pictureField, mainFields, otherFields]);
 
   const handlePictureChange = (event) => {
     if (event.target.files && event.target.files[0]) {
@@ -165,7 +165,10 @@ const ContactCard = ({
         Object.assign(
           {},
           contact,
-          { [fieldDefinitions.mainField.propName]: mainField },
+          fieldDefinitions.mainFields.reduce((acc, curr) => {
+            acc[curr.propName] = mainFields[curr.propName];
+            return acc;
+          }, {}),
           fieldDefinitions.otherFields.reduce((acc, curr) => {
             if (otherFields[curr.propName] || otherFields[curr.propName] === '')
               acc[curr.propName] = otherFields[curr.propName];
@@ -189,7 +192,7 @@ const ContactCard = ({
 
   const reset = () => {
     setPictureField(_getPictureValue(fieldDefinitions, contact, editable));
-    setMainField(_getMainValue(fieldDefinitions, contact));
+    setMainFields(_getMainFields(fieldDefinitions, contact));
     setOtherFields(_computeOtherFields(fieldDefinitions, contact));
     setSaveValidated(false);
   };
@@ -226,7 +229,7 @@ const ContactCard = ({
     setInviteValidated(!inviteForm.checkValidity());
   };
 
-  let tabIndex = 1;
+  let tabIndex = 0;
   return (
     <Fragment>
       <Card
@@ -275,41 +278,58 @@ const ContactCard = ({
           </Form.Group>
           {/* Main field */}
           <Card.Header className='d-flex h-auto font-weight-bold' style={{ flexDirection: 'column' }}>
-            <Row>
-              <Form.Group as={Col} className='mb-0'>
-                <h3 className='text-center mb-0'>
-                  {editable ? (
-                    <Fragment>
-                      <Form.Control
-                        style={{ fontSize: 'inherit' }}
-                        className='editable cursor-pointer text-center px-2'
-                        ref={mainRef}
-                        value={mainField}
-                        tabIndex={tabIndex}
-                        placeholder={fieldDefinitions.mainField.displayName}
-                        onChange={(event) =>
-                          handleChange(
-                            event,
-                            setMainField,
-                            fieldDefinitions.mainField.type,
-                            fieldDefinitions.mainField.validation.maxLength
-                          )
+            {editable &&
+              fieldDefinitions.mainFields.map((mainFieldDef) => {
+                tabIndex++;
+                const mainField = mainFields[mainFieldDef.propName];
+                return (
+                  <Row key={`${mainFieldDef.propName}-${tabIndex}`}>
+                    <Form.Group as={Col} className='mb-0'>
+                      <h3 className='text-center mb-0'>
+                        {
+                          <Fragment>
+                            <Form.Control
+                              style={{ fontSize: 'inherit' }}
+                              className='editable cursor-pointer text-center px-2'
+                              ref={(element) => (mainRef.current[mainFieldDef.propName] = element)}
+                              value={mainField}
+                              tabIndex={tabIndex}
+                              placeholder={mainFieldDef.displayName}
+                              onChange={(event) =>
+                                handleChange(
+                                  event,
+                                  (value) =>
+                                    setMainFields(Object.assign({}, mainFields, { [mainFieldDef.propName]: value })),
+                                  mainFieldDef.type,
+                                  mainFieldDef.validation.maxLength
+                                )
+                              }
+                              isInvalid={mainField ? !new RegExp(mainFieldDef.validation.regex).test(mainField) : false}
+                              required={!!mainFieldDef.validation.required}
+                            />
+                            <Form.Control.Feedback className='text-center' type='invalid'>
+                              {mainFieldDef.validation.errorMessage}
+                            </Form.Control.Feedback>
+                          </Fragment>
                         }
-                        isInvalid={
-                          mainField ? !new RegExp(fieldDefinitions.mainField.validation.regex).test(mainField) : false
-                        }
-                        required={!!fieldDefinitions.mainField.validation.required}
-                      />
-                      <Form.Control.Feedback className='text-center' type='invalid'>
-                        {fieldDefinitions.mainField.validation.errorMessage}
-                      </Form.Control.Feedback>
-                    </Fragment>
-                  ) : (
-                    <div>{mainField}</div>
-                  )}
-                </h3>
-              </Form.Group>
-            </Row>
+                      </h3>
+                    </Form.Group>
+                  </Row>
+                );
+              })}
+            {!editable && (
+              <Row>
+                <Form.Group as={Col} className='mb-0'>
+                  <h3 className='text-center mb-0'>
+                    <div>
+                      {fieldDefinitions.mainFields.reduce(
+                        (acc, curr) => `${mainFields[acc.propName]} ${mainFields[curr.propName]}`
+                      )}
+                    </div>
+                  </h3>
+                </Form.Group>
+              </Row>
+            )}
           </Card.Header>
           {/* Other fields */}
           <Card.Body className='d-flex flex-grow-1 pt-2 pb-2' style={{ flexDirection: 'column' }}>
@@ -667,7 +687,11 @@ const ContactCard = ({
         <Modal.Header closeButton>
           <Modal.Title className='text-center w-100'>
             {'Invite '}
-            <span className='text-primary'>{mainField}</span>
+            <span className='text-primary'>
+              {fieldDefinitions.mainFields.reduce(
+                (acc, curr) => `${mainFields[acc.propName]} ${mainFields[curr.propName]}`
+              )}
+            </span>
           </Modal.Title>
         </Modal.Header>
         <Modal.Body>
@@ -732,15 +756,19 @@ const _getPictureValue = (fieldDefinitions, contact, editable) => {
   });
 };
 
-const _getMainValue = (fieldDefinitions, contact) => {
-  return _getFieldValue(contact, fieldDefinitions.mainField.propName);
+const _getMainFields = (fieldDefinitions, contact) => {
+  return fieldDefinitions.mainFields.reduce((acc, currField) => {
+    const fieldValue = _getFieldValue(contact, currField.propName);
+    acc[currField.propName] = fieldValue;
+    return acc;
+  }, {});
 };
 
 const _getFieldValue = (contact, fieldName, defaultValue = '') => {
-  return _emptyIfNull(contact, fieldName, defaultValue);
+  return _defaultIfNull(contact, fieldName, defaultValue);
 };
 
-const _emptyIfNull = (contact, fieldName, defaultValue) => {
+const _defaultIfNull = (contact, fieldName, defaultValue) => {
   return contact[fieldName] ? contact[fieldName] : defaultValue;
 };
 
