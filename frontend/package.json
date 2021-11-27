@@ -12,7 +12,7 @@
     "@testing-library/jest-dom": "5.15.1",
     "@testing-library/react": "12.1.2",
     "@testing-library/user-event": "13.5.0",
-    "bootstrap": "4.6.1",
+    "bootstrap": "4.6.0",
     "deep-equal": "2.0.5",
     "holderjs": "2.9.9",
     "node-sass": "6.0.1",
