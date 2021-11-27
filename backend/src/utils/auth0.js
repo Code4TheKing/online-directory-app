@@ -32,7 +32,7 @@ const getUser = (accessToken, userId, fields) => {
   }).then((getUserResponse) => getUserResponse.data);
 };
 
-const createUser = (accessToken, email, name, contactId) => {
+const createUser = (accessToken, email, givenName, familyName, contactId) => {
   return axios({
     method: 'POST',
     url: `${process.env.API_AUTH0_MANAGEMENT_API_AUDIENCE}users`,
@@ -50,7 +50,9 @@ const createUser = (accessToken, email, name, contactId) => {
         uppercase: true,
         strict: true
       }),
-      name: name,
+      name: `${givenName} ${familyName}`,
+      given_name: givenName,
+      family_name: familyName,
       connection: process.env.API_AUTH0_DB_CONNECTION_NAME,
       email_verified: false,
       verify_email: false,

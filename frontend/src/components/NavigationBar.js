@@ -14,7 +14,8 @@ const NavigationBar = ({ fieldDefinitions, profileContact, isAdmin }) => {
   const { isAuthenticated } = useAuth0();
   const location = useLocation();
   const generateAvatarText = (fieldDefinitions, profileContact) =>
-    profileContact[fieldDefinitions.mainField.propName]
+    fieldDefinitions.mainFields
+      .reduce((acc, curr) => `${profileContact[acc.propName]} ${profileContact[curr.propName]}`)
       .split(/\s+/)
       .map((word) => {
         const letter = word.charAt(0).toUpperCase();
@@ -63,7 +64,11 @@ const NavigationBar = ({ fieldDefinitions, profileContact, isAdmin }) => {
                       : 'XX'}
                   </Avatar>
                   <span className='align-self-center'>
-                    <u>{profileContact[fieldDefinitions.mainField.propName]}</u>
+                    <u>
+                      {fieldDefinitions.mainFields.reduce(
+                        (acc, curr) => `${profileContact[acc.propName]} ${profileContact[curr.propName]}`
+                      )}
+                    </u>
                   </span>
                 </Nav.Link>
               </LinkContainer>
