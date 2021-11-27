@@ -39,8 +39,18 @@ router.post('/', (req, res, next) => {
                           true
                         )
                       )
-                      .catch(() => repository.addContact({ name: user.name, idpSubjects: [idpSub] }))
-                  : repository.addContact({ name: user.name, idpSubjects: [idpSub] }),
+                      .catch(() =>
+                        repository.addContact({
+                          firstName: user.given_name,
+                          lastName: user.family_name,
+                          idpSubjects: [idpSub]
+                        })
+                      )
+                  : repository.addContact({
+                      firstName: user.given_name,
+                      lastName: user.family_name,
+                      idpSubjects: [idpSub]
+                    }),
                 authz.isAdmin(accessToken, req.user)
               ])
             )
