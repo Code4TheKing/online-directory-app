@@ -59,7 +59,8 @@ const contactSchema = new Schema(
         }
       }
     },
-    name: nameSchemaDef,
+    firstName: nameSchemaDef,
+    lastName: nameSchemaDef,
     familyMembers: {
       type: [nameSchemaDef]
     },
@@ -133,16 +134,11 @@ const contactSchema = new Schema(
   { typePojoToMixed: false }
 );
 
-const nameDef = {
-  propName: 'name',
-  type: 'String',
-  displayName: 'Name',
-  validation: {
-    required: true,
-    regex: NAME_REGEX,
-    maxLength: NAME_MAX_LENGTH,
-    errorMessage: NAME_VALIDATION_ERROR_MESSAGE
-  }
+const nameValidation = {
+  required: true,
+  regex: NAME_REGEX,
+  maxLength: NAME_MAX_LENGTH,
+  errorMessage: NAME_VALIDATION_ERROR_MESSAGE
 };
 
 const fieldDefinitions = {
@@ -152,13 +148,26 @@ const fieldDefinitions = {
   pictureField: {
     propName: 'picture'
   },
-  mainField: nameDef,
+  mainFields: [
+    {
+      propName: 'firstName',
+      type: 'String',
+      displayName: 'First Name(s)',
+      validation: nameValidation
+    },
+    {
+      propName: 'lastName',
+      type: 'String',
+      displayName: 'Last Name',
+      validation: nameValidation
+    }
+  ],
   otherFields: [
     {
       propName: 'familyMembers',
       type: 'StringList',
       displayName: 'Family Members',
-      validation: nameDef.validation
+      validation: nameValidation
     },
     {
       propName: 'address',
@@ -176,7 +185,12 @@ const fieldDefinitions = {
       type: 'ObjectList',
       mainInnerField: 'name',
       innerFields: {
-        name: nameDef,
+        name: {
+          propName: 'name',
+          type: 'String',
+          displayName: 'Name',
+          validation: nameValidation
+        },
         phoneNumber: {
           propName: 'phoneNumber',
           displayName: 'Phone Number',

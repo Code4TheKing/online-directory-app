@@ -86,7 +86,7 @@ router.post('/:id/invite', (req, res, next) => {
       .then((existingContact) =>
         auth0.getAccessToken().then((accessToken) =>
           auth0
-            .createUser(accessToken, req.body.email, existingContact.name, req.params.id)
+            .createUser(accessToken, req.body.email, existingContact.firstName, existingContact.lastName, req.params.id)
             .catch((createUserErr) => {
               if (createUserErr.response.status === 409) {
                 return auth0.getUserByEmail(accessToken, req.body.email, 'user_id');

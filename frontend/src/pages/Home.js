@@ -28,7 +28,13 @@ const Home = ({ fieldDefinitions, profileContact, isGettingFieldDefinitions, isG
       {isGettingFieldDefinitions || isGettingProfileContact ? (
         <Spinner animation='border' variant='primary' />
       ) : (
-        <h2>Hello, {profileContact[fieldDefinitions.mainField.propName]}!</h2>
+        <h2>
+          Hello,{' '}
+          {fieldDefinitions.mainFields.reduce(
+            (acc, curr) => `${profileContact[acc.propName]} ${profileContact[curr.propName]}`
+          )}
+          !
+        </h2>
       )}
     </Row>
   );

@@ -86,12 +86,9 @@ export const addContactAsync = (fieldDefinitions, contact, pictureFile, token) =
         )
         .catch((err) => console.error(err));
     }
-    return addContactTextFields(
-      dispatch,
-      fieldDefinitions,
-      maybeClearPicture(contact, pictureFile),
-      token
-    ).catch((err) => console.error(err));
+    return addContactTextFields(dispatch, fieldDefinitions, maybeClearPicture(contact, pictureFile), token).catch(
+      (err) => console.error(err)
+    );
   };
 };
 
@@ -110,11 +107,19 @@ const addContactTextFields = (dispatch, fieldDefinitions, contact, token) => {
       .then(({ responseJson, response }) => {
         if (!response.ok) {
           dispatch(addContactError(responseJson));
-          toast.error(`Error adding "${contact[fieldDefinitions.mainField.propName]}" - ${responseJson.message}`);
+          toast.error(
+            `Error adding "${fieldDefinitions.mainFields.reduce(
+              (acc, curr) => `${contact[acc.propName]} ${contact[curr.propName]}`
+            )}" - ${responseJson.message}`
+          );
           return Promise.reject(responseJson);
         } else {
           dispatch(addContactSuccess(responseJson));
-          toast.success(`Added "${contact[fieldDefinitions.mainField.propName]}"`);
+          toast.success(
+            `Added "${fieldDefinitions.mainFields.reduce(
+              (acc, curr) => `${contact[acc.propName]} ${contact[curr.propName]}`
+            )}"`
+          );
           return responseJson;
         }
       })
@@ -246,12 +251,9 @@ export const updateContactAsync = (fieldDefinitions, contact, pictureFile, token
         )
         .catch((err) => console.error(err));
     }
-    return updateContactTextFields(
-      dispatch,
-      fieldDefinitions,
-      maybeClearPicture(contact, pictureFile),
-      token
-    ).catch((err) => console.error(err));
+    return updateContactTextFields(dispatch, fieldDefinitions, maybeClearPicture(contact, pictureFile), token).catch(
+      (err) => console.error(err)
+    );
   };
 };
 
@@ -309,11 +311,19 @@ export const inviteContactAsync = (fieldDefinitions, contact, email, token) => {
           .then(({ responseJson, response }) => {
             if (!response.ok) {
               dispatch(inviteContactError(responseJson));
-              toast.error(`Error inviting "${contact[fieldDefinitions.mainField.propName]}" - ${responseJson.message}`);
+              toast.error(
+                `Error inviting "${fieldDefinitions.mainFields.reduce(
+                  (acc, curr) => `${contact[acc.propName]} ${contact[curr.propName]}`
+                )}" - ${responseJson.message}`
+              );
               return Promise.reject(responseJson);
             } else {
               dispatch(inviteContactSuccess(responseJson));
-              toast.success(`Invitation sent for "${contact[fieldDefinitions.mainField.propName]}"`);
+              toast.success(
+                `Invitation sent for "${fieldDefinitions.mainFields.reduce(
+                  (acc, curr) => `${contact[acc.propName]} ${contact[curr.propName]}`
+                )}"`
+              );
               return responseJson;
             }
           })
@@ -397,11 +407,9 @@ export const updateProfileContactAsync = (fieldDefinitions, profileContact, pict
         )
         .catch((err) => console.error(err));
     }
-    return updateProfileContactTextFields(
-      dispatch,
-      maybeClearPicture(profileContact, pictureFile),
-      token
-    ).catch((err) => console.error(err));
+    return updateProfileContactTextFields(dispatch, maybeClearPicture(profileContact, pictureFile), token).catch(
+      (err) => console.error(err)
+    );
   };
 };
 
