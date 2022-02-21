@@ -20,6 +20,7 @@ import Spinner from 'react-bootstrap/Spinner';
 import Tooltip from 'react-bootstrap/Tooltip';
 import { LinkContainer } from 'react-router-bootstrap';
 import useDeepCompareEffect from 'use-deep-compare-effect';
+import { v4 as uuidv4 } from 'uuid';
 import { ADMIN_EDIT_CONTACT_PATH, PROFILE_PATH } from '../OnlineDirectoryApp';
 import '../styles/contact-card.css';
 
@@ -87,7 +88,7 @@ const ContactCard = ({
   useDeepCompareEffect(() => {
     if (isPicturePlaceholder(pictureField)) {
       Holder.run({
-        images: '#img-' + _getIdValue(fieldDefinitions, contact)
+        images: `#img-${_getIdValue(fieldDefinitions, contact)}`
       });
     }
     setModified(isModified());
@@ -229,6 +230,9 @@ const ContactCard = ({
     setInviteValidated(!inviteForm.checkValidity());
   };
 
+  const componentKey = contact[fieldDefinitions.idField.propName]
+    ? contact[fieldDefinitions.idField.propName]
+    : uuidv4();
   let tabIndex = 0;
   return (
     <Fragment>
@@ -248,10 +252,10 @@ const ContactCard = ({
           <Form.Group className='d-flex h-auto position-relative mb-0' style={{ flexDirection: 'column' }}>
             <Form.Label
               className='w-100 mb-0'
-              htmlFor={'profile-picture-upload-' + _getIdValue(fieldDefinitions, contact)}>
+              htmlFor={`profile-picture-upload-${_getIdValue(fieldDefinitions, contact)}`}>
               <Card.Img
                 className={editable ? ' cursor-pointer' : ''}
-                id={'img-' + _getIdValue(fieldDefinitions, contact)}
+                id={`img-${_getIdValue(fieldDefinitions, contact)}`}
                 variant='top'
                 src={pictureField.link}
                 data-src={pictureField.link}
@@ -260,7 +264,7 @@ const ContactCard = ({
             </Form.Label>
             <Form.Control
               className='d-none'
-              id={'profile-picture-upload-' + _getIdValue(fieldDefinitions, contact)}
+              id={`profile-picture-upload-${_getIdValue(fieldDefinitions, contact)}`}
               type='file'
               accept='image/png, image/jpeg'
               onChange={handlePictureChange}
@@ -280,10 +284,9 @@ const ContactCard = ({
           <Card.Header className='d-flex h-auto font-weight-bold' style={{ flexDirection: 'column' }}>
             {editable &&
               fieldDefinitions.mainFields.map((mainFieldDef) => {
-                tabIndex++;
                 const mainField = mainFields[mainFieldDef.propName];
                 return (
-                  <Row key={`${mainFieldDef.propName}-${tabIndex}`}>
+                  <Row key={`${mainFieldDef.propName}-${componentKey}`}>
                     <Form.Group as={Col} className='mb-0'>
                       <h3 className='text-center mb-0'>
                         {
@@ -293,7 +296,7 @@ const ContactCard = ({
                               className='editable cursor-pointer text-center px-2'
                               ref={(element) => (mainRef.current[mainFieldDef.propName] = element)}
                               value={mainField}
-                              tabIndex={tabIndex}
+                              tabIndex={++tabIndex}
                               placeholder={mainFieldDef.displayName}
                               onChange={(event) =>
                                 handleChange(
@@ -334,7 +337,7 @@ const ContactCard = ({
           {/* Other fields */}
           <Card.Body className='d-flex flex-grow-1 pt-2 pb-2' style={{ flexDirection: 'column' }}>
             {fieldDefinitions.otherFields.map((otherFieldDef, idx) => {
-              const renderField = (otherFieldDef) => {
+              const renderFieldFunc = (otherFieldDef) => {
                 const fieldType = otherFieldDef.type;
                 if (fieldType === 'ObjectList') {
                   const objectListInnerFields = otherFieldDef.innerFields;
@@ -342,10 +345,11 @@ const ContactCard = ({
                   return (
                     <Fragment>
                       {objectList.map((objectListItem, objectListIdx) => {
+                        const accordionKey = `${otherFieldDef.propName}-${componentKey}-${objectListIdx}`;
                         return (
-                          <Accordion className='w-100' key={`${otherFieldDef.propName}-${tabIndex}`}>
+                          <Accordion className='w-100' key={accordionKey}>
                             <ContextAwareToggle
-                              eventKey={tabIndex}
+                              eventKey={accordionKey}
                               editable={editable}
                               deleteCallback={_getListDeleteFunc(
                                 otherFieldDef,
@@ -360,7 +364,7 @@ const ContactCard = ({
                                   : '-'}
                               </span>
                             </ContextAwareToggle>
-                            <Accordion.Collapse eventKey={tabIndex}>
+                            <Accordion.Collapse eventKey={accordionKey}>
                               <Row
                                 className='mb-3 mx-0 pb-3 w-100 border border-secondary'
                                 style={{ flexDirection: 'column' }}>
@@ -371,10 +375,11 @@ const ContactCard = ({
                                     innerFieldType,
                                     innerFieldDef.validation.maxLength
                                   );
-                                  return renderInput(
+                                  return renderFieldTypeFunc(
                                     editable,
                                     true, // renderNonEditable
                                     true, // renderHeader
+                                    componentKey,
                                     innerFieldType,
                                     innerFieldKey,
                                     innerFieldValue,
@@ -409,10 +414,11 @@ const ContactCard = ({
                           fieldType,
                           otherFieldDef.validation.maxLength
                         );
-                        return renderInput(
+                        return renderFieldTypeFunc(
                           editable,
                           false, // renderNonEditable
                           false, // renderHeader
+                          componentKey,
                           fieldType,
                           otherFieldDef.propName,
                           fieldValue,
@@ -436,7 +442,7 @@ const ContactCard = ({
                           {stringList.length === 1 && `${stringList[0]}`}
                           {stringList.length === 2 && `${stringList[0]} and ${stringList[1]}`}
                           {stringList.length > 2 &&
-                            stringList.slice(0, -1).join(', ') + ', and ' + stringList.slice(-1)}
+                            `${stringList.slice(0, -1).join(', ')}, and ${stringList.slice(-1)}`}
                         </div>
                       )}
                     </Fragment>
@@ -447,10 +453,11 @@ const ContactCard = ({
                     fieldType,
                     otherFieldDef.validation.maxLength
                   );
-                  return renderInput(
+                  return renderFieldTypeFunc(
                     editable,
                     true, // renderNonEditable
                     false, // renderHeader
+                    componentKey,
                     fieldType,
                     otherFieldDef.propName,
                     fieldValue,
@@ -460,10 +467,11 @@ const ContactCard = ({
                   );
                 }
               };
-              const renderInput = (
+              const renderFieldTypeFunc = (
                 editable,
                 renderNonEditable,
                 renderHeader,
+                componentKey,
                 fieldType,
                 fieldKey,
                 fieldValue,
@@ -473,10 +481,12 @@ const ContactCard = ({
                 skipKey,
                 deleteCallback
               ) => {
-                const key = ++tabIndex;
                 if (editable) {
                   return (
-                    <Form.Group className='d-flex w-100 mb-0' style={{ flexDirection: 'row' }} key={'input-' + key}>
+                    <Form.Group
+                      className='d-flex w-100 mb-0'
+                      style={{ flexDirection: 'row' }}
+                      key={`${fieldKey}-input-${componentKey}`}>
                       <Col className='mb-2 pr-2'>
                         {renderHeader && <div className='text-center w-100'>{fieldDef.displayName}</div>}
                         <Form.Control
@@ -484,7 +494,7 @@ const ContactCard = ({
                           className='editable cursor-pointer text-center m-auto px-2'
                           ref={refFunc}
                           value={fieldValue}
-                          tabIndex={key}
+                          tabIndex={++tabIndex}
                           onChange={(event) => handleChange(event, setFunc, fieldType, fieldDef.validation.maxLength)}
                           pattern={fieldDef.validation.regex}
                           isInvalid={
@@ -507,7 +517,7 @@ const ContactCard = ({
                   );
                 } else if (renderNonEditable) {
                   return (
-                    <Fragment key={'value-' + key}>
+                    <Fragment key={`${fieldKey}-value-${componentKey}`}>
                       {fieldValue && (!skipKey || skipKey !== fieldKey) && (
                         <div className='text-center' style={{ whiteSpace: 'pre-wrap' }}>
                           {fieldValue}
@@ -518,7 +528,12 @@ const ContactCard = ({
                 }
               };
 
-              const renderAddObjectListButton = (objectList, objectListInnerFields, otherFields, setOtherFields) => {
+              const renderAddObjectListButtonFunc = (
+                objectList,
+                objectListInnerFields,
+                otherFields,
+                setOtherFields
+              ) => {
                 return (
                   <Button
                     className='w-100 mt-2'
@@ -537,7 +552,7 @@ const ContactCard = ({
                 );
               };
 
-              const renderAddStringListButton = (stringList, otherFields, setOtherFields) => {
+              const renderAddStringListButtonFunc = (stringList, otherFields, setOtherFields) => {
                 return (
                   <Button
                     className='w-100 mt-2'
@@ -557,7 +572,7 @@ const ContactCard = ({
               };
 
               return (
-                <Container key={'field- ' + (idx + 1)} className='px-0' fluid>
+                <Container key={`otherField-${componentKey}-${idx + 1}`} className='px-0' fluid>
                   {(editable ||
                     (otherFields[otherFieldDef.propName] &&
                       (otherFieldDef.type !== 'ObjectList' || otherFields[otherFieldDef.propName].length > 0) &&
@@ -576,11 +591,11 @@ const ContactCard = ({
                             backgroundColor: editable ? 'transparent' : 'rgba(255, 255, 255, 0.02)',
                             flexDirection: 'column'
                           }}>
-                          {renderField(otherFieldDef)}
+                          {renderFieldFunc(otherFieldDef)}
                         </Row>
                         {editable && otherFieldDef.type === 'ObjectList' && (
                           <Row className='w-100'>
-                            {renderAddObjectListButton(
+                            {renderAddObjectListButtonFunc(
                               otherFields[otherFieldDef.propName],
                               otherFieldDef.innerFields,
                               otherFields,
@@ -590,7 +605,7 @@ const ContactCard = ({
                         )}
                         {editable && otherFieldDef.type === 'StringList' && (
                           <Row className='w-100 px-3'>
-                            {renderAddStringListButton(
+                            {renderAddStringListButtonFunc(
                               otherFields[otherFieldDef.propName],
                               otherFields,
                               setOtherFields
