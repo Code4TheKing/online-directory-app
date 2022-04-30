@@ -13,7 +13,7 @@
     "express": "4.17.3",
     "express-jwt": "6.1.2",
     "generate-password": "1.7.0",
-    "jwks-rsa": "2.0.5",
+    "jwks-rsa": "2.1.0",
     "mongoose": "6.3.1",
     "netlify-lambda": "2.0.15",
     "serverless-http": "2.7.0",
