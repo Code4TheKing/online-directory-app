@@ -13,7 +13,7 @@
     "@testing-library/react": "12.1.5",
     "@testing-library/user-event": "14.1.1",
     "@types/uuid": "8.3.4",
-    "bootstrap": "4.6.0",
+    "bootstrap": "4.6.1",
     "deep-equal": "2.0.5",
     "holderjs": "2.9.9",
     "node-sass": "7.0.1",
@@ -30,6 +30,9 @@
     "redux-devtools-extension": "2.13.9",
     "redux-thunk": "2.4.1",
     "use-deep-compare-effect": "1.8.1"
+  },
+  "overrides": {
+    "autoprefixer": "10.4.5"
   },
   "scripts": {
     "prettify": "prettier -l --write \"**/*.js\"",
