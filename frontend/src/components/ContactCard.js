@@ -49,6 +49,7 @@ const ContactCard = ({
   const [showInviteModal, setShowInviteModal] = useState(false);
   const [inviteEmailAddress, setInviteEmailAddress] = useState('');
   const [inviteValidated, setInviteValidated] = useState(false);
+  const [sharedComponentKey, setSharedComponentKey] = useState(uuidv4());
 
   const mainRef = useRef({});
   const otherRefs = useRef({});
@@ -230,9 +231,9 @@ const ContactCard = ({
     setInviteValidated(!inviteForm.checkValidity());
   };
 
-  const componentKey = contact[fieldDefinitions.idField.propName]
-    ? contact[fieldDefinitions.idField.propName]
-    : uuidv4();
+  if (contact[fieldDefinitions.idField.propName] && sharedComponentKey !== contact[fieldDefinitions.idField.propName]) {
+    setSharedComponentKey(contact[fieldDefinitions.idField.propName]);
+  }
   let tabIndex = 0;
   return (
     <Fragment>
@@ -286,7 +287,7 @@ const ContactCard = ({
               fieldDefinitions.mainFields.map((mainFieldDef) => {
                 const mainField = mainFields[mainFieldDef.propName];
                 return (
-                  <Row key={`${mainFieldDef.propName}-${componentKey}`}>
+                  <Row key={`${mainFieldDef.propName}-${sharedComponentKey}`}>
                     <Form.Group as={Col} className='mb-0'>
                       <h3 className='text-center mb-0'>
                         {
@@ -345,7 +346,7 @@ const ContactCard = ({
                   return (
                     <Fragment>
                       {objectList.map((objectListItem, objectListIdx) => {
-                        const accordionKey = `${otherFieldDef.propName}-${componentKey}-${objectListIdx}`;
+                        const accordionKey = `${otherFieldDef.propName}-${sharedComponentKey}-${objectListIdx}`;
                         return (
                           <Accordion className='w-100' key={accordionKey}>
                             <ContextAwareToggle
@@ -379,7 +380,7 @@ const ContactCard = ({
                                     editable,
                                     true, // renderNonEditable
                                     true, // renderHeader
-                                    componentKey,
+                                    sharedComponentKey,
                                     innerFieldType,
                                     innerFieldKey,
                                     innerFieldValue,
@@ -418,7 +419,7 @@ const ContactCard = ({
                           editable,
                           false, // renderNonEditable
                           false, // renderHeader
-                          componentKey,
+                          sharedComponentKey,
                           fieldType,
                           otherFieldDef.propName,
                           fieldValue,
@@ -457,7 +458,7 @@ const ContactCard = ({
                     editable,
                     true, // renderNonEditable
                     false, // renderHeader
-                    componentKey,
+                    sharedComponentKey,
                     fieldType,
                     otherFieldDef.propName,
                     fieldValue,
@@ -572,7 +573,7 @@ const ContactCard = ({
               };
 
               return (
-                <Container key={`otherField-${componentKey}-${idx + 1}`} className='px-0' fluid>
+                <Container key={`otherField-${sharedComponentKey}-${idx + 1}`} className='px-0' fluid>
                   {(editable ||
                     (otherFields[otherFieldDef.propName] &&
                       (otherFieldDef.type !== 'ObjectList' || otherFields[otherFieldDef.propName].length > 0) &&
