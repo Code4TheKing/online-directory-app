@@ -32,7 +32,7 @@
     "use-deep-compare-effect": "1.8.1"
   },
   "overrides": {
-    "autoprefixer": "10.4.8"
+    "autoprefixer": "10.4.11"
   },
   "scripts": {
     "prettify": "prettier -l --write \"**/*.js\"",
