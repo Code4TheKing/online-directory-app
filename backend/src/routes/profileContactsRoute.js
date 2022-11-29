@@ -26,7 +26,7 @@ router.post('/', (req, res, next) => {
       .then(() =>
         auth0.getAccessToken().then((accessToken) =>
           auth0
-            .getUser(accessToken, idpSub, 'name,user_metadata')
+            .getUser(accessToken, idpSub, 'name,given_name,family_name,user_metadata')
             .then((user) =>
               Promise.all([
                 user.user_metadata?.contact_id
@@ -41,14 +41,14 @@ router.post('/', (req, res, next) => {
                       )
                       .catch(() =>
                         repository.addContact({
-                          firstName: user.given_name,
-                          lastName: user.family_name,
+                          firstName: user.given_name?? user.name,
+                          lastName: user.family_name?? "Fix Me",
                           idpSubjects: [idpSub]
                         })
                       )
                   : repository.addContact({
-                      firstName: user.given_name,
-                      lastName: user.family_name,
+                      firstName: user.given_name?? user.name,
+                      lastName: user.family_name?? "Fix me",
                       idpSubjects: [idpSub]
                     }),
                 authz.isAdmin(accessToken, req.user)
