@@ -21,7 +21,7 @@
     "webpack-node-externals": "3.0.0"
   },
   "devDependencies": {
-    "jest": "29.3.1",
+    "jest": "29.7.0",
     "nodemon": "2.0.22"
   },
   "scripts": {
