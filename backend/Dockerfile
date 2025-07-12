@@ -1,7 +1,7 @@
 # Build stage
 FROM node:18.14.0-alpine AS builder
 WORKDIR /backend
-COPY package.json .
+COPY package.json yarn.lock ./
 RUN apk --no-cache --virtual build-dependencies add \
     python3 \
     make \
@@ -17,5 +17,5 @@ WORKDIR /backend
 COPY --from=builder /backend/package.json ./
 COPY --from=builder /backend/yarn.lock ./
 COPY --from=builder /backend/node_modules ./node_modules
-COPY --from=builder /backend/src ./src
+COPY --from=builder /frontend/build ./build
 CMD ["serve", "-s", "build"]

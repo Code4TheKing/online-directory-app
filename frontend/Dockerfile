@@ -1,7 +1,7 @@
 # Build stage
 FROM node:18.14.0-alpine AS builder
 WORKDIR /frontend
-COPY package.json ./
+COPY package.json yarn.lock ./
 RUN apk --no-cache --virtual build-dependencies add \
     python3 \
     make \
