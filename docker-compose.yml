@@ -3,7 +3,7 @@
 services:
   mongo:
     container_name: online-directory-app-mongo
-    image: mongo:5.0
+    image: mongo:8.0
     restart: always
     volumes:
       - /var/db/online-directory-app:/data/db
@@ -14,7 +14,7 @@ services:
 
   mongo-express:
     container_name: online-directory-app-mongo-express
-    image: mongo-express:0.54
+    image: mongo-express:1.0
     restart: always
     ports:
       - 8081:8081
