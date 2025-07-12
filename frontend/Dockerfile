@@ -20,4 +20,4 @@ COPY --from=builder /frontend/yarn.lock ./
 COPY --from=builder /frontend/node_modules ./node_modules
 COPY --from=builder /frontend/public ./public
 COPY --from=builder /frontend/build ./build
-CMD ["yarn", "start"]
+CMD ["serve", "-s", "build"]

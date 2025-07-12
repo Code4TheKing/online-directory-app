@@ -9,6 +9,7 @@ RUN apk --no-cache --virtual build-dependencies add \
     && yarn install \
     && apk del build-dependencies
 COPY src/ ./src
+RUN yarn build
 
 # Production stage
 FROM node:18.14.0-alpine
@@ -17,4 +18,4 @@ COPY --from=builder /backend/package.json ./
 COPY --from=builder /backend/yarn.lock ./
 COPY --from=builder /backend/node_modules ./node_modules
 COPY --from=builder /backend/src ./src
-CMD ["yarn", "run", "dev"]
+CMD ["serve", "-s", "build"]
