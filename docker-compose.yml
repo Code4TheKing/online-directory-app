@@ -1,7 +1,5 @@
 # @format
 
-version: '3.8'
-
 services:
   mongo:
     container_name: online-directory-app-mongo
