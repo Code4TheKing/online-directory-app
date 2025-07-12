@@ -1,5 +1,5 @@
 # Build stage
-FROM node:18.14.0-alpine AS builder
+FROM node:20.19.3-alpine AS builder
 WORKDIR /backend
 COPY package.json yarn.lock ./
 RUN apk --no-cache --virtual build-dependencies add \
@@ -12,7 +12,7 @@ COPY src/ ./src
 RUN yarn build
 
 # Production stage
-FROM node:18.14.0-alpine
+FROM node:20.19.3-alpine
 WORKDIR /backend
 COPY --from=builder /backend/package.json ./
 COPY --from=builder /backend/yarn.lock ./

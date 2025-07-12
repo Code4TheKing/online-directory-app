@@ -1,5 +1,10 @@
 {
   "extends": [
     "config:js-app"
-  ]
+  ],
+  "requireConfig": "optional",
+  "major": {
+    "dependencyDashboardApproval": true
+  },
+  "recreateWhen": "never"
 }
