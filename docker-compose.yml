@@ -31,9 +31,6 @@ services:
       context: ./backend
       dockerfile: Dockerfile
     working_dir: /backend
-    volumes:
-      - ./backend:/backend
-      - /backend/node_modules
     ports:
       - 4000:4000
     depends_on:
@@ -49,9 +46,6 @@ services:
       context: ./frontend
       dockerfile: Dockerfile
     working_dir: /frontend
-    volumes:
-      - ./frontend:/frontend
-      - /frontend/node_modules
     ports:
       - 3000:3000
     tty: true
