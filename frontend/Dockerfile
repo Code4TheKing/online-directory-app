@@ -17,6 +17,6 @@ COPY --from=builder /frontend/package.json ./
 COPY --from=builder /frontend/yarn.lock ./
 COPY --from=builder /frontend/node_modules ./node_modules
 COPY --from=builder /frontend/public ./public
-COPY --from=builder /frontend/src ./srcg
+COPY --from=builder /frontend/src ./src
 
 CMD ["yarn", "start"]

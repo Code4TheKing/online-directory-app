@@ -43,7 +43,7 @@ import {
 export const getFieldDefinitionsAsync = (token) => {
   return (dispatch) => {
     dispatch(getFieldDefinitions());
-    return fetch(`${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_BASE_PATH}/contacts/field-definitions`, {
+    return fetch(`${getApiUrl()}/${process.env.REACT_APP_API_BASE_PATH}/contacts/field-definitions`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -93,7 +93,7 @@ export const addContactAsync = (fieldDefinitions, contact, pictureFile, token) =
 };
 
 const addContactTextFields = (dispatch, fieldDefinitions, contact, token) => {
-  return fetch(`${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_BASE_PATH}/contacts`, {
+  return fetch(`${getApiUrl()}/${process.env.REACT_APP_API_BASE_PATH}/contacts`, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -129,7 +129,7 @@ const addContactTextFields = (dispatch, fieldDefinitions, contact, token) => {
 export const getContactAsync = (contactId, token) => {
   return (dispatch) => {
     dispatch(getContact());
-    return fetch(`${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_BASE_PATH}/contacts/${contactId}`, {
+    return fetch(`${getApiUrl()}/${process.env.REACT_APP_API_BASE_PATH}/contacts/${contactId}`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -191,7 +191,7 @@ export const listAllContactsAsync = (token) => {
 
 const listContacts = (keyword, token) => {
   return fetch(
-    `${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_BASE_PATH}/contacts` +
+    `${getApiUrl()}/${process.env.REACT_APP_API_BASE_PATH}/contacts` +
       `?keyword=${encodeURIComponent(keyword)}`,
     {
       headers: {
@@ -205,7 +205,7 @@ export const listUsersForContactAsync = (contactId, token) => {
   return (dispatch) => {
     dispatch(listUsersForContact());
     return fetch(
-      `${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_BASE_PATH}/contacts/${contactId}/users`,
+      `${getApiUrl()}/${process.env.REACT_APP_API_BASE_PATH}/contacts/${contactId}/users`,
       {
         headers: {
           Authorization: `Bearer ${token}`
@@ -259,7 +259,7 @@ export const updateContactAsync = (fieldDefinitions, contact, pictureFile, token
 
 const updateContactTextFields = (dispatch, fieldDefinitions, contact, token) => {
   return fetch(
-    `${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_BASE_PATH}/contacts/${
+    `${getApiUrl()}/${process.env.REACT_APP_API_BASE_PATH}/contacts/${
       contact[fieldDefinitions.idField.propName]
     }`,
     {
@@ -292,7 +292,7 @@ export const inviteContactAsync = (fieldDefinitions, contact, email, token) => {
   return (dispatch) => {
     dispatch(inviteContact());
     return fetch(
-      `${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_BASE_PATH}/contacts/${
+      `${getApiUrl()}/${process.env.REACT_APP_API_BASE_PATH}/contacts/${
         contact[fieldDefinitions.idField.propName]
       }/invite`,
       {
@@ -337,7 +337,7 @@ export const inviteContactAsync = (fieldDefinitions, contact, email, token) => {
 export const createProfileContactAsync = (token) => {
   return (dispatch) => {
     dispatch(createProfileContact());
-    return fetch(`${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_BASE_PATH}/profile-contacts`, {
+    return fetch(`${getApiUrl()}/${process.env.REACT_APP_API_BASE_PATH}/profile-contacts`, {
       method: 'POST',
       headers: {
         Authorization: `Bearer ${token}`,
@@ -365,7 +365,7 @@ export const createProfileContactAsync = (token) => {
 export const getProfileContactAsync = (token) => {
   return (dispatch) => {
     dispatch(getProfileContact());
-    return fetch(`${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_BASE_PATH}/profile-contacts`, {
+    return fetch(`${getApiUrl()}/${process.env.REACT_APP_API_BASE_PATH}/profile-contacts`, {
       headers: {
         Authorization: `Bearer ${token}`
       }
@@ -438,7 +438,7 @@ const uploadProfilePicture = (dispatch, pictureFile) => {
 };
 
 const updateProfileContactTextFields = (dispatch, localProfileContact, token) => {
-  return fetch(`${process.env.REACT_APP_API_URL}/${process.env.REACT_APP_API_BASE_PATH}/profile-contacts`, {
+  return fetch(`${getApiUrl()}/${process.env.REACT_APP_API_BASE_PATH}/profile-contacts`, {
     method: 'PATCH',
     headers: {
       Authorization: `Bearer ${token}`,
@@ -473,4 +473,18 @@ const maybeClearPicture = (contact, pictureFile) => {
         }
       : {}
   );
+};
+
+const getApiUrl = () => {
+  if (process.env.REACT_APP_CONTEXT === 'deploy-preview') {
+    let deployPreviewUrl = process.env.REACT_APP_DEPLOY_PREVIEW_API_URL;
+    if (deployPreviewUrl) {
+      deployPreviewUrl = deployPreviewUrl.replace(
+      /\.netlify\.app$/,
+      '-backend.netlify.app'
+      );
+      return deployPreviewUrl;
+    }
+  }
+  return process.env.REACT_APP_API_URL;
 };
