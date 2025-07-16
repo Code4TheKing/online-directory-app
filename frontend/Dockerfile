@@ -1,5 +1,5 @@
 # Build stage
-FROM node:20.19.3-alpine AS builder
+FROM node:20.19.4-alpine AS builder
 WORKDIR /frontend
 COPY package.json .yarnrc yarn.lock ./
 RUN apk add --no-cache python3 py3-setuptools make g++ \
@@ -11,7 +11,7 @@ COPY src/ ./src
 RUN yarn build
 
 # Production stage
-FROM node:20.19.3-alpine
+FROM node:20.19.4-alpine
 WORKDIR /frontend
 COPY --from=builder /frontend/package.json ./
 COPY --from=builder /frontend/yarn.lock ./
