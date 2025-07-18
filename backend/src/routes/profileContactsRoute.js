@@ -9,8 +9,8 @@ const errors = require('../utils/errors');
 
 // Create profile contact
 router.post('/', (req, res, next) => {
-  authz.enforceAuthorization(req.user, ['create:profile_contact'], req, res, next, (req, res, next) => {
-    const idpSub = req.user.sub;
+  authz.enforceAuthorization(req.auth, ['create:profile_contact'], req, res, next, (req, res, next) => {
+    const idpSub = req.auth.sub;
     repository
       .getContactByIdpSubject(idpSub)
       .catch((err) => {
@@ -51,7 +51,7 @@ router.post('/', (req, res, next) => {
                       lastName: user.family_name?? "Fix me",
                       idpSubjects: [idpSub]
                     }),
-                authz.isAdmin(accessToken, req.user)
+                authz.isAdmin(accessToken, req.auth)
               ])
             )
             .then(([profileContact, isAdmin]) => res.json(Object.assign(profileContact, { admin: isAdmin })))
@@ -63,13 +63,13 @@ router.post('/', (req, res, next) => {
 
 // Get profile contact
 router.get('/', (req, res, next) => {
-  authz.enforceAuthorization(req.user, ['read:profile_contact'], req, res, next, (req, res, next) =>
+  authz.enforceAuthorization(req.auth, ['read:profile_contact'], req, res, next, (req, res, next) =>
     repository
-      .getContactByIdpSubject(req.user.sub, true)
+      .getContactByIdpSubject(req.auth.sub, true)
       .then((profileContact) =>
         auth0
           .getAccessToken()
-          .then((accessToken) => authz.isAdmin(accessToken, req.user))
+          .then((accessToken) => authz.isAdmin(accessToken, req.auth))
           .then((isAdmin) => {
             res.json(Object.assign(profileContact, { admin: isAdmin }));
           })
@@ -81,9 +81,9 @@ router.get('/', (req, res, next) => {
 // Update profile contact
 router.patch('/', (req, res, next) => {
   delete req.body.idpSub;
-  authz.enforceAuthorization(req.user, ['update:profile_contact'], req, res, next, (req, res, next) =>
+  authz.enforceAuthorization(req.auth, ['update:profile_contact'], req, res, next, (req, res, next) =>
     repository
-      .getContactByIdpSubject(req.user.sub)
+      .getContactByIdpSubject(req.auth.sub)
       .then((existingProfileContact) => repository.updateContact(existingProfileContact._id, req.body))
       .then((updatedProfileContact) => res.json(updatedProfileContact))
       .catch((err) => handleError(err, next))

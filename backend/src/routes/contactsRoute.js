@@ -9,14 +9,14 @@ const contactSchema = require('../mongodb/schema/contactSchema');
 
 // Get field definitions
 router.get('/field-definitions', (req, res, next) => {
-  authz.enforceAuthorization(req.user, ['read:contacts'], req, res, next, (req, res, next) =>
+  authz.enforceAuthorization(req.auth, ['read:contacts'], req, res, next, (req, res, next) =>
     res.json(contactSchema.fieldDefinitions)
   );
 });
 
 // Add contact
 router.post('/', (req, res, next) => {
-  authz.enforceAuthorization(req.user, ['create:contacts'], req, res, next, (req, res, next) =>
+  authz.enforceAuthorization(req.auth, ['create:contacts'], req, res, next, (req, res, next) =>
     repository
       .addContact(req.body)
       .then((savedContact) => res.json(savedContact))
@@ -26,7 +26,7 @@ router.post('/', (req, res, next) => {
 
 // Get contact by ID
 router.get('/:id', (req, res, next) => {
-  authz.enforceAuthorization(req.user, ['read:contacts'], req, res, next, (req, res, next) =>
+  authz.enforceAuthorization(req.auth, ['read:contacts'], req, res, next, (req, res, next) =>
     repository
       .getContactById(req.params.id)
       .then((contact) => res.json(contact))
@@ -37,7 +37,7 @@ router.get('/:id', (req, res, next) => {
 // Update contact by ID
 router.patch('/:id', (req, res, next) => {
   delete req.body.idpSub;
-  authz.enforceAuthorization(req.user, ['update:contacts'], req, res, next, (req, res, next) =>
+  authz.enforceAuthorization(req.auth, ['update:contacts'], req, res, next, (req, res, next) =>
     repository
       .getContactById(req.params.id)
       .then((existingContact) => repository.updateContact(existingContact._id, req.body))
@@ -48,7 +48,7 @@ router.patch('/:id', (req, res, next) => {
 
 // List contacts by keyword
 router.get('/', (req, res, next) => {
-  authz.enforceAuthorization(req.user, ['read:contacts'], req, res, next, (req, res, next) =>
+  authz.enforceAuthorization(req.auth, ['read:contacts'], req, res, next, (req, res, next) =>
     repository
       .listContactsByKeyword(req.query.keyword)
       .then((contactsList) => res.json({ contacts: contactsList }))
@@ -58,7 +58,7 @@ router.get('/', (req, res, next) => {
 
 // List linked users for contact
 router.get('/:id/users', (req, res, next) => {
-  authz.enforceAuthorization(req.user, ['read:contacts', 'read:users'], req, res, next, (req, res, next) =>
+  authz.enforceAuthorization(req.auth, ['read:contacts', 'read:users'], req, res, next, (req, res, next) =>
     repository
       .getContactById(req.params.id)
       .then((existingContact) => {
@@ -80,7 +80,7 @@ router.get('/:id/users', (req, res, next) => {
 
 // Invite contact to register
 router.post('/:id/invite', (req, res, next) => {
-  authz.enforceAuthorization(req.user, ['invite:contacts'], req, res, next, (req, res, next) =>
+  authz.enforceAuthorization(req.auth, ['invite:contacts'], req, res, next, (req, res, next) =>
     repository
       .getContactById(req.params.id)
       .then((existingContact) =>
