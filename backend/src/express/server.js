@@ -10,7 +10,7 @@ try {
 } catch (e) {
   console.error(e);
 }
-const jwt = require('express-jwt');
+const { expressjwt: jwt } = require('express-jwt');
 const jwks = require('jwks-rsa');
 const errors = require('../utils/errors');
 
