@@ -13,7 +13,7 @@
     "@testing-library/react": "12.1.5",
     "@testing-library/user-event": "14.6.1",
     "@types/uuid": "9.0.8",
-    "bootstrap": "4.6.2",
+    "bootstrap": "5.0.0",
     "deep-equal": "2.2.3",
     "holderjs": "2.9.9",
     "sass": "^1.70.0",
