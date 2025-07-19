@@ -30,5 +30,8 @@
     "test": "jest",
     "start": "node src/server-local.js",
     "dev": "nodemon src/server-local.js"
+  },
+  "resolutions": {
+    "braces": "3.0.3"
   }
 }
