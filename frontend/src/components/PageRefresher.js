@@ -1,6 +1,6 @@
 /** @format */
 
-import { Icon } from '@material-ui/core';
+import { Icon } from '@mui/material';
 import React from 'react';
 import { Button } from 'react-bootstrap';
 import { useHistory, useLocation } from 'react-router-dom';

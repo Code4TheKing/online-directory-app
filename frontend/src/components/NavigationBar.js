@@ -1,7 +1,7 @@
 /** @format */
 
 import { useAuth0 } from '@auth0/auth0-react';
-import { Avatar } from '@material-ui/core';
+import { Avatar } from '@mui/material';
 import React from 'react';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
