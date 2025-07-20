@@ -1,7 +1,7 @@
 /** @format */
 
 import { useAuth0 } from '@auth0/auth0-react';
-import { Icon, LinearProgress } from '@material-ui/core';
+import { Icon, LinearProgress } from '@mui/material';
 import equals from 'deep-equal';
 import Holder from 'holderjs';
 import React, { Fragment, useContext, useRef, useState } from 'react';
