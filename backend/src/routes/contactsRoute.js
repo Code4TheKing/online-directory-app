@@ -7,6 +7,9 @@ const authz = require('../utils/authz');
 const auth0 = require('../utils/auth0');
 const contactSchema = require('../mongodb/schema/contactSchema');
 
+// Ensure JSON body parsing middleware is used
+//router.use(express.json());
+
 // Get field definitions
 router.get('/field-definitions', (req, res, next) => {
   authz.enforceAuthorization(req.auth, ['read:contacts'], req, res, next, (req, res, next) =>
@@ -16,6 +19,7 @@ router.get('/field-definitions', (req, res, next) => {
 
 // Add contact
 router.post('/', (req, res, next) => {
+  console.log('Adding contact with data:', req.body.firstName, req.body.lastName);
   authz.enforceAuthorization(req.auth, ['create:contacts'], req, res, next, (req, res, next) =>
     repository
       .addContact(req.body)
@@ -37,6 +41,7 @@ router.get('/:id', (req, res, next) => {
 // Update contact by ID
 router.patch('/:id', (req, res, next) => {
   delete req.body.idpSub;
+  console.log(`Updating contact with ID ${req.params.id} with data:`, req.body.firstName, req.body.lastName);
   authz.enforceAuthorization(req.auth, ['update:contacts'], req, res, next, (req, res, next) =>
     repository
       .getContactById(req.params.id)

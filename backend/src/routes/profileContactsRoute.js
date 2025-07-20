@@ -3,9 +3,12 @@
 const express = require('express');
 const router = express.Router();
 const repository = require('../mongodb/repository');
-const auth0 = require('../utils/auth0');
 const authz = require('../utils/authz');
+const auth0 = require('../utils/auth0');
 const errors = require('../utils/errors');
+
+// Ensure JSON body parsing middleware is used
+//router.use(express.json());
 
 // Create profile contact
 router.post('/', (req, res, next) => {

@@ -14,12 +14,12 @@ const { expressjwt: jwt } = require('express-jwt');
 const jwks = require('jwks-rsa');
 const errors = require('../utils/errors');
 
-app.use(require('body-parser').json());
+//app.use(express.json());
 app.use(express.static(path.join(__dirname, '../static')));
 
 // Root-level logger
 app.use((req, res, next) => {
-  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - ${req.ip}`, '-', req.body, '-', req.query);
+  console.log(`[${new Date().toISOString()}] ${req.method} ${req.path} - ${req.ip}`, '-', JSON.stringify(req.body), '-', req.query);
   next();
 });
 

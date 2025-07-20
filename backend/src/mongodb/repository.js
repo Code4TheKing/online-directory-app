@@ -20,6 +20,7 @@ const Contact = mongoose.model('Contact', contactSchema.schema);
 // Add contact
 const addContact = async (contact) => {
   await connectionPromise;
+  console.log('Adding contact with data:', contact.firstName, contact.lastName);
   const savedContact = await new Contact(contact).save();
   if (!savedContact) {
     throw new Error('Something went wrong. Could not add contact for the given input.');
@@ -50,6 +51,7 @@ const getContactByIdpSubject = async (idpSub, lean = false) => {
 // Update contact by ID
 const updateContact = async (contactId, contact, lean = false) => {
   await connectionPromise;
+  console.log(`Updating contact with ID ${contactId} with data:`, contact.firstName, contact.lastName);
   const updatedContact = await Contact.findByIdAndUpdate(
     contactId,
     contact,
