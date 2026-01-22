@@ -8,7 +8,7 @@
   "main": "functions/server.js",
   "dependencies": {
     "axios": "0.30.0",
-    "cors": "2.8.5",
+    "cors": "2.8.6",
     "express": "5.1.0",
     "express-jwt": "8.5.1",
     "generate-password": "1.7.1",
